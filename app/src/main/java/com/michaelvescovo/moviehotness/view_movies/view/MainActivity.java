@@ -19,12 +19,10 @@ import com.michaelvescovo.moviehotness.view_movies.data.CloudModel;
 import com.michaelvescovo.moviehotness.view_movies.data.DataModel;
 import com.michaelvescovo.moviehotness.view_movies.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movies.data.DbModel;
-import com.michaelvescovo.moviehotness.view_movies.data.MemoryModel;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 
 public class MainActivity extends AppCompatActivity implements PresenterInterface {
     private static final String TAG = "MainActivity";
-    DataModel mMemoryModel;
     DataModel mDbModel;
     DataModel mCloudModel;
     ViewMoviesInterface mViewMovies;
@@ -38,16 +36,12 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         * Setup Application
         *
         * */
-        mMemoryModel = new MemoryModel();
         mDbModel = new DbModel();
         mCloudModel = new CloudModel(this);
-        mMemoryModel.setSuccessor(mDbModel);
         mDbModel.setSuccessor(mCloudModel);
-        mViewMovies = new ViewMovies(this, mMemoryModel);
-        mMemoryModel.setDataResponseInterface((DataResponseInterface)mViewMovies);
+        mViewMovies = new ViewMovies(this, mDbModel);
         mDbModel.setDataResponseInterface((DataResponseInterface)mViewMovies);
         mCloudModel.setDataResponseInterface((DataResponseInterface)mViewMovies);
-
 
         /*
         * Setup view

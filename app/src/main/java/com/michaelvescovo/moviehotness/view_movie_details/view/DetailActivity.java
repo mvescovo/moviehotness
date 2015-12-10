@@ -21,7 +21,6 @@ import com.michaelvescovo.moviehotness.view_movie_details.data.CloudModel;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataModel;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DbModel;
-import com.michaelvescovo.moviehotness.view_movie_details.data.MemoryModel;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 import com.michaelvescovo.moviehotness.view_movies.view.AboutActivity;
 import com.squareup.picasso.Picasso;
@@ -29,7 +28,6 @@ import com.squareup.picasso.Picasso;
 public class DetailActivity extends AppCompatActivity implements PlotFragment.OnFragmentInteractionListener, PresenterInterface {
     private static final String TAG = "DetailActivity";
 
-    DataModel mMemoryModel;
     DataModel mDbModel;
     DataModel mCloudModel;
     ViewMovieDetailsInterface mViewMovieDetails;
@@ -46,16 +44,12 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         * Setup Application
         *
         * */
-        mMemoryModel = new MemoryModel();
         mDbModel = new DbModel();
         mCloudModel = new CloudModel(this);
-        mMemoryModel.setSuccessor(mDbModel);
         mDbModel.setSuccessor(mCloudModel);
-        mViewMovieDetails = new ViewMovieDetails(this, mMemoryModel);
-        mMemoryModel.setDataResponseInterface((DataResponseInterface)mViewMovieDetails);
+        mViewMovieDetails = new ViewMovieDetails(this, mDbModel);
         mDbModel.setDataResponseInterface((DataResponseInterface)mViewMovieDetails);
         mCloudModel.setDataResponseInterface((DataResponseInterface) mViewMovieDetails);
-
 
         /*
         * Setup view
