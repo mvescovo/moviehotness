@@ -3,6 +3,7 @@ package com.michaelvescovo.moviehotness.view_movies.view;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,11 +21,14 @@ import java.util.ArrayList;
  *
  */
 public class PosterAdapter extends RecyclerView.Adapter {
+    private static final String TAG = "PosterAdapter";
     private Context mContext;
     private ArrayList<MovieInterface> mDataset = new ArrayList<>();
+    public int mSortBy = -1;
 
-    public PosterAdapter(Context c) {
+    public PosterAdapter(Context c, int sortBy) {
         mContext = c;
+        mSortBy = sortBy;
     }
 
     @Override
@@ -43,7 +48,19 @@ public class PosterAdapter extends RecyclerView.Adapter {
 
         Picasso.with(mContext)
                 .load(builtUri.toString() + mDataset.get(position).getPosterUrl())
-                .into(imageView);
+                .error(R.drawable.no_image)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        updateProgress();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.i(TAG, "onError: poster download error");
+                        updateProgress();
+                    }
+                });
     }
 
     @Override
@@ -53,6 +70,10 @@ public class PosterAdapter extends RecyclerView.Adapter {
 
     public void updateDataset(MovieInterface movie) {
         mDataset.add(movie);
-        notifyItemInserted(getItemCount());
+        notifyItemInserted(getItemCount() -1);
+    }
+
+    public void updateProgress() {
+        ((MainActivity)mContext).onSuccess(mSortBy);
     }
 }

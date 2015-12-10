@@ -7,5 +7,5 @@ import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
  *
  */
 public interface DataResponseInterface {
-    void displayMovies(MovieInterface movie, int sortBy);
+    void displayMovies(MovieInterface movie, int sortBy, int resultsSize);
 }

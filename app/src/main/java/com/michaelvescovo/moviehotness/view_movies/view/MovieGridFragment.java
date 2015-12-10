@@ -31,13 +31,17 @@ import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 
 public class MovieGridFragment extends Fragment {
-    RecyclerView mRecyclerView;
-    RecyclerView.Adapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private int mSortBy = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            mSortBy = getArguments().getInt("sortBy");
+        }
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
-        mAdapter = new PosterAdapter(getContext());
+        mAdapter = new PosterAdapter(getContext(), mSortBy);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
@@ -59,9 +63,7 @@ public class MovieGridFragment extends Fragment {
             }
         });
 
-        if (getArguments() != null) {
-            ((MainActivity)getActivity()).getMovies(getArguments().getInt("sortBy"));
-        }
+        ((MainActivity)getActivity()).getMovies(mSortBy);
 
         return mRecyclerView;
     }

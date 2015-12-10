@@ -8,5 +8,5 @@ import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
  *
  */
 public interface PresenterInterface {
-    void displayMovies(MovieInterface movie, int sortBy);
+    void displayMovies(MovieInterface movie, int sortBy, int resultsSize);
 }

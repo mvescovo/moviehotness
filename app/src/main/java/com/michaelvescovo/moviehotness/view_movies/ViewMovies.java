@@ -34,7 +34,7 @@ public class ViewMovies implements ViewMoviesInterface, DataResponseInterface {
     }
 
     @Override
-    public void displayMovies(MovieInterface movie, int sortBy) {
-        mPresenterInterface.displayMovies(movie, sortBy);
+    public void displayMovies(MovieInterface movie, int sortBy, int resultsSize) {
+        mPresenterInterface.displayMovies(movie, sortBy, resultsSize);
     }
 }

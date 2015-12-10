@@ -40,18 +40,17 @@ public class CloudModel extends DataModel {
     }
 
     public void downloadList(String url, final int sortBy) {
-        // Show user something is happening
-        // mView.findViewById(R.id.fragment_main_progress).setVisibility(View.VISIBLE);
-
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         final JSONArray results;
+                        int resultsSize;
 
                         try {
                             results = response.getJSONArray("results");
+                            resultsSize = results.length();
 
                             for (int i = 0; i < results.length(); i++) {
                                 String id = results.getJSONObject(i).getString("id");
@@ -62,23 +61,10 @@ public class CloudModel extends DataModel {
                                 String plot = results.getJSONObject(i).getString("overview");
                                 String backdrop = results.getJSONObject(i).getString("backdrop_path");
                                 MovieInterface movie = new Movie(id, title, releaseDate, poster, voteAverage, plot, backdrop);
-                                mDataResponseInterface.displayMovies(movie, sortBy);
+                                mDataResponseInterface.displayMovies(movie, sortBy, resultsSize);
                             }
-
-//                            mAdapter.notifyDataSetChanged();
-//                            mView.findViewById(R.id.fragment_main_progress).setVisibility(View.INVISIBLE);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
-
-//                            try {
-//                                fragment.getActivity().findViewById(R.id.search_progress).setVisibility(View.INVISIBLE);
-//                                ((TextView) fragment.getActivity().findViewById(R.id.volley_error_msg)).setText(fragment.getText(R.string.no_matches));
-//                                MovieGridFragment.mImdbIdList.clear();
-//                                fragment.getLoaderManager().restartLoader(MovieClubConstants.MOVIE_LOADER_PREVIEW_ID, null, (LoaderManager.LoaderCallbacks) fragment);
-//                            } catch (NullPointerException e2) {
-//                                // The view doesn't exist.
-//                            }
                         }
 
                     }
@@ -90,7 +76,6 @@ public class CloudModel extends DataModel {
 
                     }
                 });
-        // Access the RequestQueue through your singleton class.
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 }
