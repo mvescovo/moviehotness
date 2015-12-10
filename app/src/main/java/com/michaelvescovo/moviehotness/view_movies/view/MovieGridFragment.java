@@ -26,11 +26,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 
 public class MovieGridFragment extends Fragment {
-    private static final String TAG = "MovieGridFragment";
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
 
@@ -58,6 +58,10 @@ public class MovieGridFragment extends Fragment {
                 layoutManager.requestLayout();
             }
         });
+
+        if (getArguments() != null) {
+            ((MainActivity)getActivity()).getMovies(getArguments().getInt("sortBy"));
+        }
 
         return mRecyclerView;
     }

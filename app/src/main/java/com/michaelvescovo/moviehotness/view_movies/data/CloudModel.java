@@ -1,7 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movies.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -22,7 +21,6 @@ import org.json.JSONObject;
  *
  */
 public class CloudModel extends DataModel {
-    private static final String TAG = "CloudModel";
     private Context mContext;
 
     public CloudModel(Context context) {
@@ -65,7 +63,6 @@ public class CloudModel extends DataModel {
                                 String backdrop = results.getJSONObject(i).getString("backdrop_path");
                                 MovieInterface movie = new Movie(id, title, releaseDate, poster, voteAverage, plot, backdrop);
                                 mDataResponseInterface.displayMovies(movie, sortBy);
-                                Log.i(TAG, "onResponse: sortBy: " + sortBy);
                             }
 
 //                            mAdapter.notifyDataSetChanged();

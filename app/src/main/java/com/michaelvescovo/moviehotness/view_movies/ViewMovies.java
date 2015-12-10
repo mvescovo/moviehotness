@@ -13,10 +13,17 @@ public class ViewMovies implements ViewMoviesInterface, DataResponseInterface {
     private static final String TAG = "ViewMovies";
     private PresenterInterface mPresenterInterface;
     private DataRequestInterface mDataRequestInterface;
+    private int mSortBy;
 
-    public ViewMovies(PresenterInterface presenterInterface, DataRequestInterface dataRequestInterface) {
+    public ViewMovies(PresenterInterface presenterInterface, DataRequestInterface dataRequestInterface, int sortBy) {
         setPresenterInterface(presenterInterface);
         setDataRequestInterface(dataRequestInterface);
+        setSortBy(sortBy);
+    }
+
+    @Override
+    public void setSortBy(int sortBy) {
+
     }
 
     @Override

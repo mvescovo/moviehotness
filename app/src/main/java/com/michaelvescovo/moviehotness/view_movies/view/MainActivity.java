@@ -7,7 +7,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,10 +21,10 @@ import com.michaelvescovo.moviehotness.view_movies.data.DbModel;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 
 public class MainActivity extends AppCompatActivity implements PresenterInterface {
-    private static final String TAG = "MainActivity";
     DataModel mDbModel;
     DataModel mCloudModel;
-    ViewMoviesInterface mViewMovies;
+    ViewMoviesInterface mViewPopularMovies;
+    ViewMoviesInterface mViewHighestRatedMovies;
     ViewPager mViewPager;
 
     @Override
@@ -39,9 +38,10 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         mDbModel = new DbModel();
         mCloudModel = new CloudModel(this);
         mDbModel.setSuccessor(mCloudModel);
-        mViewMovies = new ViewMovies(this, mDbModel);
-        mDbModel.setDataResponseInterface((DataResponseInterface)mViewMovies);
-        mCloudModel.setDataResponseInterface((DataResponseInterface)mViewMovies);
+        mViewPopularMovies = new ViewMovies(this, mDbModel, Constants.POPULAR);
+        mViewHighestRatedMovies = new ViewMovies(this, mDbModel, Constants.HIGHEST_RATED);
+        mDbModel.setDataResponseInterface((DataResponseInterface) mViewPopularMovies);
+        mCloudModel.setDataResponseInterface((DataResponseInterface) mViewPopularMovies);
 
         /*
         * Setup view
@@ -54,20 +54,30 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         setupViewPager(mViewPager);
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.setupWithViewPager(mViewPager);
-        // TODO maybe here use polymorphism?
-        getMovies(Constants.POPULAR);
-        getMovies(Constants.HIGHEST_RATED);
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        MovieGridFragment movieGridFragment;
+        Bundle bundle;
         PagerAdapter pagerAdapter = new MovieSortByPagerAdapter(getSupportFragmentManager());
-        ((MovieSortByPagerAdapter) pagerAdapter).addFragment(new MovieGridFragment(), "Popular");
-        ((MovieSortByPagerAdapter)pagerAdapter).addFragment(new MovieGridFragment(), "Highest Rated");
+
+        bundle = new Bundle();
+        bundle.putInt("sortBy", Constants.POPULAR);
+        movieGridFragment = new MovieGridFragment();
+        movieGridFragment.setArguments(bundle);
+        ((MovieSortByPagerAdapter) pagerAdapter).addFragment(movieGridFragment, "Popular");
+
+        bundle = new Bundle();
+        bundle.putInt("sortBy", Constants.HIGHEST_RATED);
+        movieGridFragment = new MovieGridFragment();
+        movieGridFragment.setArguments(bundle);
+        ((MovieSortByPagerAdapter)pagerAdapter).addFragment(movieGridFragment, "Highest Rated");
+
         viewPager.setAdapter(pagerAdapter);
     }
 
     public void getMovies(int sortBy) {
-        mViewMovies.getMovies(sortBy);
+        mViewPopularMovies.getMovies(sortBy);
     }
 
     @Override
@@ -75,11 +85,9 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         switch (sortBy) {
             case Constants.POPULAR:
                 ((MovieGridFragment)((MovieSortByPagerAdapter)mViewPager.getAdapter()).getItem(0)).updateMovies(movie);
-                Log.i(TAG, "displayMovies: popular");
                 break;
             case Constants.HIGHEST_RATED:
                 ((MovieGridFragment)((MovieSortByPagerAdapter)mViewPager.getAdapter()).getItem(1)).updateMovies(movie);
-                Log.i(TAG, "displayMovies: highest rated");
                 break;
         }
     }

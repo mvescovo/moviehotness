@@ -3,7 +3,6 @@ package com.michaelvescovo.moviehotness.view_movies.view;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  *
  */
 public class MovieSortByPagerAdapter extends FragmentPagerAdapter {
-    private static final String TAG = "MovieSortByPagerAdapter";
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -34,7 +32,6 @@ public class MovieSortByPagerAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
-        Log.i(TAG, "addFragment: count: " + getCount());
     }
 
     @Override
