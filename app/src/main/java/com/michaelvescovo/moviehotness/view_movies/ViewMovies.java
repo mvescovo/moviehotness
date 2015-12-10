@@ -10,20 +10,12 @@ import com.michaelvescovo.moviehotness.view_movies.view.PresenterInterface;
  *
  */
 public class ViewMovies implements ViewMoviesInterface, DataResponseInterface {
-    private static final String TAG = "ViewMovies";
     private PresenterInterface mPresenterInterface;
     private DataRequestInterface mDataRequestInterface;
-    private int mSortBy;
 
-    public ViewMovies(PresenterInterface presenterInterface, DataRequestInterface dataRequestInterface, int sortBy) {
+    public ViewMovies(PresenterInterface presenterInterface, DataRequestInterface dataRequestInterface) {
         setPresenterInterface(presenterInterface);
         setDataRequestInterface(dataRequestInterface);
-        setSortBy(sortBy);
-    }
-
-    @Override
-    public void setSortBy(int sortBy) {
-
     }
 
     @Override
@@ -44,7 +36,5 @@ public class ViewMovies implements ViewMoviesInterface, DataResponseInterface {
     @Override
     public void displayMovies(MovieInterface movie, int sortBy) {
         mPresenterInterface.displayMovies(movie, sortBy);
-
-        // TODO maybe here call to save to memory model and db model
     }
 }

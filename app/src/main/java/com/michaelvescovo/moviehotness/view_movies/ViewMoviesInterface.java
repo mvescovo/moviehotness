@@ -9,8 +9,6 @@ import com.michaelvescovo.moviehotness.view_movies.view.PresenterInterface;
  *
  */
 public interface ViewMoviesInterface {
-    void setSortBy(int sortBy);
-
     void setDataRequestInterface(DataRequestInterface dataRequestInterface);
 
     void getMovies(int sortOrder);

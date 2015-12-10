@@ -23,8 +23,7 @@ import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 public class MainActivity extends AppCompatActivity implements PresenterInterface {
     DataModel mDbModel;
     DataModel mCloudModel;
-    ViewMoviesInterface mViewPopularMovies;
-    ViewMoviesInterface mViewHighestRatedMovies;
+    ViewMoviesInterface mViewMovies;
     ViewPager mViewPager;
 
     @Override
@@ -38,10 +37,9 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         mDbModel = new DbModel();
         mCloudModel = new CloudModel(this);
         mDbModel.setSuccessor(mCloudModel);
-        mViewPopularMovies = new ViewMovies(this, mDbModel, Constants.POPULAR);
-        mViewHighestRatedMovies = new ViewMovies(this, mDbModel, Constants.HIGHEST_RATED);
-        mDbModel.setDataResponseInterface((DataResponseInterface) mViewPopularMovies);
-        mCloudModel.setDataResponseInterface((DataResponseInterface) mViewPopularMovies);
+        mViewMovies = new ViewMovies(this, mDbModel);
+        mDbModel.setDataResponseInterface((DataResponseInterface) mViewMovies);
+        mCloudModel.setDataResponseInterface((DataResponseInterface) mViewMovies);
 
         /*
         * Setup view
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     }
 
     public void getMovies(int sortBy) {
-        mViewPopularMovies.getMovies(sortBy);
+        mViewMovies.getMovies(sortBy);
     }
 
     @Override
