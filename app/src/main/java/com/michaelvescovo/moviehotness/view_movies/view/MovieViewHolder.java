@@ -30,7 +30,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
                 intent.putExtra("plot", movies.get(getAdapterPosition()).getPlot());
                 intent.putExtra("rating", movies.get(getAdapterPosition()).getVoteAverage());
                 intent.putExtra("release_date", movies.get(getAdapterPosition()).getReleaseDate());
-                intent.putExtra("poster_url", movies.get(getAdapterPosition()).getPosterUrl());
+                intent.putExtra("poster", movies.get(getAdapterPosition()).getPoster());
                 intent.putExtra("backdrop_url", movies.get(getAdapterPosition()).getBackdropUrl());
                 intent.putExtra("position", getAdapterPosition());
                 // TODO see why id sometimes doesn't exist.
