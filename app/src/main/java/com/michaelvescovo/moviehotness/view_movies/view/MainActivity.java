@@ -20,7 +20,7 @@ import com.michaelvescovo.moviehotness.view_movies.data.CloudModel;
 import com.michaelvescovo.moviehotness.view_movies.data.DataModel;
 import com.michaelvescovo.moviehotness.view_movies.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movies.data.DbModel;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 public class MainActivity extends AppCompatActivity implements PresenterInterface {
     private static final String TAG = "MainActivity";
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     }
 
     @Override
-    public void displayMovies(MovieInterface movie, int sortBy, int resultsSize) {
+    public void displayMovies(MoviePreviewInterface movie, int sortBy, int resultsSize) {
         switch (sortBy) {
             case Constants.POPULAR:
                 mPopularSize = resultsSize;

@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by Michael on 29/11/15.
  *
  */
-public class Movie implements MovieInterface {
+public class MoviePreview implements MoviePreviewInterface {
     private String mId;
     private String mTitle;
     private String mReleaseDate;
@@ -17,7 +17,7 @@ public class Movie implements MovieInterface {
     private String mBackdropUrl;
     private Bitmap mBackdrop;
 
-    public Movie(String id, String title, String releaseDate, String posterUrl, String voteAverage, String plot, String backdropUrl) {
+    public MoviePreview(String id, String title, String releaseDate, String posterUrl, String voteAverage, String plot, String backdropUrl) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;

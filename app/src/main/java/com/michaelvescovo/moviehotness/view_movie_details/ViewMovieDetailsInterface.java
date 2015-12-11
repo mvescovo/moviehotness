@@ -1,8 +1,8 @@
 package com.michaelvescovo.moviehotness.view_movie_details;
 
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataRequestInterface;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.view.PresenterInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 /**
  * Created by Michael on 6/12/15.
@@ -15,5 +15,5 @@ public interface ViewMovieDetailsInterface {
 
     void setPresenterInterface(PresenterInterface presenterInterface);
 
-    void displayMovie(MovieInterface movie);
+    void displayMovie(MoviePreviewInterface movie);
 }

@@ -8,8 +8,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.michaelvescovo.moviehotness.BuildConfig;
 import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
-import com.michaelvescovo.moviehotness.view_movies.entity.Movie;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreview;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,8 +54,8 @@ public class CloudModel extends DataModel {
                                 String plot = results.getJSONObject(i).getString("overview");
                                 String backdrop = results.getJSONObject(i).getString("backdrop_path");
 //                                Log.i(TAG, "onResponse: " + backdrop);
-//                                movies.add(new Movie(id, title, releaseDate, poster, voteAverage, plot, backdrop));
-                                MovieInterface movie = new Movie(id, title, releaseDate, poster, voteAverage, plot, backdrop);
+//                                movies.add(new MoviePreview(id, title, releaseDate, poster, voteAverage, plot, backdrop));
+                                MoviePreviewInterface movie = new MoviePreview(id, title, releaseDate, poster, voteAverage, plot, backdrop);
                                 mDataResponseInterface.displayMovie(movie);
                             }
 

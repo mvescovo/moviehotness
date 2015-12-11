@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.michaelvescovo.moviehotness.view_movie_details.view.DetailActivity;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MovieViewHolder extends RecyclerView.ViewHolder {
     private View mView;
 
-    public MovieViewHolder(final Context context, View itemView, final ArrayList<MovieInterface> movies) {
+    public MovieViewHolder(final Context context, View itemView, final ArrayList<MoviePreviewInterface> movies) {
         super(itemView);
         mView = itemView;
 

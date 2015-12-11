@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class PosterAdapter extends RecyclerView.Adapter {
     private Context mContext;
     public int mSortBy = -1;
-    private ArrayList<MovieInterface> mDataset = new ArrayList<>();
+    private ArrayList<MoviePreviewInterface> mDataset = new ArrayList<>();
 
     public PosterAdapter(Context c, int sortBy) {
         mContext = c;
@@ -43,7 +43,7 @@ public class PosterAdapter extends RecyclerView.Adapter {
         return mDataset.size();
     }
 
-    public void updateDataset(MovieInterface movie) {
+    public void updateDataset(MoviePreviewInterface movie) {
         mDataset.add(movie);
         notifyItemInserted(getItemCount() - 1);
     }

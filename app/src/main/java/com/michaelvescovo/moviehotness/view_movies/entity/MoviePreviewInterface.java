@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by Michael on 29/11/15.
  *
  */
-public interface MovieInterface {
+public interface MoviePreviewInterface {
     public  void setId(String id);
 
     public String getId();

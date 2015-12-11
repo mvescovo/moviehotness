@@ -2,7 +2,7 @@ package com.michaelvescovo.moviehotness.view_movies;
 
 import com.michaelvescovo.moviehotness.view_movies.data.DataRequestInterface;
 import com.michaelvescovo.moviehotness.view_movies.data.DataResponseInterface;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 import com.michaelvescovo.moviehotness.view_movies.view.PresenterInterface;
 
 /**
@@ -34,7 +34,7 @@ public class ViewMovies implements ViewMoviesInterface, DataResponseInterface {
     }
 
     @Override
-    public void displayMovies(MovieInterface movie, int sortBy, int resultsSize) {
+    public void displayMovies(MoviePreviewInterface movie, int sortBy, int resultsSize) {
         mPresenterInterface.displayMovies(movie, sortBy, resultsSize);
     }
 }

@@ -21,7 +21,6 @@ import com.michaelvescovo.moviehotness.view_movie_details.data.CloudModel;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataModel;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DbModel;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 import com.michaelvescovo.moviehotness.view_movies.view.AboutActivity;
 import com.squareup.picasso.Picasso;
 
@@ -123,7 +122,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     }
 
     @Override
-    public void displayMovie(MovieInterface movie) {
+    public void displayMovie(com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface movie) {
 
     }
 

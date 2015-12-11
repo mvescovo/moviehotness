@@ -15,8 +15,8 @@ import com.michaelvescovo.moviehotness.BuildConfig;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.moviehotness.view_movies.Constants;
-import com.michaelvescovo.moviehotness.view_movies.entity.Movie;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreview;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,7 +67,7 @@ public class CloudModel extends DataModel {
                                 String voteAverage = results.getJSONObject(i).getString("vote_average");
                                 String plot = results.getJSONObject(i).getString("overview");
                                 String backdrop = results.getJSONObject(i).getString("backdrop_path");
-                                MovieInterface movie = new Movie(id, title, releaseDate, posterUrl, voteAverage, plot, backdrop);
+                                MoviePreviewInterface movie = new MoviePreview(id, title, releaseDate, posterUrl, voteAverage, plot, backdrop);
                                 getPoster(posterUrl, sortBy, resultsSize, movie);
                             }
                         } catch (JSONException e) {
@@ -84,7 +84,7 @@ public class CloudModel extends DataModel {
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    public void getPoster(String url, final int sortBy, final int resultsSize, final MovieInterface movie) {
+    public void getPoster(String url, final int sortBy, final int resultsSize, final MoviePreviewInterface movie) {
         final String BASE_URL = "https://image.tmdb.org/t/p";
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(Constants.POSTER_MEDIUM)

@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 public class MovieGridFragment extends Fragment {
     private RecyclerView mRecyclerView;
@@ -68,7 +68,7 @@ public class MovieGridFragment extends Fragment {
         return mRecyclerView;
     }
 
-    public void updateMovies(MovieInterface movie) {
+    public void updateMovies(MoviePreviewInterface movie) {
         ((PosterAdapter)mAdapter).updateDataset(movie);
     }
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movie Hotness</string>
 
-    <!--Movie Detail-->
+    <!--MoviePreview Detail-->
     <string name="activity_detail_title">Movie Details</string>
 
     <!-- TODO: Remove or change this placeholder text -->
