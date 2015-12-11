@@ -1,5 +1,7 @@
 package com.michaelvescovo.moviehotness.view_movies.entity;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Michael on 29/11/15.
  *
@@ -9,18 +11,20 @@ public class Movie implements MovieInterface {
     private String mTitle;
     private String mReleaseDate;
     private String mPosterUrl;
+    private Bitmap mPoster;
     private String mVoteAverage;
     private String mPlot;
     private String mBackdropUrl;
+    private Bitmap mBackdrop;
 
-    public Movie(String id, String title, String releaseDate, String poster, String voteAverage, String plot, String backdrop) {
+    public Movie(String id, String title, String releaseDate, String posterUrl, String voteAverage, String plot, String backdropUrl) {
         mId = id;
         mTitle = title;
         mReleaseDate = releaseDate;
-        mPosterUrl = poster;
+        mPosterUrl = posterUrl;
         mVoteAverage = voteAverage;
         mPlot = plot;
-        mBackdropUrl = backdrop;
+        mBackdropUrl = backdropUrl;
     }
 
     @Override
@@ -64,6 +68,16 @@ public class Movie implements MovieInterface {
     }
 
     @Override
+    public void setPoster(Bitmap poster) {
+        mPoster = poster;
+    }
+
+    @Override
+    public Bitmap getPoster() {
+        return mPoster;
+    }
+
+    @Override
     public void setVoteAverage(String voteAverage) {
         mVoteAverage = voteAverage;
     }
@@ -91,5 +105,15 @@ public class Movie implements MovieInterface {
     @Override
     public String getBackdropUrl() {
         return mBackdropUrl;
+    }
+
+    @Override
+    public void setBackdrop(Bitmap backdrop) {
+        mBackdrop = backdrop;
+    }
+
+    @Override
+    public Bitmap getBackrop() {
+        return mBackdrop;
     }
 }

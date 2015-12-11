@@ -22,7 +22,7 @@ import com.michaelvescovo.moviehotness.view_movies.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movies.data.DbModel;
 import com.michaelvescovo.moviehotness.view_movies.entity.MovieInterface;
 
-public class MainActivity extends AppCompatActivity implements PresenterInterface, PosterDownloadCallback {
+public class MainActivity extends AppCompatActivity implements PresenterInterface {
     private static final String TAG = "MainActivity";
     DataModel mDbModel;
     DataModel mCloudModel;
@@ -136,10 +136,12 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
             case Constants.POPULAR:
                 mPopularSize = resultsSize;
                 ((MovieGridFragment)((MovieSortByPagerAdapter)mViewPager.getAdapter()).getItem(0)).updateMovies(movie);
+                updateProgressBar(sortBy);
                 break;
             case Constants.HIGHEST_RATED:
                 mHighestRatedSize = resultsSize;
                 ((MovieGridFragment)((MovieSortByPagerAdapter)mViewPager.getAdapter()).getItem(1)).updateMovies(movie);
+                updateProgressBar(sortBy);
                 break;
         }
     }
@@ -167,9 +169,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         return super.onOptionsItemSelected(item);
     }
 
-    // This is called when a poster image has been downloaded
-    @Override
-    public void onSuccess(int sortBy) {
+    public void updateProgressBar(int sortBy) {
         switch (sortBy) {
             case Constants.POPULAR:
                 mPopularProgress++;

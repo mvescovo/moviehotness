@@ -5,7 +5,6 @@ package com.michaelvescovo.moviehotness.view_movies.data;
  *
  */
 public class DbModel extends DataModel {
-
     @Override
     public void getMovies(int sortBy) {
         if (successor != null) {

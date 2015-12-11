@@ -1,5 +1,7 @@
 package com.michaelvescovo.moviehotness.view_movies.entity;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Michael on 29/11/15.
  *
@@ -21,6 +23,10 @@ public interface MovieInterface {
 
     public String getPosterUrl();
 
+    public void setPoster(Bitmap poster);
+
+    public Bitmap getPoster();
+
     public void setVoteAverage(String voteAverage);
 
     public String getVoteAverage();
@@ -32,4 +38,8 @@ public interface MovieInterface {
     public void setBackdropUrl(String backdropUrl);
 
     public String getBackdropUrl();
+
+    public void setBackdrop(Bitmap backdrop);
+
+    public Bitmap getBackrop();
 }
