@@ -11,14 +11,6 @@ public interface MoviePreviewInterface {
 
     public String getId();
 
-    public void setTitle(String title);
-
-    public String getTitle();
-
-    public void setReleaseDate(String releaseDate);
-
-    public String getReleaseDate();
-
     public void setPosterUrl(String posterUrl);
 
     public String getPosterUrl();
@@ -26,20 +18,4 @@ public interface MoviePreviewInterface {
     public void setPoster(Bitmap poster);
 
     public Bitmap getPoster();
-
-    public void setVoteAverage(String voteAverage);
-
-    public String getVoteAverage();
-
-    public void setPlot(String plot);
-
-    public String getPlot();
-
-    public void setBackdropUrl(String backdropUrl);
-
-    public String getBackdropUrl();
-
-    public void setBackdrop(Bitmap backdrop);
-
-    public Bitmap getBackrop();
 }

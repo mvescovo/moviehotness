@@ -1,5 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movies.data;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -61,14 +62,9 @@ public class CloudModel extends DataModel {
 
                             for (int i = 0; i < results.length(); i++) {
                                 String id = results.getJSONObject(i).getString("id");
-                                String title = results.getJSONObject(i).getString("original_title");
-                                String releaseDate = results.getJSONObject(i).getString("release_date");
                                 String posterUrl = results.getJSONObject(i).getString("poster_path");
-                                String voteAverage = results.getJSONObject(i).getString("vote_average");
-                                String plot = results.getJSONObject(i).getString("overview");
-                                String backdrop = results.getJSONObject(i).getString("backdrop_path");
-                                MoviePreviewInterface movie = new MoviePreview(id, title, releaseDate, posterUrl, voteAverage, plot, backdrop);
-                                getPoster(posterUrl, sortBy, resultsSize, movie);
+                                MoviePreviewInterface moviePreview = new MoviePreview(id, posterUrl);
+                                getPoster(posterUrl, sortBy, resultsSize, moviePreview);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -109,3 +105,7 @@ public class CloudModel extends DataModel {
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(request);
     }
 }
+
+
+
+

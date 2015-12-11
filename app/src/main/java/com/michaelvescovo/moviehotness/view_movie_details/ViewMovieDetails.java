@@ -2,8 +2,8 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataRequestInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataResponseInterface;
+import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.view.PresenterInterface;
-import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 /**
  * Created by Michael on 6/12/15.
@@ -29,14 +29,12 @@ public class ViewMovieDetails implements ViewMovieDetailsInterface, DataResponse
     }
 
     @Override
-    public void getMovie(int movieId) {
+    public void getMovie(String movieId) {
         mDataRequestInterface.getMovie(movieId);
     }
 
     @Override
-    public void displayMovie(MoviePreviewInterface movie) {
+    public void displayMovie(MovieInterface movie) {
         mPresenterInterface.displayMovie(movie);
-
-        // TODO maybe save to memory model and db model here
     }
 }

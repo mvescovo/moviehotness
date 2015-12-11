@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:label=""
             android:name=".view_movie_details.view.DetailActivity"
             android:parentActivityName=".view_movies.view.MainActivity">
             <meta-data

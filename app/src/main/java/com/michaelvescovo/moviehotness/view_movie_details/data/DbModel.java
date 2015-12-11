@@ -7,7 +7,7 @@ package com.michaelvescovo.moviehotness.view_movie_details.data;
 public class DbModel extends DataModel {
 
     @Override
-    public void getMovie(int movieId) {
+    public void getMovie(String movieId) {
         if (successor != null) {
             successor.getMovie(movieId);
         }

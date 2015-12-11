@@ -5,5 +5,5 @@ package com.michaelvescovo.moviehotness.view_movie_details.data;
  *
  */
 public interface DataRequestInterface {
-    void getMovie(int movieId);
+    void getMovie(String movieId);
 }

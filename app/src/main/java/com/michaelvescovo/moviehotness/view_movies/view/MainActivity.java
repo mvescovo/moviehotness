@@ -1,5 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movies.view;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         super.onCreate(savedInstanceState);
 
         /*
+
         * Setup Application
         *
         * */
@@ -153,29 +155,6 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_about) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void updateProgressBar(int sortBy) {
         switch (sortBy) {
             case Constants.POPULAR:
@@ -209,5 +188,28 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -26,14 +26,7 @@ public class MovieViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("movie_id", movies.get(getAdapterPosition()).getId());
-                intent.putExtra("title", movies.get(getAdapterPosition()).getTitle());
-                intent.putExtra("plot", movies.get(getAdapterPosition()).getPlot());
-                intent.putExtra("rating", movies.get(getAdapterPosition()).getVoteAverage());
-                intent.putExtra("release_date", movies.get(getAdapterPosition()).getReleaseDate());
-                intent.putExtra("poster", movies.get(getAdapterPosition()).getPoster());
-                intent.putExtra("backdrop_url", movies.get(getAdapterPosition()).getBackdropUrl());
                 intent.putExtra("position", getAdapterPosition());
-                // TODO see why id sometimes doesn't exist.
                 context.startActivity(intent);
             }
         });

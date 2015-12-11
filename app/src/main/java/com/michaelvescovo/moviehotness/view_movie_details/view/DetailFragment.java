@@ -1,7 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movie_details.view;
 
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
 
 public class DetailFragment extends Fragment {
 
@@ -21,28 +21,22 @@ public class DetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int position = getActivity().getIntent().getIntExtra("position", -1);
-        String title = getActivity().getIntent().getStringExtra("title");
-        String plot = getActivity().getIntent().getStringExtra("plot");
-        String rating = getActivity().getIntent().getStringExtra("rating");
-        String releaseDate = getActivity().getIntent().getStringExtra("release_date");
-        Bitmap poster = getActivity().getIntent().getParcelableExtra("poster");
-
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        ImageView imageView = (ImageView) view.findViewById(R.id.fragment_detail_poster);
-        TextView textViewTitle = (TextView) view.findViewById(R.id.fragment_detail_title);
-        TextView textViewPlot = (TextView) view.findViewById(R.id.fragment_detail_plot);
-        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.fragment_detail_rating);
-        TextView textviewReleaseDate = (TextView) view.findViewById(R.id.fragment_detail_release_date);
-
-        if (position != -1) {
-            imageView.setImageBitmap(poster);
-            textViewTitle.setText(title);
-            textViewPlot.setText(plot);
-            ratingBar.setRating(Float.parseFloat(rating) / 2);
-            textviewReleaseDate.setText(releaseDate);
-        }
-
+        ((DetailActivity)getActivity()).getMovie();
         return view;
+    }
+
+    public void displayMovie(MovieInterface movie) {
+        ImageView imageView = (ImageView) getActivity().findViewById(R.id.fragment_detail_poster);
+        TextView textViewTitle = (TextView) getActivity().findViewById(R.id.fragment_detail_title);
+        TextView textViewPlot = (TextView) getActivity().findViewById(R.id.fragment_detail_plot);
+        RatingBar ratingBar = (RatingBar) getActivity().findViewById(R.id.fragment_detail_rating);
+        TextView textviewReleaseDate = (TextView) getActivity().findViewById(R.id.fragment_detail_release_date);
+
+        imageView.setImageBitmap(movie.getPoster());
+        textViewTitle.setText(movie.getTitle());
+        textViewPlot.setText(movie.getPlot());
+        ratingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
+        textviewReleaseDate.setText(movie.getReleaseDate());
     }
 }
