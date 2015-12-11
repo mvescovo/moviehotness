@@ -38,5 +38,6 @@ public class DetailFragment extends Fragment {
         textViewPlot.setText(movie.getPlot());
         ratingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
         textviewReleaseDate.setText(movie.getReleaseDate());
+        ((DetailActivity)getActivity()).disableProgressBar();
     }
 }

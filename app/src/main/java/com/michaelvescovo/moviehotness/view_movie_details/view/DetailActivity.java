@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetails;
@@ -34,6 +35,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     String mMovieId;
     Fragment mDetailFragment;
     String mPlot;
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,8 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     }
 
     public void getMovie() {
+        mProgressBar = (ProgressBar) findViewById(R.id.view_movie_details_progress_indeterminate);
+        mProgressBar.setVisibility(View.VISIBLE);
         mViewMovieDetails.getMovie(mMovieId);
     }
 
@@ -95,6 +99,10 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         backdrop.setImageBitmap(movie.getBackrop());
         mPlot = movie.getPlot();
         ((DetailFragment) mDetailFragment).displayMovie(movie);
+    }
+
+    public void disableProgressBar() {
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     public void openPlot(View v) {
