@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     int mHighestRatedSize = 0;
     boolean mHighestRatedComplete = false;
     ProgressBar mProgressBar;
+    ProgressBar mProgressBarIndeterminate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +77,25 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
                     case Constants.POPULAR:
                         if (!mPopularComplete) {
                             mProgressBar.setVisibility(View.VISIBLE);
+                            mProgressBarIndeterminate.setVisibility(View.VISIBLE);
                             mProgressBar.setMax(mPopularSize);
                             mProgressBar.setProgress(mPopularProgress);
                         }
                         if (mPopularComplete) {
                             mProgressBar.setVisibility(View.INVISIBLE);
+                            mProgressBarIndeterminate.setVisibility(View.INVISIBLE);
                         }
                         break;
                     case Constants.HIGHEST_RATED:
                         if (!mHighestRatedComplete) {
                             mProgressBar.setVisibility(View.VISIBLE);
+                            mProgressBarIndeterminate.setVisibility(View.VISIBLE);
                             mProgressBar.setMax(mHighestRatedSize);
                             mProgressBar.setProgress(mHighestRatedProgress);
                         }
                         if (mHighestRatedComplete) {
                             mProgressBar.setVisibility(View.INVISIBLE);
+                            mProgressBarIndeterminate.setVisibility(View.INVISIBLE);
                         }
                         break;
                 }
@@ -128,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         mHighestRatedComplete = false;
         mProgressBar = (ProgressBar) findViewById(R.id.view_movies_progress);
         mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBarIndeterminate = (ProgressBar) findViewById(R.id.view_movies_progress_indeterminate);
+        mProgressBarIndeterminate.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -182,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
                     mProgressBar.setProgress(mPopularProgress);
                     if (mPopularComplete) {
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        mProgressBarIndeterminate.setVisibility(View.INVISIBLE);
                     }
                 }
                 break;
@@ -196,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
                     mProgressBar.setProgress(mHighestRatedProgress);
                     if (mHighestRatedComplete) {
                         mProgressBar.setVisibility(View.INVISIBLE);
+                        mProgressBarIndeterminate.setVisibility(View.INVISIBLE);
                     }
                 }
                 break;
