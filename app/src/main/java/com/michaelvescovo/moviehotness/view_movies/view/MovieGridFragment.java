@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,11 +78,16 @@ public class MovieGridFragment extends Fragment {
         return mRecyclerView;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ((MainActivity)getActivity()).getMovies(mSortBy);
+    }
+
     public void updateMovies(MoviePreviewInterface movie) {
         if (mAdapter != null) {
             ((PosterAdapter)mAdapter).updateDataset(movie);
-        } else {
-            Log.i(TAG, "updateMovies: adapter IS null");
         }
     }
 
@@ -92,12 +96,5 @@ public class MovieGridFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt("sortBy", mSortBy);
         outState.putSerializable("adapter", (PosterAdapter) mAdapter);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        ((MainActivity)getActivity()).getMovies(mSortBy);
     }
 }
