@@ -9,12 +9,12 @@
     android:layout_marginLeft="@dimen/md_keylines"
     android:layout_marginRight="@dimen/md_keylines"
     android:foreground="?attr/selectableItemBackground"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    style="@style/CardView.Poster.Preview">
 
     <ImageView
         android:id="@+id/poster_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside" />
+        android:scaleType="centerCrop" />
 
 </android.support.v7.widget.CardView>
