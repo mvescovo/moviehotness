@@ -2,7 +2,7 @@ package com.michaelvescovo.moviehotness.view_movies.view;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Michael on 6/12/15.
  *
  */
-public class MovieSortByPagerAdapter extends FragmentPagerAdapter {
+public class MovieSortByPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 

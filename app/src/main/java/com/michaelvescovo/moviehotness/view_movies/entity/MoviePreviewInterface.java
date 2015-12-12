@@ -1,7 +1,5 @@
 package com.michaelvescovo.moviehotness.view_movies.entity;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by Michael on 29/11/15.
  *
@@ -14,8 +12,4 @@ public interface MoviePreviewInterface {
     public void setPosterUrl(String posterUrl);
 
     public String getPosterUrl();
-
-    public void setPoster(Bitmap poster);
-
-    public Bitmap getPoster();
 }

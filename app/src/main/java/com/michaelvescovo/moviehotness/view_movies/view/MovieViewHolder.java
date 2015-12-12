@@ -1,6 +1,5 @@
 package com.michaelvescovo.moviehotness.view_movies.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,17 +16,17 @@ import java.util.ArrayList;
 public class MovieViewHolder extends RecyclerView.ViewHolder {
     private View mView;
 
-    public MovieViewHolder(final Context context, View itemView, final ArrayList<MoviePreviewInterface> movies) {
+    public MovieViewHolder(View itemView, final ArrayList<MoviePreviewInterface> movies) {
         super(itemView);
         mView = itemView;
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
                 intent.putExtra("movie_id", movies.get(getAdapterPosition()).getId());
                 intent.putExtra("position", getAdapterPosition());
-                context.startActivity(intent);
+                v.getContext().startActivity(intent);
             }
         });
     }

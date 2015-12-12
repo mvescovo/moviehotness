@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,17 +32,29 @@ import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 public class MovieGridFragment extends Fragment {
+    private static final String TAG = "MovieGridFragment";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private int mSortBy = -1;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            mSortBy = getArguments().getInt("sortBy");
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mSortBy = savedInstanceState.getInt("sortBy");
+            mAdapter = (RecyclerView.Adapter) savedInstanceState.getSerializable("adapter");
+        } else {
+            mAdapter = new PosterAdapter(mSortBy);
+            if (getArguments() != null) {
+                mSortBy = getArguments().getInt("sortBy");
+            }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
-        mAdapter = new PosterAdapter(getContext(), mSortBy);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
@@ -63,17 +76,28 @@ public class MovieGridFragment extends Fragment {
             }
         });
 
-        ((MainActivity)getActivity()).getMovies(mSortBy);
-
         return mRecyclerView;
     }
 
     public void updateMovies(MoviePreviewInterface movie) {
-        ((PosterAdapter)mAdapter).updateDataset(movie);
+        if (mAdapter != null) {
+            ((PosterAdapter)mAdapter).updateDataset(movie);
+        } else {
+            Log.i(TAG, "updateMovies: adapter IS null");
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("sortBy", mSortBy);
+        outState.putSerializable("adapter", (PosterAdapter) mAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ((MainActivity)getActivity()).getMovies(mSortBy);
     }
 }

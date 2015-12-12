@@ -1,15 +1,14 @@
 package com.michaelvescovo.moviehotness.view_movies.entity;
 
-import android.graphics.Bitmap;
+import java.io.Serializable;
 
 /**
  * Created by Michael on 29/11/15.
  *
  */
-public class MoviePreview implements MoviePreviewInterface {
+public class MoviePreview implements MoviePreviewInterface, Serializable {
     private String mId;
     private String mPosterUrl;
-    private Bitmap mPoster;
 
     public MoviePreview(String id, String posterUrl) {
         mId = id;
@@ -34,15 +33,5 @@ public class MoviePreview implements MoviePreviewInterface {
     @Override
     public String getPosterUrl() {
         return mPosterUrl;
-    }
-
-    @Override
-    public void setPoster(Bitmap poster) {
-        mPoster = poster;
-    }
-
-    @Override
-    public Bitmap getPoster() {
-        return mPoster;
     }
 }

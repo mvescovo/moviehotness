@@ -27,6 +27,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void displayMovie(MovieInterface movie) {
+        // TODO this isn't available on rotation
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.fragment_detail_poster);
         TextView textViewTitle = (TextView) getActivity().findViewById(R.id.fragment_detail_title);
         TextView textViewPlot = (TextView) getActivity().findViewById(R.id.fragment_detail_plot);

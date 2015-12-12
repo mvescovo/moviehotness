@@ -16,12 +16,13 @@ import com.michaelvescovo.moviehotness.BuildConfig;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.moviehotness.view_movies.Constants;
-import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreview;
 import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.FileOutputStream;
 
 /**
  * Created by Michael on 4/12/15.
@@ -63,7 +64,7 @@ public class CloudModel extends DataModel {
                             for (int i = 0; i < results.length(); i++) {
                                 String id = results.getJSONObject(i).getString("id");
                                 String posterUrl = results.getJSONObject(i).getString("poster_path");
-                                MoviePreviewInterface moviePreview = new MoviePreview(id, posterUrl);
+                                MoviePreviewInterface moviePreview = new com.michaelvescovo.moviehotness.view_movies.entity.MoviePreview(id, posterUrl);
                                 getPoster(posterUrl, sortBy, resultsSize, moviePreview);
                             }
                         } catch (JSONException e) {
@@ -80,7 +81,7 @@ public class CloudModel extends DataModel {
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    public void getPoster(String url, final int sortBy, final int resultsSize, final MoviePreviewInterface movie) {
+    public void getPoster(final String url, final int sortBy, final int resultsSize, final MoviePreviewInterface movie) {
         final String BASE_URL = "https://image.tmdb.org/t/p";
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(Constants.POSTER_MEDIUM)
@@ -90,22 +91,33 @@ public class CloudModel extends DataModel {
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
-                        movie.setPoster(bitmap);
+                        String FILENAME = movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
+
                         mDataResponseInterface.displayMovies(movie, sortBy, resultsSize);
                     }
                 }, 0, 0, null, null,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
                         Bitmap poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
-                        movie.setPoster(poster);
+                        String FILENAME = movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            poster.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
+
                         mDataResponseInterface.displayMovies(movie, sortBy, resultsSize);
-                        Log.i(TAG, "onErrorResponse: " + error);
                     }
                 });
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(request);
     }
 }
-
-
-
-
