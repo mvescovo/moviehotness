@@ -16,8 +16,6 @@
 
 package com.michaelvescovo.moviehotness.view_movies.view;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,7 +23,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
@@ -56,24 +53,24 @@ public class MovieGridFragment extends Fragment {
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
-        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 1);
+        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(layoutManager);
 
         // make it so that the number of columns in the grid is automatic on different screen sizes and orientations
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onGlobalLayout() {
-                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int viewWidth = mRecyclerView.getMeasuredWidth();
-                float cardViewWidth = getActivity().getResources().getDimension(R.dimen.card_layout_width);
-                int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
-                if (newSpanCount < 1)
-                    newSpanCount = 1;
-                ((GridLayoutManager) layoutManager).setSpanCount(newSpanCount);
-                layoutManager.requestLayout();
-            }
-        });
+//        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+//            @Override
+//            public void onGlobalLayout() {
+//                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                int viewWidth = mRecyclerView.getMeasuredWidth();
+//                float cardViewWidth = getActivity().getResources().getDimension(R.dimen.card_layout_width);
+//                int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
+//                if (newSpanCount < 1)
+//                    newSpanCount = 1;
+//                ((GridLayoutManager) layoutManager).setSpanCount(newSpanCount);
+//                layoutManager.requestLayout();
+//            }
+//        });
 
         return mRecyclerView;
     }

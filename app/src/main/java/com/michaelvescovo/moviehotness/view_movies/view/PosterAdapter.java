@@ -61,7 +61,7 @@ public class PosterAdapter extends RecyclerView.Adapter implements Serializable 
     * */
     public void loadBitmap(ImageView imageView, String path) {
         Bitmap.Config config = Bitmap.Config.ALPHA_8;
-        Bitmap mPlaceHolderBitmap = Bitmap.createBitmap(1, 1, config);
+        Bitmap mPlaceHolderBitmap = Bitmap.createBitmap(350, 500, config);
 
         if (cancelPotentialWork(imageView, path)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView, path);
