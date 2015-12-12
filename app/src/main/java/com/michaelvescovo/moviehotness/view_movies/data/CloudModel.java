@@ -84,7 +84,7 @@ public class CloudModel extends DataModel {
     public void getPoster(final String url, final int sortBy, final int resultsSize, final MoviePreviewInterface movie) {
         final String BASE_URL = "https://image.tmdb.org/t/p";
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(Constants.POSTER_MEDIUM)
+                .appendPath(Constants.POSTER_LARGE)
                 .build();
 
         ImageRequest request = new ImageRequest(builtUri.toString() + url,

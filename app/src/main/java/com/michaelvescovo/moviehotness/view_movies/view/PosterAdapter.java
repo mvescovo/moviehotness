@@ -61,7 +61,7 @@ public class PosterAdapter extends RecyclerView.Adapter implements Serializable 
     * */
     public void loadBitmap(ImageView imageView, String path) {
         Bitmap.Config config = Bitmap.Config.ALPHA_8;
-        Bitmap mPlaceHolderBitmap = Bitmap.createBitmap(100, 100, config);
+        Bitmap mPlaceHolderBitmap = Bitmap.createBitmap(1, 1, config);
 
         if (cancelPotentialWork(imageView, path)) {
             final BitmapWorkerTask task = new BitmapWorkerTask(imageView, path);
@@ -85,7 +85,7 @@ public class PosterAdapter extends RecyclerView.Adapter implements Serializable 
         @Override
         protected Bitmap doInBackground(String... params) {
             path = params[0];
-            return decodeSampledBitmapFromFile(path, 100, 100);
+            return decodeSampledBitmapFromFile(path, 350, 550);
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
