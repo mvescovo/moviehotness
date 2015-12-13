@@ -4,6 +4,7 @@ package com.michaelvescovo.moviehotness.view_movie_details.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +40,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     String mPlot;
     ProgressBar mProgressBar;
     BitmapHelper mBitmapHelper = new BitmapHelper();
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,14 +121,16 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         bundle.putString("plot", mPlot);
         newFragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, newFragment);
+        transaction.replace(R.id.fragment_container, newFragment, "plotFragment");
         transaction.addToBackStack(null);
         transaction.commit();
+        enablePlotAppBarLayout();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        mMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_main, mMenu);
         return true;
     }
 
@@ -145,5 +149,43 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("plotFragment");
+        if (fragment != null && fragment.isVisible()) {
+            getSupportFragmentManager().popBackStack();
+            disablePlotAppBarLayout();
+            return true;
+        } else {
+            return super.onSupportNavigateUp();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        disablePlotAppBarLayout();
+    }
+
+    public void enablePlotAppBarLayout() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+        }
+
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        appBarLayout.setExpanded(false, false);
+        mMenu.findItem(R.id.action_about).setVisible(false);
+    }
+
+    public void disablePlotAppBarLayout() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_24dp);
+        }
+
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+        appBarLayout.setExpanded(true, false);
+        mMenu.findItem(R.id.action_about).setVisible(true);
     }
 }

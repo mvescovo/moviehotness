@@ -31,6 +31,8 @@ public class DetailFragment extends Fragment {
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.fragment_detail_poster);
             TextView textViewTitle = (TextView) getActivity().findViewById(R.id.fragment_detail_title);
             TextView textViewPlot = (TextView) getActivity().findViewById(R.id.fragment_detail_plot);
+            TextView textViewMore = (TextView) getActivity().findViewById(R.id.fragment_detail_read_more);
+            textViewMore.setVisibility(View.VISIBLE);
             RatingBar ratingBar = (RatingBar) getActivity().findViewById(R.id.fragment_detail_rating);
             ratingBar.setVisibility(View.VISIBLE);
             TextView textviewReleaseDate = (TextView) getActivity().findViewById(R.id.fragment_detail_release_date);

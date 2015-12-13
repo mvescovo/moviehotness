@@ -18,6 +18,14 @@ public class AboutActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        // Make it so the activity closes instead of going up to it's parent (like the back button)
+        finish();
+        return true;
     }
 }
