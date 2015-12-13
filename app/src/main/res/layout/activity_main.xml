@@ -32,14 +32,14 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/view_pager_margin_top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <ProgressBar
         android:id="@+id/view_movies_progress"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="@dimen/horizontal_progress_bar_layout_height"
         android:visibility="invisible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
@@ -58,9 +58,9 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
 </android.support.design.widget.CoordinatorLayout>

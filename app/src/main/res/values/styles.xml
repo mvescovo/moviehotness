@@ -11,6 +11,11 @@
     <style name="AppTheme.AppBarOverlay_ActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+    <!--ViewMovies-->
     <style name="CardView.Poster.Preview" parent="CardView.Dark"/>
+
+    <!--ViewMovieDetails-->
 
 </resources>

@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -61,13 +61,13 @@
     </android.support.v4.widget.NestedScrollView>
 
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@drawable/ic_favorite_white_24dp"-->
-        <!--app:layout_anchor="@id/app_bar"-->
-        <!--app:layout_anchorGravity="bottom|end"/>-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--android:src="@drawable/ic_favorite_white_24dp"-->
+    <!--app:layout_anchor="@id/app_bar"-->
+    <!--app:layout_anchorGravity="bottom|end"/>-->
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -1,20 +1,26 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!--Application-->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
-    <dimen name="app_bar_height_backdrop">300dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_small">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="md_keylines">4dp</dimen>
+    <dimen name="standard_padding">8dp</dimen>
+    <dimen name="attribution_image_width">100dp</dimen>
+    <dimen name="attribution_image_height">100dp</dimen>
+
+    <!--ViewMovies-->
+    <dimen name="view_pager_margin_top">8dp</dimen>
     <dimen name="card_layout_width">185dp</dimen>
     <dimen name="card_layout_height">287dp</dimen>
-    <!--<dimen name="card_layout_width">125dp</dimen>-->
-    <!--<dimen name="card_layout_height">188dp</dimen>-->
-    <!--<dimen name="card_layout_width">100dp</dimen>-->
-    <!--<dimen name="card_layout_height">150dp</dimen>-->
+    <dimen name="horizontal_progress_bar_layout_height">8dp</dimen>
+
+    <!--ViewMovieDetails-->
+    <dimen name="app_bar_height_backdrop">300dp</dimen>
     <dimen name="poster_detail_width">154dp</dimen>
     <dimen name="poster_detail_height">231dp</dimen>
+
 </resources>

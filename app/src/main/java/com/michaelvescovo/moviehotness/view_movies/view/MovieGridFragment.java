@@ -29,7 +29,6 @@ import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 public class MovieGridFragment extends Fragment {
     private static final String TAG = "MovieGridFragment";
-    private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private int mSortBy = -1;
 
@@ -50,29 +49,13 @@ public class MovieGridFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setHasFixedSize(true);
         final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
-        // make it so that the number of columns in the grid is automatic on different screen sizes and orientations
-//        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//            @Override
-//            public void onGlobalLayout() {
-//                mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                int viewWidth = mRecyclerView.getMeasuredWidth();
-//                float cardViewWidth = getActivity().getResources().getDimension(R.dimen.card_layout_width);
-//                int newSpanCount = (int) Math.floor(viewWidth / cardViewWidth);
-//                if (newSpanCount < 1)
-//                    newSpanCount = 1;
-//                ((GridLayoutManager) layoutManager).setSpanCount(newSpanCount);
-//                layoutManager.requestLayout();
-//            }
-//        });
-
-        return mRecyclerView;
+        return recyclerView;
     }
 
     @Override

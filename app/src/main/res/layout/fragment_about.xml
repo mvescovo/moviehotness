@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:padding="@dimen/standard_padding"
     tools:context="com.michaelvescovo.moviehotness.view_movies.view.AboutFragment">
 
     <TextView
@@ -15,8 +15,8 @@
         android:text="@string/action_about_attribution"/>
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/attribution_image_width"
+        android:layout_height="@dimen/attribution_image_height"
         android:contentDescription="@string/activity_about_themoviedb_logo"
         android:src="@drawable/var_8_0_tmdb_logo"/>
 
