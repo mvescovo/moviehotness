@@ -1,13 +1,16 @@
 package com.michaelvescovo.moviehotness.view_movies.view;
 
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     boolean mHighestRatedComplete = false;
     ProgressBar mProgressBar;
     ProgressBar mProgressBarIndeterminate;
+    Menu mMenu;
+    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,11 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mViewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager(mViewPager);
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.setupWithViewPager(mViewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -197,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        mMenu = menu;
+        getMenuInflater().inflate(R.menu.menu_main, mMenu);
         return true;
     }
 
@@ -206,10 +213,69 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
+            Fragment newFragment = new AboutFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment, "aboutFragment");
+            transaction.addToBackStack(null);
+            transaction.commit();
+            enableCloseButtonAppBarLayout();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+//        Fragment plotFragment = getSupportFragmentManager().findFragmentByTag("plotFragment");
+//        Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("aboutFragment");
+//        if ((plotFragment != null && plotFragment.isVisible()) || (aboutFragment != null && aboutFragment.isVisible())) {
+//            getSupportFragmentManager().popBackStack();
+//            disableCloseButtonAppBarLayout();
+//            return true;
+//        } else {
+//            return super.onSupportNavigateUp();
+//        }
+        getSupportFragmentManager().popBackStack();
+        disableCloseButtonAppBarLayout();
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("aboutFragment");
+            if (aboutFragment != null && aboutFragment.isVisible()) {
+                disableCloseButtonAppBarLayout();
+            }
+        }
+        super.onBackPressed();
+    }
+
+    public void enableCloseButtonAppBarLayout() {
+        mViewPager.setVisibility(View.INVISIBLE);
+        mMenu.findItem(R.id.action_about).setVisible(false);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.removeView(mTabLayout);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("About Movie Hotness");
+        toolbar.setNavigationIcon(R.drawable.ic_close_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick: pressed back from about");
+                onBackPressed();
+            }
+        });
+    }
+
+    public void disableCloseButtonAppBarLayout() {
+        mViewPager.setVisibility(View.VISIBLE);
+        mMenu.findItem(R.id.action_about).setVisible(true);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addView(mTabLayout);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle("Movie Hotness");
+        toolbar.setNavigationIcon(null);
+    }
+
 }

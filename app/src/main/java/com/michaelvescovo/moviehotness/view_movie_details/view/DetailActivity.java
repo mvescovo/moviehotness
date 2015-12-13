@@ -1,7 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movie_details.view;
 
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -27,7 +26,7 @@ import com.michaelvescovo.moviehotness.view_movie_details.data.DataModel;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DataResponseInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.data.DbModel;
 import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
-import com.michaelvescovo.moviehotness.view_movies.view.AboutActivity;
+import com.michaelvescovo.moviehotness.view_movies.view.AboutFragment;
 
 public class DetailActivity extends AppCompatActivity implements PlotFragment.OnFragmentInteractionListener, PresenterInterface {
     private static final String TAG = "DetailActivity";
@@ -36,6 +35,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     ViewMovieDetailsInterface mViewMovieDetails;
     int mPosition;
     String mMovieId;
+    String mMovieTitle;
     Fragment mDetailFragment;
     String mPlot;
     ProgressBar mProgressBar;
@@ -104,6 +104,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
             mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
             mPlot = movie.getPlot();
+            mMovieTitle = movie.getTitle();
             ((DetailFragment) mDetailFragment).displayMovie(movie);
         } else {
             Log.e(TAG, "displayMovie: error getting movie details");
@@ -124,7 +125,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         transaction.replace(R.id.fragment_container, newFragment, "plotFragment");
         transaction.addToBackStack(null);
         transaction.commit();
-        enablePlotAppBarLayout();
+        enableCloseButtonAppBarLayout("Plot");
     }
 
     @Override
@@ -139,8 +140,12 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
+            Fragment newFragment = new AboutFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, newFragment, "aboutFragment");
+            transaction.addToBackStack(null);
+            transaction.commit();
+            enableCloseButtonAppBarLayout("About Movie Hotness");
         }
 
         return super.onOptionsItemSelected(item);
@@ -153,10 +158,11 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
 
     @Override
     public boolean onSupportNavigateUp() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("plotFragment");
-        if (fragment != null && fragment.isVisible()) {
+        Fragment plotFragment = getSupportFragmentManager().findFragmentByTag("plotFragment");
+        Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("aboutFragment");
+        if ((plotFragment != null && plotFragment.isVisible()) || (aboutFragment != null && aboutFragment.isVisible())) {
             getSupportFragmentManager().popBackStack();
-            disablePlotAppBarLayout();
+            disableCloseButtonAppBarLayout();
             return true;
         } else {
             return super.onSupportNavigateUp();
@@ -166,10 +172,10 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        disablePlotAppBarLayout();
+        disableCloseButtonAppBarLayout();
     }
 
-    public void enablePlotAppBarLayout() {
+    public void enableCloseButtonAppBarLayout(String title) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
         }
@@ -177,9 +183,11 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(false, false);
         mMenu.findItem(R.id.action_about).setVisible(false);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout.setTitle(title);
     }
 
-    public void disablePlotAppBarLayout() {
+    public void disableCloseButtonAppBarLayout() {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_24dp);
         }
