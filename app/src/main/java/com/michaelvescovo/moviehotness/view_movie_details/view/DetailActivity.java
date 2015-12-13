@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,12 +96,17 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
 
     @Override
     public void displayMovie(MovieInterface movie) {
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setTitle(movie.getTitle());
-        ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
-        mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
-        mPlot = movie.getPlot();
-        ((DetailFragment) mDetailFragment).displayMovie(movie);
+        if (movie != null) {
+            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+            collapsingToolbarLayout.setTitle(movie.getTitle());
+            ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
+            mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
+            mPlot = movie.getPlot();
+            ((DetailFragment) mDetailFragment).displayMovie(movie);
+        } else {
+            Log.e(TAG, "displayMovie: error getting movie details");
+            disableProgressBar();
+        }
     }
 
     public void disableProgressBar() {

@@ -58,6 +58,7 @@ public class CloudModel extends DataModel {
                             MovieInterface movie = new Movie(id, title, releaseDate, posterUrl, voteAverage, plot, backdrop);
                             getBackdrop(backdropUrl, movie);
                         } catch (JSONException e) {
+                            mDataResponseInterface.displayMovie(null);
                             Log.e(TAG, "onResponse: " + e);
                             Log.i(TAG, "onResponse: url: " + url);
                             e.printStackTrace();
@@ -67,6 +68,7 @@ public class CloudModel extends DataModel {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i(TAG, "onErrorResponse: " + error);
+                        mDataResponseInterface.displayMovie(null);
                     }
                 });
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
@@ -75,7 +77,7 @@ public class CloudModel extends DataModel {
     public void getBackdrop(final String url, final MovieInterface movie) {
         final String BASE_URL = "https://image.tmdb.org/t/p";
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(Constants.POSTER_LARGE)
+                .appendPath(Constants.POSTER_X_LARGE)
                 .build();
 
         ImageRequest request = new ImageRequest(builtUri.toString() + url,
@@ -104,7 +106,7 @@ public class CloudModel extends DataModel {
                         } catch (java.io.IOException e) {
                             Log.i(TAG, "onResponse: error: " + e);
                         }
-                        mDataResponseInterface.displayMovie(movie);
+                        getPoster(movie.getPosterUrl(), movie);
                         Log.i(TAG, "onErrorResponse: " + error);
                     }
                 });
@@ -135,7 +137,7 @@ public class CloudModel extends DataModel {
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
                         Bitmap detail_poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
-                        String FILENAME = "backdrop_" + movie.getId();
+                        String FILENAME = "detail_poster_" + movie.getId();
                         try{
                             FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
                             detail_poster.compress(Bitmap.CompressFormat.JPEG, 100, fos);
