@@ -11,9 +11,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.util.BitmapHelper;
 import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
 
 public class DetailFragment extends Fragment {
+    BitmapHelper mBitmapHelper = new BitmapHelper();
 
     public DetailFragment() {
         // Required empty public constructor
@@ -30,9 +32,10 @@ public class DetailFragment extends Fragment {
             TextView textViewTitle = (TextView) getActivity().findViewById(R.id.fragment_detail_title);
             TextView textViewPlot = (TextView) getActivity().findViewById(R.id.fragment_detail_plot);
             RatingBar ratingBar = (RatingBar) getActivity().findViewById(R.id.fragment_detail_rating);
+            ratingBar.setVisibility(View.VISIBLE);
             TextView textviewReleaseDate = (TextView) getActivity().findViewById(R.id.fragment_detail_release_date);
-
-            imageView.setImageBitmap(movie.getPoster());
+            textviewReleaseDate.setVisibility(View.VISIBLE);
+            mBitmapHelper.loadBitmap(imageView, imageView.getContext().getFilesDir() + "/" + "detail_poster_" + movie.getId());
             textViewTitle.setText(movie.getTitle());
             textViewPlot.setText(movie.getPlot());
             ratingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);

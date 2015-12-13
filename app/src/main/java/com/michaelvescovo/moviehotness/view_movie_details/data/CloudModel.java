@@ -22,6 +22,8 @@ import com.michaelvescovo.moviehotness.view_movies.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
+
 /**
  * Created by Michael on 7/12/15.
  *
@@ -80,14 +82,28 @@ public class CloudModel extends DataModel {
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
-                        movie.setBackdrop(bitmap);
+                        String FILENAME = "backdrop_" + movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
                         getPoster(movie.getPosterUrl(), movie);
                     }
                 }, 0, 0, null, null,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Bitmap poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
-                        movie.setPoster(poster);
+                        Bitmap backdrop = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
+                        String FILENAME = "backdrop_" + movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            backdrop.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
                         mDataResponseInterface.displayMovie(movie);
                         Log.i(TAG, "onErrorResponse: " + error);
                     }
@@ -105,14 +121,28 @@ public class CloudModel extends DataModel {
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
-                        movie.setPoster(bitmap);
+                        String FILENAME = "detail_poster_" + movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
                         mDataResponseInterface.displayMovie(movie);
                     }
                 }, 0, 0, null, null,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Bitmap poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
-                        movie.setPoster(poster);
+                        Bitmap detail_poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
+                        String FILENAME = "backdrop_" + movie.getId();
+                        try{
+                            FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                            detail_poster.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            fos.close();
+                        } catch (java.io.IOException e) {
+                            Log.i(TAG, "onResponse: error: " + e);
+                        }
                         mDataResponseInterface.displayMovie(movie);
                         Log.i(TAG, "onErrorResponse: " + error);
                     }

@@ -51,6 +51,7 @@
             android:singleLine="false"/>
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/fragment_detail_read_more"
             style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
@@ -59,6 +60,7 @@
             android:text="@string/fragment_detail_read_more"/>
 
         <android.support.v7.widget.AppCompatRatingBar
+            android:visibility="invisible"
             android:id="@+id/fragment_detail_rating"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"

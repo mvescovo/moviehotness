@@ -84,14 +84,14 @@ public class CloudModel extends DataModel {
     public void getPoster(final String url, final int sortBy, final int resultsSize, final MoviePreviewInterface movie) {
         final String BASE_URL = "https://image.tmdb.org/t/p";
         Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(Constants.POSTER_X_LARGE)
+                .appendPath(Constants.POSTER_LARGE)
                 .build();
 
         ImageRequest request = new ImageRequest(builtUri.toString() + url,
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {
-                        String FILENAME = movie.getId();
+                        String FILENAME = "preview_poster_" + movie.getId();
                         try{
                             FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -105,11 +105,11 @@ public class CloudModel extends DataModel {
                 }, 0, 0, null, null,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        Bitmap poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
-                        String FILENAME = movie.getId();
+                        Bitmap preview_poster = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.no_image);
+                        String FILENAME = "preview_poster_" + movie.getId();
                         try{
                             FileOutputStream fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                            poster.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                            preview_poster.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                             fos.close();
                         } catch (java.io.IOException e) {
                             Log.i(TAG, "onResponse: error: " + e);

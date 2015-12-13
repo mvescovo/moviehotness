@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.util.BitmapHelper;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetails;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetailsInterface;
 import com.michaelvescovo.moviehotness.view_movie_details.data.CloudModel;
@@ -36,6 +37,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     Fragment mDetailFragment;
     String mPlot;
     ProgressBar mProgressBar;
+    BitmapHelper mBitmapHelper = new BitmapHelper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(movie.getTitle());
         ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
-        backdrop.setImageBitmap(movie.getBackrop());
+        mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
         mPlot = movie.getPlot();
         ((DetailFragment) mDetailFragment).displayMovie(movie);
     }
