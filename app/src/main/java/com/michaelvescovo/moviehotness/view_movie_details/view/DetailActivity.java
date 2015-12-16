@@ -38,7 +38,6 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     String mMovieId;
     String mMovieTitle;
     Fragment mDetailFragment;
-    Fragment mTrailersFragment;
     String mPlot;
     ProgressBar mProgressBar;
     BitmapHelper mBitmapHelper = new BitmapHelper();
