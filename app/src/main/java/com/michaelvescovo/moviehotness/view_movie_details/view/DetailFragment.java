@@ -3,6 +3,8 @@ package com.michaelvescovo.moviehotness.view_movie_details.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
 
 public class DetailFragment extends Fragment {
     BitmapHelper mBitmapHelper = new BitmapHelper();
+    Fragment mTrailersFragment;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -23,6 +26,16 @@ public class DetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        mTrailersFragment = new TrailersFragment();
+        fragmentTransaction.add(R.id.fragment_container_trailers, mTrailersFragment);
+        fragmentTransaction.commit();
+
+
+
         return inflater.inflate(R.layout.fragment_detail, container, false);
     }
 
@@ -42,6 +55,7 @@ public class DetailFragment extends Fragment {
             textViewPlot.setText(movie.getPlot());
             ratingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
             textviewReleaseDate.setText(movie.getReleaseDate());
+            ((TrailersFragment)mTrailersFragment).displayMovie(movie);
             ((DetailActivity)getActivity()).disableProgressBar();
         }
     }

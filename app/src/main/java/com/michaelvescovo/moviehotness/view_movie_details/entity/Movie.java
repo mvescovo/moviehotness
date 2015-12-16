@@ -129,4 +129,9 @@ public class Movie implements MovieInterface {
     public MovieTrailerInterface getTrailer(int index) {
         return mTrailers.get(index);
     }
+
+    @Override
+    public int getTrailerCount() {
+        return mTrailers.size();
+    }
 }

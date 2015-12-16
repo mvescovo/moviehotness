@@ -46,4 +46,6 @@ public interface MovieInterface {
     public void addTrailer(MovieTrailerInterface trailer);
 
     public MovieTrailerInterface getTrailer(int index);
+
+    public int getTrailerCount();
 }

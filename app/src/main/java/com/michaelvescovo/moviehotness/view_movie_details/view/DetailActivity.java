@@ -81,8 +81,8 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
 
         mDetailFragment = new DetailFragment();
         fragmentTransaction.add(R.id.fragment_container, mDetailFragment);
-        mTrailersFragment = new TrailersFragment();
-        fragmentTransaction.add(R.id.fragment_container_trailers, mTrailersFragment);
+//        mTrailersFragment = new TrailersFragment();
+//        fragmentTransaction.add(R.id.fragment_container_trailers, mTrailersFragment);
         fragmentTransaction.commit();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -110,9 +110,12 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
             mPlot = movie.getPlot();
             mMovieTitle = movie.getTitle();
-            mMovieTrailer1YouTubeId = movie.getTrailer(0).getYouTubeId();
             ((DetailFragment) mDetailFragment).displayMovie(movie);
-            ((TrailersFragment) mTrailersFragment).displayMovie(movie);
+            if (movie.getTrailerCount() > 0) {
+                mMovieTrailer1YouTubeId = movie.getTrailer(0).getYouTubeId();
+                ImageView imageView = (ImageView) findViewById(R.id.main_trailer_play_button);
+                imageView.setVisibility(View.VISIBLE);
+            }
         } else {
             Log.e(TAG, "displayMovie: error getting movie details");
             disableProgressBar();

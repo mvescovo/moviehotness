@@ -111,7 +111,13 @@ public class TrailersFragment extends Fragment {
     }
 
     public void displayMovie(MovieInterface movie) {
-        TextView textViewName = (TextView) getActivity().findViewById(R.id.trailer_name);
-        textViewName.setText(movie.getTrailer(0).getName());
+        if (getView() != null) {
+            TextView textViewName = (TextView) getView().findViewById(R.id.trailer_name);
+            if (movie.getTrailerCount() > 0) {
+                if (textViewName != null) {
+                    textViewName.setText(movie.getTrailer(0).getName());
+                }
+            }
+        }
     }
 }
