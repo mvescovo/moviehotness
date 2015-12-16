@@ -17,8 +17,11 @@ import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.moviehotness.view_movie_details.entity.Movie;
 import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
+import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieTrailer;
+import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.view_movies.Constants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -131,7 +134,7 @@ public class CloudModel extends DataModel {
                         } catch (java.io.IOException e) {
                             Log.i(TAG, "onResponse: error: " + e);
                         }
-                        mDataResponseInterface.displayMovie(movie);
+                        getTrailers(movie);
                     }
                 }, 0, 0, null, null,
                 new Response.ErrorListener() {
@@ -145,10 +148,48 @@ public class CloudModel extends DataModel {
                         } catch (java.io.IOException e) {
                             Log.i(TAG, "onResponse: error: " + e);
                         }
-                        mDataResponseInterface.displayMovie(movie);
+                        getTrailers(movie);
                         Log.i(TAG, "onErrorResponse: " + error);
                     }
                 });
         VolleyRequestQueue.getInstance(mContext).addToRequestQueue(request);
+    }
+
+    public void getTrailers(final MovieInterface movie) {
+        String url = "http://api.themoviedb.org/3/movie/" + movie.getId() + "/videos" + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
+        Log.i(TAG, "getTrailers: url: " + url);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                final JSONArray results;
+                int resultsSize;
+
+                try {
+                    results = response.getJSONArray("results");
+                    resultsSize = results.length();
+                    Log.i(TAG, "onResponse: numTrailers: " + resultsSize);
+
+                    for (int i = 0; i < results.length(); i++) {
+                        String trailerYouTubeId = results.getJSONObject(i).getString("key");
+                        String trailerName = results.getJSONObject(i).getString("name");
+                        MovieTrailerInterface movieTrailer = new MovieTrailer(trailerYouTubeId, trailerName);
+                        movie.addTrailer(movieTrailer);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.i(TAG, "onResponse: " + e);
+                }
+
+                mDataResponseInterface.displayMovie(movie);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+                mDataResponseInterface.displayMovie(movie);
+            }
+        });
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 }

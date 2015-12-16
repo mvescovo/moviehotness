@@ -11,4 +11,5 @@
 
     <!--ViewMovieDetails-->
     <string name="fragment_detail_read_more">Read more&#8230;</string>
+
 </resources>

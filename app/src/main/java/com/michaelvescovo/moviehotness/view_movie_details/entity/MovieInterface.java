@@ -42,4 +42,8 @@ public interface MovieInterface {
     public void setBackdrop(Bitmap backdrop);
 
     public Bitmap getBackrop();
+
+    public void addTrailer(MovieTrailerInterface trailer);
+
+    public MovieTrailerInterface getTrailer(int index);
 }

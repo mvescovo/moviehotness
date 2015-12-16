@@ -1,6 +1,6 @@
 package com.michaelvescovo.moviehotness.view_movie_details.view;
 
-
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.youtube.player.YouTubeIntents;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.util.BitmapHelper;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetails;
@@ -28,7 +29,7 @@ import com.michaelvescovo.moviehotness.view_movie_details.data.DbModel;
 import com.michaelvescovo.moviehotness.view_movie_details.entity.MovieInterface;
 import com.michaelvescovo.moviehotness.view_movies.view.AboutFragment;
 
-public class DetailActivity extends AppCompatActivity implements PlotFragment.OnFragmentInteractionListener, PresenterInterface {
+public class DetailActivity extends AppCompatActivity implements PlotFragment.OnFragmentInteractionListener, TrailersFragment.OnFragmentInteractionListener, PresenterInterface {
     private static final String TAG = "DetailActivity";
     DataModel mDbModel;
     DataModel mCloudModel;
@@ -37,10 +38,12 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     String mMovieId;
     String mMovieTitle;
     Fragment mDetailFragment;
+    Fragment mTrailersFragment;
     String mPlot;
     ProgressBar mProgressBar;
     BitmapHelper mBitmapHelper = new BitmapHelper();
     Menu mMenu;
+    String mMovieTrailer1YouTubeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,8 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
 
         mDetailFragment = new DetailFragment();
         fragmentTransaction.add(R.id.fragment_container, mDetailFragment);
+        mTrailersFragment = new TrailersFragment();
+        fragmentTransaction.add(R.id.fragment_container_trailers, mTrailersFragment);
         fragmentTransaction.commit();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -105,7 +110,9 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
             mPlot = movie.getPlot();
             mMovieTitle = movie.getTitle();
+            mMovieTrailer1YouTubeId = movie.getTrailer(0).getYouTubeId();
             ((DetailFragment) mDetailFragment).displayMovie(movie);
+            ((TrailersFragment) mTrailersFragment).displayMovie(movie);
         } else {
             Log.e(TAG, "displayMovie: error getting movie details");
             disableProgressBar();
@@ -195,5 +202,10 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true, false);
         mMenu.findItem(R.id.action_about).setVisible(true);
+    }
+
+    public void playTrailer(View v) {
+        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, mMovieTrailer1YouTubeId, true, true);
+        startActivity(intent);
     }
 }

@@ -2,6 +2,8 @@ package com.michaelvescovo.moviehotness.view_movie_details.entity;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 /**
  * Created by Michael on 11/12/15.
  *
@@ -16,6 +18,7 @@ public class Movie implements MovieInterface {
     private String mPlot;
     private String mBackdropUrl;
     private Bitmap mBackdrop;
+    private ArrayList<MovieTrailerInterface> mTrailers = new ArrayList<>();
 
     public Movie(String id, String title, String releaseDate, String posterUrl, String voteAverage, String plot, String backdropUrl) {
         mId = id;
@@ -115,5 +118,15 @@ public class Movie implements MovieInterface {
     @Override
     public Bitmap getBackrop() {
         return mBackdrop;
+    }
+
+    @Override
+    public void addTrailer(MovieTrailerInterface trailer) {
+        mTrailers.add(trailer);
+    }
+
+    @Override
+    public MovieTrailerInterface getTrailer(int index) {
+        return mTrailers.get(index);
     }
 }
