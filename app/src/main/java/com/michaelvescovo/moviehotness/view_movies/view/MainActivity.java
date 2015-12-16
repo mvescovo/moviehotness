@@ -278,4 +278,8 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         toolbar.setNavigationIcon(null);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 }

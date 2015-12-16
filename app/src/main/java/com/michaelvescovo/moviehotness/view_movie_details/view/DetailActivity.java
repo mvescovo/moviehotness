@@ -77,11 +77,8 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         // Setup fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         mDetailFragment = new DetailFragment();
-        fragmentTransaction.add(R.id.fragment_container, mDetailFragment);
-//        mTrailersFragment = new TrailersFragment();
-//        fragmentTransaction.add(R.id.fragment_container_trailers, mTrailersFragment);
+        fragmentTransaction.add(R.id.fragment_container, mDetailFragment, "detailFragment");
         fragmentTransaction.commit();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -204,10 +201,17 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true, false);
         mMenu.findItem(R.id.action_about).setVisible(true);
+        getMovie();
     }
 
     public void playTrailer(View v) {
         Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, mMovieTrailer1YouTubeId, true, true);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getMovie();
     }
 }

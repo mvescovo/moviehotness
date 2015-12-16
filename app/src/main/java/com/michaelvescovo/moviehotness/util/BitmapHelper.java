@@ -18,6 +18,7 @@ import java.lang.ref.WeakReference;
  * Code taken and modified from http://developer.android.com/training/displaying-bitmaps/index.html
  */
 public class BitmapHelper implements Serializable {
+    private static final String TAG = "BitmapHelper";
     public void loadBitmap(ImageView imageView, String path) {
         Bitmap.Config config = Bitmap.Config.ALPHA_8;
         Bitmap mPlaceHolderBitmap = Bitmap.createBitmap(350, 500, config);
