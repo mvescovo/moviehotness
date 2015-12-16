@@ -22,5 +22,6 @@
     <dimen name="app_bar_height_backdrop">300dp</dimen>
     <dimen name="poster_detail_width">154dp</dimen>
     <dimen name="poster_detail_height">231dp</dimen>
+    <dimen name="play_trailer_button_width">70dp</dimen>
 
 </resources>

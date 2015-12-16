@@ -38,6 +38,19 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/backdrop_scrim"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="@dimen/play_trailer_button_width"
+                    android:layout_height="@dimen/play_trailer_button_width"
+                    android:src="@drawable/ic_play_circle_fill_24dp"
+                    android:onClick="playTrailer"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
