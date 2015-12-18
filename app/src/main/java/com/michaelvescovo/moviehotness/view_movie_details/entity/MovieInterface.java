@@ -2,6 +2,8 @@ package com.michaelvescovo.moviehotness.view_movie_details.entity;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 /**
  * Created by Michael on 11/12/15.
  *
@@ -46,6 +48,8 @@ public interface MovieInterface {
     public void addTrailer(MovieTrailerInterface trailer);
 
     public MovieTrailerInterface getTrailer(int index);
+
+    public ArrayList<MovieTrailerInterface> getTrailers();
 
     public int getTrailerCount();
 }

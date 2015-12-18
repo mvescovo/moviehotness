@@ -11,5 +11,6 @@
 
     <!--ViewMovieDetails-->
     <string name="fragment_detail_read_more">Read more&#8230;</string>
+    <string name="fragment_detail_view_trailers">View all trailers</string>
 
 </resources>

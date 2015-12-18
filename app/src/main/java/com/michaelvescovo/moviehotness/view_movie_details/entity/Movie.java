@@ -2,13 +2,14 @@ package com.michaelvescovo.moviehotness.view_movie_details.entity;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Michael on 11/12/15.
  *
  */
-public class Movie implements MovieInterface {
+public class Movie implements MovieInterface, Serializable {
     private String mId;
     private String mTitle;
     private String mReleaseDate;
@@ -128,6 +129,11 @@ public class Movie implements MovieInterface {
     @Override
     public MovieTrailerInterface getTrailer(int index) {
         return mTrailers.get(index);
+    }
+
+    @Override
+    public ArrayList<MovieTrailerInterface> getTrailers() {
+        return mTrailers;
     }
 
     @Override

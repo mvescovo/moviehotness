@@ -14,4 +14,5 @@ public class Constants {
     public static final String POSTER_LARGE = "w342";
     public static final String POSTER_X_LARGE = "w500";
     public static final String POSTER_XX_LARGE = "w780";
+    public static final int SHORT_PLOT_MAX_CHARS = 120;
 }

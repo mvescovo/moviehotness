@@ -20,16 +20,11 @@ import com.michaelvescovo.moviehotness.R;
  * create an instance of this fragment.
  */
 public class PlotFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final String PLOT = "plot";
+    private static final String TITLE = "title";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private String mPlot;
+    private String mTitle;
 
     private OnFragmentInteractionListener mListener;
 
@@ -41,16 +36,15 @@ public class PlotFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param plot Full plot.
+     * @param movieTitle Movie title.
      * @return A new instance of fragment PlotFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static PlotFragment newInstance(String param1, String param2) {
+    public static PlotFragment newInstance(String plot, String movieTitle) {
         PlotFragment fragment = new PlotFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(PLOT, plot);
+        args.putString(TITLE, movieTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,17 +53,16 @@ public class PlotFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-            mPlot= getArguments().getString("plot");
+            mPlot = getArguments().getString(PLOT);
+            mTitle = getArguments().getString(TITLE);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plot, container, false);
         ((TextView) view.findViewById(R.id.fragment_plot_text)).setText(mPlot);
+        ((TextView) view.findViewById(R.id.fragment_detail_title)).setText(mTitle);
         return view;
     }
 

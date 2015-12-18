@@ -1,10 +1,12 @@
 package com.michaelvescovo.moviehotness.view_movie_details.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Michael on 16/12/15.
  *
  */
-public class MovieTrailer implements MovieTrailerInterface {
+public class MovieTrailer implements MovieTrailerInterface, Serializable {
     private String mYouTubeId;
     private String mName;
 
