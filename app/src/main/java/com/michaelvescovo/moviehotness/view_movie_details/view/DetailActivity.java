@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.google.android.youtube.player.YouTubeIntents;
 import com.michaelvescovo.moviehotness.R;
@@ -33,42 +32,43 @@ import com.michaelvescovo.moviehotness.view_movies.view.AboutFragment;
 
 public class DetailActivity extends AppCompatActivity implements PlotFragment.OnFragmentInteractionListener, TrailersFragment.OnFragmentInteractionListener, PresenterInterface {
     private static final String TAG = "DetailActivity";
-    private DataModel mDbModel;
-    private DataModel mCloudModel;
-    private ViewMovieDetailsInterface mViewMovieDetails;
-    private String mMovieId;
-    private String mMovieTitle;
-    private Fragment mDetailFragment;
-    private String mPlot;
-    private ProgressBar mProgressBar;
-    private BitmapHelper mBitmapHelper = new BitmapHelper();
-    private Menu mMenu;
-    private String mMovieTrailer1YouTubeId;
-    private int mTrailerCount;
-    private String mTrailerName;
-    private MovieInterface mMovie;
+    private String mMovieId; // saved
+    private String mCurrentFragment; // saved
+    private MovieInterface mMovie; // saved
+    private ViewMovieDetailsInterface mViewMovieDetails; // not saved
+    private Menu mMenu; // not saved
+
 
 
     /***********************
-    * Main lifecycle methods
-    *
-    * *********************/
+     * Main lifecycle methods
+     *
+     * *********************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mMovieId = getIntent().getStringExtra("movie_id");
-
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            Log.i(TAG, "onCreate: savedinstancestate does not exist");
+            mMovieId = getIntent().getStringExtra("movie_id");
+            mCurrentFragment = "details_fragment";
+        } else {
+            Log.i(TAG, "onCreate: savedinstancestate does exist");
+            mMovieId = savedInstanceState.getString("movie_id");
+            mCurrentFragment = savedInstanceState.getString("current_fragment");
+            mMovie = (Movie)savedInstanceState.getSerializable("movie");
+        }
 
         /*
         * Setup Application
         *
         * */
-        mDbModel = new DbModel();
-        mCloudModel = new CloudModel(this);
-        mDbModel.setSuccessor(mCloudModel);
-        mViewMovieDetails = new ViewMovieDetails(this, mDbModel);
-        mDbModel.setDataResponseInterface((DataResponseInterface)mViewMovieDetails);
-        mCloudModel.setDataResponseInterface((DataResponseInterface) mViewMovieDetails);
+        DataModel dbModel = new DbModel();
+        DataModel cloudModel = new CloudModel(this);
+        dbModel.setSuccessor(cloudModel);
+        mViewMovieDetails = new ViewMovieDetails(this, dbModel);
+        dbModel.setDataResponseInterface((DataResponseInterface) mViewMovieDetails);
+        cloudModel.setDataResponseInterface((DataResponseInterface) mViewMovieDetails);
 
         /*
         * Setup view
@@ -83,13 +83,15 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         }
 
         // Setup fragment
-//        if (savedInstanceState == null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            mDetailFragment = new DetailFragment();
-            fragmentTransaction.add(R.id.fragment_container_scroll_view, mDetailFragment, "detailFragment");
-            fragmentTransaction.commit();
-//        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment detailFragment = new DetailFragment();
+        fragmentTransaction.replace(R.id.fragment_container_scroll_view, detailFragment, "detailFragment");
+        fragmentTransaction.commit();
+
+        if (savedInstanceState != null) {
+
+        }
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -102,9 +104,53 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("movie_id", mMovieId);
+
+        Fragment plotFragment = getSupportFragmentManager().findFragmentByTag("plotFragment");
+        Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("aboutFragment");
+        Fragment trailersFragment = getSupportFragmentManager().findFragmentByTag("trailersFragment");
+
+        if (plotFragment != null && plotFragment.isVisible()) {
+            outState.putString("current_fragment", "plot_fragment");
+        } else if (aboutFragment != null && aboutFragment.isVisible()) {
+            outState.putString("current_fragment", "about_fragment");
+        } else if (trailersFragment != null && trailersFragment.isVisible()) {
+            outState.putString("current_fragment", "trailers_fragment");
+        } else {
+            outState.putString("current_fragment", "details_fragment");
+        }
+
+        outState.putSerializable("movie", (Movie)mMovie);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
+
         getMovie();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        supportInvalidateOptionsMenu();
+
+        if (mCurrentFragment.equals("plot_fragment")) {
+            openPlot(null);
+        } else if (mCurrentFragment.equals("about_fragment")) {
+            openAbout();
+        } else if (mCurrentFragment.equals("trailers_fragment")) {
+            openTrailers(null);
+        }
     }
 
     @Override
@@ -129,7 +175,6 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         disableCloseButtonAppBarLayout();
     }
 
-
     /******************************
      * Interface overridden methods
      *
@@ -141,14 +186,9 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
             collapsingToolbarLayout.setTitle(movie.getTitle());
             ImageView backdrop = (ImageView) findViewById(R.id.backdrop);
-            mBitmapHelper.loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
-            mPlot = movie.getPlot();
-            mMovieTitle = movie.getTitle();
-            ((DetailFragment) mDetailFragment).displayMovie(movie);
-            mTrailerCount = movie.getTrailerCount();
+            new BitmapHelper().loadBitmap(backdrop, getFilesDir() + "/" + "backdrop_" + movie.getId());
+            ((DetailFragment)getSupportFragmentManager().findFragmentByTag("detailFragment")).displayMovie(movie);
             if (movie.getTrailerCount() > 0) {
-                mMovieTrailer1YouTubeId = movie.getTrailer(0).getYouTubeId();
-                mTrailerName = movie.getTrailer(0).getName();
                 ImageView imageView = (ImageView) findViewById(R.id.main_trailer_play_button);
                 imageView.setVisibility(View.VISIBLE);
             }
@@ -180,12 +220,7 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            Fragment newFragment = new AboutFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container_scroll_view, newFragment, "aboutFragment");
-            transaction.addToBackStack(null);
-            transaction.commit();
-            enableCloseButtonAppBarLayout("About Movie Hotness");
+            openAbout();
         }
 
         return super.onOptionsItemSelected(item);
@@ -197,26 +232,37 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
      *
      * ***************************/
     public void getMovie() {
-        mProgressBar = (ProgressBar) findViewById(R.id.view_movie_details_progress_indeterminate);
-        mProgressBar.setVisibility(View.VISIBLE);
+        findViewById(R.id.view_movie_details_progress_indeterminate).setVisibility(View.VISIBLE);
         mViewMovieDetails.getMovie(mMovieId);
     }
 
     public void disableProgressBar() {
-        mProgressBar.setVisibility(View.INVISIBLE);
+        findViewById(R.id.view_movie_details_progress_indeterminate).setVisibility(View.INVISIBLE);
+    }
+
+    public void openAbout() {
+        enableCloseButtonAppBarLayout("About Movie Hotness");
+        mCurrentFragment = "plot_fragment";
+        Fragment newFragment = new AboutFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_scroll_view, newFragment, "aboutFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void openPlot(View v) {
-        Fragment newFragment = PlotFragment.newInstance(mPlot, mMovieTitle);
+        enableCloseButtonAppBarLayout("Plot");
+        mCurrentFragment = "plot_fragment";
+        Fragment newFragment = PlotFragment.newInstance(mMovie.getPlot(), mMovie.getTitle());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_scroll_view, newFragment, "plotFragment");
         transaction.addToBackStack(null);
         transaction.commit();
-        enableCloseButtonAppBarLayout("Plot");
     }
 
     public void openTrailers(View v) {
         enableCloseButtonAppBarLayout("Trailers");
+        mCurrentFragment = "trailers_fragment";
         Fragment newFragment = TrailersFragment.newInstance((Movie) mMovie);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.remove(getSupportFragmentManager().findFragmentByTag("detailFragment"));
@@ -230,14 +276,15 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
         }
 
-        mMenu.findItem(R.id.action_about).setVisible(false);
+        if (mMenu != null) {
+            mMenu.findItem(R.id.action_about).setVisible(false);
+        }
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(false, false);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(title);
-
 
         NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
         nestedScrollView.setNestedScrollingEnabled(false);
@@ -250,7 +297,9 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_24dp);
         }
 
-        mMenu.findItem(R.id.action_about).setVisible(true);
+        if (mMenu != null) {
+            mMenu.findItem(R.id.action_about).setVisible(true);
+        }
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.setExpanded(true, false);
@@ -260,8 +309,8 @@ public class DetailActivity extends AppCompatActivity implements PlotFragment.On
 
     }
 
-    public void playTrailer(View v) {
-        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, mMovieTrailer1YouTubeId, true, true);
+    public void playTrailer1(View v) {
+        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(this, mMovie.getTrailer(0).getYouTubeId(), true, true);
         startActivity(intent);
     }
 }

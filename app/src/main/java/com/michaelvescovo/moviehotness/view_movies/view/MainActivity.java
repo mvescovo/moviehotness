@@ -28,29 +28,28 @@ import com.michaelvescovo.moviehotness.view_movies.entity.MoviePreviewInterface;
 
 public class MainActivity extends AppCompatActivity implements PresenterInterface {
     private static final String TAG = "MainActivity";
-    DataModel mDbModel;
-    DataModel mCloudModel;
-    ViewMoviesInterface mViewMovies;
-    ViewPager mViewPager;
-    MovieGridFragment mPopularMovieGridFragment;
-    MovieGridFragment mHighestRatedMovieGridFragment;
-    int mPopularProgress = 0;
-    int mPopularSize = 0;
-    boolean mPopularComplete = false;
-    int mHighestRatedProgress = 0;
-    int mHighestRatedSize = 0;
-    boolean mHighestRatedComplete = false;
-    ProgressBar mProgressBar;
-    ProgressBar mProgressBarIndeterminate;
-    Menu mMenu;
-    TabLayout mTabLayout;
+    DataModel mDbModel; // not saved
+    DataModel mCloudModel; // not saved
+    ViewMoviesInterface mViewMovies; // not saved
+    ViewPager mViewPager; // not saved
+    MovieGridFragment mPopularMovieGridFragment; // not saved
+    MovieGridFragment mHighestRatedMovieGridFragment; // not saved
+    int mPopularProgress = 0; // not saved
+    int mPopularSize = 0; // not saved
+    boolean mPopularComplete = false; // not saved
+    int mHighestRatedProgress = 0; // not saved
+    int mHighestRatedSize = 0; // not saved
+    boolean mHighestRatedComplete = false; // not saved
+    ProgressBar mProgressBar; // not saved
+    ProgressBar mProgressBarIndeterminate; // not saved
+    Menu mMenu; // not saved
+    TabLayout mTabLayout; // not saved
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         /*
-
         * Setup Application
         *
         * */
@@ -114,6 +113,25 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
 
             }
         });
+
+        if (savedInstanceState != null) {
+            if (getSupportFragmentManager().findFragmentByTag("about_fragment") != null) {
+                if (getSupportFragmentManager().findFragmentByTag("about_fragment").isVisible()) {
+                    Log.i(TAG, "onCreate: about visible");
+                }
+            }
+//            if (aboutFragment != null && aboutFragment.isVisible()) {
+//                Log.i(TAG, "onCreate: about visible");
+//                enableCloseButtonAppBarLayout();
+//            }
+            Log.i(TAG, "onCreate: about not visible");
+
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -197,11 +215,6 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.menu_main, mMenu);
@@ -215,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         if (id == R.id.action_about) {
             Fragment newFragment = new AboutFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, newFragment, "aboutFragment");
+            transaction.replace(R.id.fragment_container, newFragment, "about_fragment");
             transaction.addToBackStack(null);
             transaction.commit();
             enableCloseButtonAppBarLayout();
@@ -243,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("aboutFragment");
+            Fragment aboutFragment = getSupportFragmentManager().findFragmentByTag("about_fragment");
             if (aboutFragment != null && aboutFragment.isVisible()) {
                 disableCloseButtonAppBarLayout();
             }
@@ -253,7 +266,9 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
 
     public void enableCloseButtonAppBarLayout() {
         mViewPager.setVisibility(View.INVISIBLE);
-        mMenu.findItem(R.id.action_about).setVisible(false);
+        if (mMenu != null) {
+            mMenu.findItem(R.id.action_about).setVisible(false);
+        }
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.removeView(mTabLayout);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -272,7 +287,9 @@ public class MainActivity extends AppCompatActivity implements PresenterInterfac
         mViewPager.setVisibility(View.VISIBLE);
         mMenu.findItem(R.id.action_about).setVisible(true);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        appBarLayout.addView(mTabLayout);
+        if (mTabLayout == null) {
+            appBarLayout.addView(mTabLayout);
+        }
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("Movie Hotness");
         toolbar.setNavigationIcon(null);

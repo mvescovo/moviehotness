@@ -22,8 +22,10 @@ import com.michaelvescovo.moviehotness.view_movie_details.entity.Movie;
  * create an instance of this fragment.
  */
 public class TrailersFragment extends Fragment {
+    private static final String TAG = "TrailersFragment";
     private static final String MOVIE = "movie";
     private Movie mMovie;
+    private RecyclerView.Adapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
     public TrailersFragment() {
@@ -52,6 +54,15 @@ public class TrailersFragment extends Fragment {
         if (getArguments() != null) {
             mMovie = (Movie) getArguments().getSerializable(MOVIE);
         }
+
+        if (savedInstanceState != null) {
+            mAdapter = (TrailerAdapter) savedInstanceState.getSerializable("adapter");
+            mMovie = (Movie) savedInstanceState.getSerializable(MOVIE);
+        } else {
+            if (mMovie != null) {
+                mAdapter = new TrailerAdapter(mMovie.getTrailers());
+            }
+        }
     }
 
     @Override
@@ -60,8 +71,7 @@ public class TrailersFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.Adapter adapter = new TrailerAdapter(mMovie.getTrailers());
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
         return recyclerView;
     }
@@ -88,6 +98,13 @@ public class TrailersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("adapter", (TrailerAdapter) mAdapter);
+        outState.putSerializable(MOVIE, mMovie);
     }
 
     /**
