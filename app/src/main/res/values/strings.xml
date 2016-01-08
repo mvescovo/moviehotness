@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Application-->
     <string name="app_name">Movie Hotness</string>
@@ -13,4 +14,12 @@
     <string name="fragment_detail_read_more">Read more&#8230;</string>
     <string name="fragment_detail_view_trailers">View all trailers</string>
 
+    <!--Image sizes-->
+    <string name="poster_x_small">w92</string>
+    <string name="poster_small">w154</string>
+    <string name="poster_medium">w185</string>
+    <string name="poster_large">w342</string>
+    <string name="poster_x_large">w500</string>
+    <string name="poster_xx_large">w780</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

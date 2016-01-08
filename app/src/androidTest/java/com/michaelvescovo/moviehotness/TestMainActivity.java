@@ -14,6 +14,6 @@ public class TestMainActivity extends AndroidTestCase {
 //    }
 
 //    public void testActivity() {
-//        assertActivityRequiresPermission("com.michaelvescovo.moviehotness.view_movies.view", "MainActivity", "android.permission.INTERNET");
+//        assertActivityRequiresPermission("com.michaelvescovo.moviehotness.view_movies.view", "ViewMoviesActivity", "android.permission.INTERNET");
 //    }
 }

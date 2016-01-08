@@ -1,0 +1,245 @@
+/*
+ * Copyright 2015, The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * I've changed the code but it's similar to the example I'm following.
+ * Possibly the best Android example I've ever seen so far. Really nice design.
+ *
+ * https://codelabs.developers.google.com/codelabs/android-testing
+ *
+ */
+
+package com.michaelvescovo.moviehotness.view_movie_details;
+
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import com.google.android.youtube.player.YouTubeIntents;
+import com.michaelvescovo.moviehotness.Injection;
+import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity;
+import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
+import com.michaelvescovo.moviehotness.view_full_plot.PlotActivity;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetailsContract.View {
+    private static final String TAG = "ViewMovieDetailsFragment";
+    public static final String MOVIE_ID = "MOVIE_ID";
+    public static final String SORT_BY = "SORT_BY";
+    private ViewMovieDetailsContract.UserActionsListener mActionsListener;
+    private String mTitle;
+    private ImageView mDetailposter;
+    private TextView mReleaseDate;
+    private TextView mPlot;
+    private TextView mPlotMore;
+    private RatingBar mRatingBar;
+    private ArrayList<MovieTrailerInterface> mTrailers;
+    private Button mMoreTrailers;
+
+    public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
+        Bundle arguments = new Bundle();
+        arguments.putInt(SORT_BY, sortBy);
+        arguments.putString(MOVIE_ID, movieId);
+        ViewMovieDetailsFragment fragment = new ViewMovieDetailsFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mActionsListener = new ViewMovieDetailsPresenter(getContext(), Injection.provideMovieRepository(getContext(), getArguments().getInt(SORT_BY)), this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
+
+        mDetailposter = (ImageView) root.findViewById(R.id.fragment_detail_poster);
+        mReleaseDate = (TextView) root.findViewById(R.id.fragment_detail_release_date);
+        mPlot = (TextView) root.findViewById(R.id.fragment_detail_plot);
+        mPlotMore = (TextView) root.findViewById(R.id.fragment_detail_read_more);
+
+        mPlot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+            }
+        });
+
+        mPlotMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+            }
+        });
+
+        mRatingBar = (RatingBar) root.findViewById(R.id.fragment_detail_rating);
+        mMoreTrailers = (Button) root.findViewById(R.id.more_trailers);
+
+        mMoreTrailers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openAllTrailers(mTrailers);
+            }
+        });
+
+        ImageView playFirstTrailerButton = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
+        playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openFirstTrailer(mTrailers.get(0).getYouTubeId());
+            }
+        });
+
+        //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String movieId = getArguments().getString(MOVIE_ID);
+        mActionsListener.loadMovieDetails(movieId, false);
+    }
+
+    @Override
+    public void setProgressIndicator(boolean active) {
+        if (active) {
+            // TODO set a progress indicator
+        }
+    }
+
+    @Override
+    public void showMovieDetails(MovieInterface movie) {
+        mTitle = movie.getTitle();
+
+        if (getView() != null) {
+
+            mTrailers = movie.getTrailers();
+            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).into(mDetailposter, new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+
+            mReleaseDate.setText(movie.getReleaseDate());
+            mPlot.setText(movie.getPlot());
+            if (movie.getPlot().length() > getResources().getInteger(R.integer.short_plot_max_chars)) {
+                TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
+                textViewMore.setVisibility(View.VISIBLE);
+            }
+            mRatingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
+            mRatingBar.setVisibility(View.VISIBLE);
+            if (movie.getTrailerCount() > 0) {
+                mMoreTrailers.setVisibility(View.VISIBLE);
+            }
+        }
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout.setTitle(mTitle);
+        ImageView backdrop = (ImageView) getActivity().findViewById(R.id.backdrop);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getBackdropUrl()).into(backdrop, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+        if (movie.getTrailerCount() > 0) {
+            ImageView imageView = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
+            imageView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void showFirstTrailerUi(String youTubeId) {
+        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getContext(), youTubeId, true, true);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showFullPlotUi(String title, String plot) {
+        Intent intent = new Intent(getContext(), PlotActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("plot", plot);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers) {
+        Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
+        intent.putExtra("trailers", mTrailers);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showAttributionUi() {
+        Intent intent = new Intent(getContext(), AttributionActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_about) {
+            mActionsListener.openAttribution();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+}
