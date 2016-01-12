@@ -1,6 +1,8 @@
 package com.michaelvescovo.moviehotness.view_movie_details;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
@@ -43,5 +46,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @VisibleForTesting
+    public IdlingResource getCountingIdlingResource() {
+        return EspressoIdlingResource.getIdlingResource();
     }
 }

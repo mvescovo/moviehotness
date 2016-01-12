@@ -35,20 +35,18 @@ public class CloudModel extends DataModel {
     }
 
     @Override
-    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
 
         mContext = context;
         mResultsSize = 0;
         mDownloaded = 0;
-        String url = "";
         final List<MovieInterface> movies = new ArrayList<>();
+        String url = "";
 
         if (sortBy.equals(mContext.getResources().getInteger(R.integer.popular))) {
             url = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
-
         } else if (sortBy.equals(mContext.getResources().getInteger(R.integer.highest_rated))) {
             url = "https://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
-
         }
 
         downloadMovies(url, new DownloadMovieCallback() {

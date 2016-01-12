@@ -33,4 +33,5 @@ ext {
     runnerVersion = '0.4.1'
     rulesVersion = '0.4.1'
     espressoVersion = '2.2.1'
+    picassoVersion = '2.5.2'
 }

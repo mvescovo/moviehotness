@@ -51,5 +51,7 @@ public interface ViewMoviesContract {
         void loadMovies(int sortBy, boolean forceUpdate);
 
         void openMovieDetails(@NonNull MovieInterface requestedMovie);
+
+        void openAttribution();
     }
 }

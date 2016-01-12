@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 public class DbModel extends DataModel {
 
     @Override
-    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull LoadMoviesCallback callback) {
         // TODO: 8/01/16 get movies from local db
         successor.getMovies(context, sortBy, callback);
     }

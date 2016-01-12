@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,10 +41,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeIntents;
-import com.michaelvescovo.moviehotness.Injection;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.model.MovieRepositories;
 import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_full_plot.PlotActivity;
@@ -61,7 +63,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private ImageView mDetailposter;
     private TextView mReleaseDate;
     private TextView mPlot;
-    private TextView mPlotMore;
     private RatingBar mRatingBar;
     private ArrayList<MovieTrailerInterface> mTrailers;
     private Button mMoreTrailers;
@@ -78,7 +79,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActionsListener = new ViewMovieDetailsPresenter(getContext(), Injection.provideMovieRepository(getContext(), getArguments().getInt(SORT_BY)), this);
+        mActionsListener = new ViewMovieDetailsPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), getArguments().getInt(SORT_BY)), this);
     }
 
     @Nullable
@@ -90,7 +91,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mDetailposter = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         mReleaseDate = (TextView) root.findViewById(R.id.fragment_detail_release_date);
         mPlot = (TextView) root.findViewById(R.id.fragment_detail_plot);
-        mPlotMore = (TextView) root.findViewById(R.id.fragment_detail_read_more);
+        TextView plotMore = (TextView) root.findViewById(R.id.fragment_detail_read_more);
 
         mPlot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +100,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        mPlotMore.setOnClickListener(new View.OnClickListener() {
+        plotMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
@@ -153,56 +154,81 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showMovieDetails(MovieInterface movie) {
+
+        Log.i(TAG, "showMovieDetails: id: " + movie.getId());
+        Log.i(TAG, "showMovieDetails: title: " + movie.getTitle());
+        Log.i(TAG, "showMovieDetails: release date: " + movie.getReleaseDate());
+        Log.i(TAG, "showMovieDetails: poster: " + movie.getPosterUrl());
+        Log.i(TAG, "showMovieDetails: vote average: " + movie.getVoteAverage());
+        Log.i(TAG, "showMovieDetails: plot: " + movie.getPlot());
+        Log.i(TAG, "showMovieDetails: backdrop: " + movie.getBackdropUrl());
+
+        // Title
         mTitle = movie.getTitle();
-
-        if (getView() != null) {
-
-            mTrailers = movie.getTrailers();
-            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).into(mDetailposter, new Callback() {
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            });
-
-            mReleaseDate.setText(movie.getReleaseDate());
-            mPlot.setText(movie.getPlot());
-            if (movie.getPlot().length() > getResources().getInteger(R.integer.short_plot_max_chars)) {
-                TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
-                textViewMore.setVisibility(View.VISIBLE);
-            }
-            mRatingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
-            mRatingBar.setVisibility(View.VISIBLE);
-            if (movie.getTrailerCount() > 0) {
-                mMoreTrailers.setVisibility(View.VISIBLE);
-            }
-        }
-
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(mTitle);
-        ImageView backdrop = (ImageView) getActivity().findViewById(R.id.backdrop);
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getBackdropUrl()).into(backdrop, new Callback() {
+
+        // Release date
+        mReleaseDate.setText(movie.getReleaseDate());
+
+        // Poster
+        EspressoIdlingResource.increment();
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).into(mDetailposter, new Callback() {
             @Override
             public void onSuccess() {
-
+                EspressoIdlingResource.decrement();
             }
 
             @Override
             public void onError() {
-
+                EspressoIdlingResource.decrement();
             }
         });
 
+        // Rating
+        mRatingBar.setStepSize((float) 0.25);
+        mRatingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
+        mRatingBar.setVisibility(View.VISIBLE);
+
+        // Plot
+        mPlot.setText(movie.getPlot());
+        if (movie.getPlot().length() > getResources().getInteger(R.integer.short_plot_max_chars)) {
+            if (getView() != null) {
+                TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
+                textViewMore.setVisibility(View.VISIBLE);
+            }
+        }
+
+        // Backdrop
+        ImageView backdrop = (ImageView) getActivity().findViewById(R.id.backdrop);
+        EspressoIdlingResource.increment();
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getBackdropUrl()).into(backdrop, new Callback() {
+            @Override
+            public void onSuccess() {
+                EspressoIdlingResource.decrement();
+            }
+
+            @Override
+            public void onError() {
+                EspressoIdlingResource.decrement();
+            }
+        });
+
+        // Trailers
+        mTrailers = movie.getTrailers();
         if (movie.getTrailerCount() > 0) {
+            Log.i(TAG, "showMovieDetails: " + movie.getTrailer(0).getName() + movie.getTrailer(0).getYouTubeId());
+            mMoreTrailers.setVisibility(View.VISIBLE);
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
             imageView.setVisibility(View.VISIBLE);
         }
+    }
 
+    @Override
+    public void showMissingMovie() {
+        mTitle = "Movie not found.";
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout.setTitle(mTitle);
     }
 
     @Override

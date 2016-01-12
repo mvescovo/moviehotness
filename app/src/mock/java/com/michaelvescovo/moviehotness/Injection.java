@@ -24,26 +24,26 @@
 
 package com.michaelvescovo.moviehotness;
 
-import com.michaelvescovo.moviehotness.model.CloudModel;
-import com.michaelvescovo.moviehotness.model.DbModel;
-import com.michaelvescovo.moviehotness.model.MemoryModel;
+import com.michaelvescovo.moviehotness.model.FakeCloudModel;
+import com.michaelvescovo.moviehotness.model.FakeDbModel;
+import com.michaelvescovo.moviehotness.model.FakeMemoryModel;
 import com.michaelvescovo.moviehotness.model.MovieRepository;
 
 /**
- * Created by Michael Vescovo on 5/01/16.
+ * Created by Michael Vescovo on 9/01/16.
  *
  */
 public class Injection {
 
     public static MovieRepository provideMemoryRepository() {
-        return new MemoryModel();
+        return new FakeMemoryModel();
     }
 
     public static MovieRepository provideDbRepository() {
-        return new DbModel();
+        return new FakeDbModel();
     }
 
     public static MovieRepository provideCloudRepository() {
-        return new CloudModel();
+        return new FakeCloudModel();
     }
 }

@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 
 import com.michaelvescovo.moviehotness.model.MovieInterface;
 import com.michaelvescovo.moviehotness.model.MovieRepository;
+import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
 import java.util.List;
 
@@ -60,12 +61,11 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
 
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
-//        EspressoIdlingResource.increment(); // App is busy until further notice
-
+        EspressoIdlingResource.increment(); // App is busy until further notice
         mMovieRepository.getMovies(mContext, sortBy, new MovieRepository.LoadMoviesCallback() {
             @Override
             public void onMoviesLoaded(List<MovieInterface> movies) {
-//                EspressoIdlingResource.decrement(); // Set app as idle.
+                EspressoIdlingResource.decrement(); // Set app as idle.
                 mViewMoviesView.setProgressIndicator(false);
                 mViewMoviesView.showMovies(movies);
             }
@@ -75,5 +75,10 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
     @Override
     public void openMovieDetails(@NonNull MovieInterface requestedMovie) {
         mViewMoviesView.showMovieDetailUi(requestedMovie.getId());
+    }
+
+    @Override
+    public void openAttribution() {
+        mViewMoviesView.showAttributionUi();
     }
 }

@@ -47,6 +47,8 @@ public interface ViewMovieDetailsContract {
         void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers);
 
         void showAttributionUi();
+
+        void showMissingMovie();
     }
 
     interface UserActionsListener {

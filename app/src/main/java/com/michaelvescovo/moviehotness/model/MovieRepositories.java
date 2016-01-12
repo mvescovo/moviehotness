@@ -26,6 +26,7 @@ package com.michaelvescovo.moviehotness.model;
 
 import android.content.Context;
 
+import com.michaelvescovo.moviehotness.Injection;
 import com.michaelvescovo.moviehotness.R;
 
 /**
@@ -41,26 +42,29 @@ public class MovieRepositories {
     private static MovieRepository popularMemoryRepository = null;
     private static MovieRepository highestRatedMemoryRepository = null;
 
-    public synchronized static MovieRepository getMemoryModel(Context context, int sortBy) {
+    public synchronized static MovieRepository getMovieRepository(Context context, int sortBy) {
         if (sortBy == context.getResources().getInteger(R.integer.popular)) {
             if (null == popularMemoryRepository) {
-                popularMemoryRepository = new MemoryModel();
-                MovieRepository dbRepository = new DbModel();
+                popularMemoryRepository = Injection.provideMemoryRepository();
+                MovieRepository dbRepository = Injection.provideDbRepository();
+                MovieRepository cloudRepository = Injection.provideCloudRepository();
+
                 ((DataModel) popularMemoryRepository).setSuccessor((DataModel) dbRepository);
-                MovieRepository cloudRepository = new CloudModel();
                 ((DataModel) dbRepository).setSuccessor((DataModel) cloudRepository);
             }
             return popularMemoryRepository;
         } else if (sortBy == context.getResources().getInteger(R.integer.highest_rated)) {
             if (null == highestRatedMemoryRepository) {
-                highestRatedMemoryRepository = new MemoryModel();
-                MovieRepository dbRepository = new DbModel();
+                highestRatedMemoryRepository = Injection.provideMemoryRepository();
+                MovieRepository dbRepository = Injection.provideDbRepository();
+                MovieRepository cloudRepository = Injection.provideCloudRepository();
+
                 ((DataModel) highestRatedMemoryRepository).setSuccessor((DataModel) dbRepository);
-                MovieRepository cloudRepository = new CloudModel();
                 ((DataModel) dbRepository).setSuccessor((DataModel) cloudRepository);
             }
             return highestRatedMemoryRepository;
+        } else {
+            return null;
         }
-        return null;
     }
 }

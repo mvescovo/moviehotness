@@ -36,9 +36,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.michaelvescovo.moviehotness.Injection;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.model.MovieRepositories;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetailsActivity;
 
@@ -54,6 +54,8 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mSortBy = -1;
+
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
@@ -64,7 +66,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
                 mSortBy = getArguments().getInt("sortBy");
             }
 
-            mActionsListener = new ViewMoviesPresenter(getContext(), Injection.provideMovieRepository(getContext(), mSortBy), this);
+            mActionsListener = new ViewMoviesPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), mSortBy), this);
             mAdapter = new PosterAdapter(getContext(), mActionsListener);
         }
     }

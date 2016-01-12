@@ -2,31 +2,25 @@ package com.michaelvescovo.moviehotness.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
- * Created by Michael Vescovo on 5/01/16.
+ * Created by Michael Vescovo on 11/01/16.
  *
  */
-public class MemoryModel extends DataModel {
+public class FakeMemoryModel extends DataModel {
 
-    private static final String TAG = "MemoryModel";
     List<MovieInterface> cachedMovies;
 
     @Override
-    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
-        checkNotNull(callback);
-        if (cachedMovies == null) {
+    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
+        if (null == cachedMovies) {
             successor.getMovies(context, sortBy, new LoadMoviesCallback() {
                 @Override
                 public void onMoviesLoaded(List<MovieInterface> movies) {
                     cachedMovies = movies;
                     callback.onMoviesLoaded(cachedMovies);
-                    Log.i(TAG, "onMoviesLoaded: called popmovies callback");
                 }
             });
         } else {
@@ -36,9 +30,7 @@ public class MemoryModel extends DataModel {
 
     @Override
     public void getMovie(@NonNull Context context, @NonNull String movieId, @NonNull final GetMovieCallback callback) {
-        checkNotNull(movieId);
-        checkNotNull(callback);
-        if (cachedMovies == null) {
+        if (null == cachedMovies) {
             successor.getMovie(context, movieId, new GetMovieCallback() {
                 @Override
                 public void onMovieLoaded(MovieInterface movie) {
@@ -56,12 +48,11 @@ public class MemoryModel extends DataModel {
 
     @Override
     public void saveMovie(@NonNull MovieInterface movie) {
-        successor.saveMovie(movie);
+
     }
 
     @Override
     public void refreshData() {
-        cachedMovies =  null;
-        successor.refreshData();
+
     }
 }
