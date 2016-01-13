@@ -29,7 +29,7 @@ public class TrailerAdapter extends RecyclerView.Adapter implements Serializable
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailers_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_card, parent, false);
         return new TrailerViewHolder(v, mDataset);
     }
 

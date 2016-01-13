@@ -42,4 +42,12 @@ public interface MovieInterface {
     public ArrayList<MovieTrailerInterface> getTrailers();
 
     public int getTrailerCount();
+
+    public void addReview(MovieReviewInterface review);
+
+    public MovieReviewInterface getReview(int index);
+
+    public ArrayList<MovieReviewInterface> getReviews();
+
+    public int getReviewCount();
 }

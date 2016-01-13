@@ -8,6 +8,7 @@ import java.util.ArrayList;
  *
  */
 public class Movie implements MovieInterface, Serializable {
+
     private String mId;
     private String mTitle;
     private String mReleaseDate;
@@ -16,6 +17,7 @@ public class Movie implements MovieInterface, Serializable {
     private String mPlot;
     private String mBackdropUrl;
     private ArrayList<MovieTrailerInterface> mTrailers = new ArrayList<>();
+    private ArrayList<MovieReviewInterface> mReviews = new ArrayList<>();
 
     public Movie(String id, String title, String releaseDate, String posterUrl, String voteAverage, String plot, String backdropUrl) {
         mId = id;
@@ -115,5 +117,25 @@ public class Movie implements MovieInterface, Serializable {
     @Override
     public int getTrailerCount() {
         return mTrailers.size();
+    }
+
+    @Override
+    public void addReview(MovieReviewInterface review) {
+        mReviews.add(review);
+    }
+
+    @Override
+    public MovieReviewInterface getReview(int index) {
+        return mReviews.get(index);
+    }
+
+    @Override
+    public ArrayList<MovieReviewInterface> getReviews() {
+        return mReviews;
+    }
+
+    @Override
+    public int getReviewCount() {
+        return mReviews.size();
     }
 }

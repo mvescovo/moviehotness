@@ -25,6 +25,7 @@
 package com.michaelvescovo.moviehotness.view_movie_details;
 
 import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
 
 import java.util.ArrayList;
@@ -46,6 +47,10 @@ public interface ViewMovieDetailsContract {
 
         void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers);
 
+        void showFullReview(String author, String content);
+
+        void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews);
+
         void showAttributionUi();
 
         void showMissingMovie();
@@ -60,6 +65,10 @@ public interface ViewMovieDetailsContract {
         void openFullPlot(String title, String plot);
 
         void openAllTrailers(ArrayList<MovieTrailerInterface> trailers);
+
+        void openFullReview(String author, String content);
+
+        void openAllReviews(ArrayList<MovieReviewInterface> reviews);
 
         void openAttribution();
     }

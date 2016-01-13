@@ -27,11 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view_movies.ViewMoviesActivity"/>
         </activity>
-        <activity android:name=".view_full_plot.PlotActivity">
+        <activity android:name=".view_full_plot.ViewFullPlotActivity">
         </activity>
         <activity android:name=".view_attribution.AttributionActivity">
         </activity>
         <activity android:name=".view_all_trailers.ViewAllTrailersActivity">
+        </activity>
+        <activity android:name=".view_all_reviews.ViewAllReviewsActivity">
+        </activity>
+        <activity android:name=".view_full_review.ViewFullReviewActivity">
         </activity>
     </application>
 

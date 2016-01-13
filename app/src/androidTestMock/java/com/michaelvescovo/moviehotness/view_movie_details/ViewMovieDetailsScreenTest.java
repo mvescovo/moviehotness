@@ -33,6 +33,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.model.FakeEndPoint;
 import com.michaelvescovo.moviehotness.model.Movie;
+import com.michaelvescovo.moviehotness.model.MovieReview;
 import com.michaelvescovo.moviehotness.model.MovieTrailer;
 
 import org.junit.After;
@@ -70,6 +71,11 @@ public class ViewMovieDetailsScreenTest {
     private static final String BACKDROP_URL_THE_MARTIAN = "/sy3e2e4JwdAtd2oZGA2uUilZe8j.jpg";
     private static final Movie THE_MARTIAN = new Movie(ID_THE_MARTIAN, TITLE_THE_MARTIAN, RELEASE_DATE_THE_MARTIAN, POSTER_URL_THE_MARTIAN, VOTE_AVERAGE_THE_MARTIAN, PLOT_THE_MARTIAN, BACKDROP_URL_THE_MARTIAN);
     private static final MovieTrailer TRAILER_THE_MARTIAN = new MovieTrailer("#1ZiS7akYy4yA", "Ant-Man Official Trailer");
+    private static final String REVIEW_ID_THE_MARTIAN = "5619f70d9251415d3100129c";
+    private static final String REVIEW_AUTHOR_THE_MARTIAN = "Frank Ochieng";
+    private static final String REVIEW_CONTENT_THE_MARTIAN = "The Martian’ is definitely in the creative wheelhouse of filmmaker Ridley Scott whose Science Fiction sensibilities are grounded in colorful futuristic fantasies that tiptoe in grand whimsy.  The veteran auteur responsible for such pop cultural high-minded spectacles in ‘Alien’, ‘Blade Runner’ and even the mixed bag reception of ‘Prometheus’ certainly brings a sophisticated and thought-provoking vibe to the probing aura of ‘The Martian’.";
+    private static final String REVIEW_URL = "http://j.mp/1OtCJjC";
+    private static final MovieReview REVIEW_THE_MARTIAN = new MovieReview(REVIEW_ID_THE_MARTIAN, REVIEW_AUTHOR_THE_MARTIAN, REVIEW_CONTENT_THE_MARTIAN, REVIEW_URL);
 
     @Rule
     public ActivityTestRule<ViewMovieDetailsActivity> mViewMovieDetailsActivityTestRule = new ActivityTestRule<>(ViewMovieDetailsActivity.class, true, false);
@@ -77,6 +83,7 @@ public class ViewMovieDetailsScreenTest {
     @Before
     public void intentWithStubbedMovieIdAndSortBy() {
         THE_MARTIAN.addTrailer(TRAILER_THE_MARTIAN);
+        THE_MARTIAN.addReview(REVIEW_THE_MARTIAN);
         FakeEndPoint.addMovie(THE_MARTIAN);
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
@@ -117,12 +124,46 @@ public class ViewMovieDetailsScreenTest {
         // Trailers
         if (THE_MARTIAN.getTrailerCount() > 0) {
             onView(withId(R.id.main_trailer_play_button)).check(matches(isDisplayed()));
-            onView(withId(R.id.more_trailers)).check(matches(withText(R.string.fragment_detail_view_trailers)));
+            onView(withId(R.id.more_trailers_button)).check(matches(isDisplayed()));
+            onView(withId(R.id.more_trailers_button)).check(matches(withText(R.string.fragment_detail_view_trailers)));
         } else {
             onView(withId(R.id.main_trailer_play_button)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.more_trailers)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.more_trailers_button)).check(matches(not(isDisplayed())));
         }
-//        Thread.sleep(15000);
+
+        // Reviews
+        if (THE_MARTIAN.getReviewCount() > 0) {
+
+            onView(withId(R.id.review_title)).check(matches(withText(R.string.review_title)));
+            onView(withId(R.id.review_author_label)).check(matches(withText(R.string.review_author_label)));
+            onView(withId(R.id.review_author)).check(matches(withText(THE_MARTIAN.getReview(0).getAuthor())));
+            onView(withId(R.id.review_content)).check(matches(withText(THE_MARTIAN.getReview(0).getContent())));
+            onView(withId(R.id.review_content_read_more)).check(matches(withText(R.string.fragment_detail_read_more)));
+            onView(withId(R.id.review_all_reviews_button)).check(matches(withText(R.string.review_all_reviews_button)));
+
+            /*
+            * need to find out how to scroll inside coordinatorlayout for the isDisplayed lines to work
+            *
+            * onView(withId(R.id.review_title)).check(matches(isDisplayed()));
+            * onView(withId(R.id.review_author_label)).check(matches(isDisplayed()));
+            * onView(withId(R.id.review_author)).check(matches(isDisplayed()));
+            * onView(withId(R.id.review_content)).check(matches(isDisplayed()));
+            * onView(withId(R.id.review_content_read_more)).check(matches(isDisplayed()));
+            * onView(withId(R.id.review_all_reviews_button)).check(matches(isDisplayed()));
+            *
+            * */
+
+        } else {
+            onView(withId(R.id.review_title)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.review_author_label)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.review_author)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.review_content)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.review_content_read_more)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.review_all_reviews_button)).check(matches(not(isDisplayed())));
+
+        }
+
+        // Thread.sleep(15000);
     }
 
     private void registerIdlingResource() {

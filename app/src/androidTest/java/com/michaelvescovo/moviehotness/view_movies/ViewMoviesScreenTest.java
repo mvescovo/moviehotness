@@ -26,7 +26,7 @@ package com.michaelvescovo.moviehotness.view_movies;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import com.michaelvescovo.moviehotness.R;
 
@@ -48,7 +48,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  *
  */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class ViewMoviesScreenTest {
 
     @Rule

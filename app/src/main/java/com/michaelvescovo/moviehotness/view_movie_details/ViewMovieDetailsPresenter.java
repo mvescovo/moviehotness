@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 
 import com.michaelvescovo.moviehotness.model.MovieInterface;
 import com.michaelvescovo.moviehotness.model.MovieRepository;
+import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
@@ -86,6 +87,16 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     @Override
     public void openAllTrailers(ArrayList<MovieTrailerInterface> trailers) {
         mViewMovieDetailsView.showAllTrailersUi(trailers);
+    }
+
+    @Override
+    public void openFullReview(String author, String content) {
+        mViewMovieDetailsView.showFullReview(author, content);
+    }
+
+    @Override
+    public void openAllReviews(ArrayList<MovieReviewInterface> reviews) {
+
     }
 
     @Override

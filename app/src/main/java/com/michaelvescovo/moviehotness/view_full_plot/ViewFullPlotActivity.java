@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
 
-public class PlotActivity extends AppCompatActivity {
-    private static final String TAG = "PlotActivity";
+public class ViewFullPlotActivity extends AppCompatActivity {
+    private static final String TAG = "ViewFullPlotActivity";
     private static final String PLOT = "plot";
     private static final String TITLE = "title";
 
@@ -26,7 +26,7 @@ public class PlotActivity extends AppCompatActivity {
             mTitle = getIntent().getStringExtra(TITLE);
         }
 
-        setContentView(R.layout.activity_plot);
+        setContentView(R.layout.activity_view_full_plot);
 
         ((TextView) findViewById(R.id.plot_title)).setText(mTitle);
         ((TextView) findViewById(R.id.plot_text)).setText(mPlot);

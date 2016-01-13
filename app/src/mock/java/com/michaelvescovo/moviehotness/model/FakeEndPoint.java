@@ -42,10 +42,16 @@ public final class FakeEndPoint {
     private static final String BACKDROP_URL_TEST = "/kvXLZqY0Ngl1XSw7EaMQO0C1CCj.jpg";
     private static final Movie ANTMAN = new Movie(ID_TEST, TITLE_TEST, RELEASE_DATE_TEST, POSTER_URL_TEST, VOTE_AVERAGE_TEST, PLOT_TEST, BACKDROP_URL_TEST);
     private static final MovieTrailer TRAILER = new MovieTrailer("8E8N8EKbpV4", "The Martian Official Trailer 1 HD");
+    private static final String REVIEW_ID = "55d5a00792514102cf0041f2";
+    private static final String REVIEW_AUTHOR = "owen333";
+    private static final String REVIEW_CONTENT = "I loved it it was so much fun and very funny, another marvel masterpiece.";
+    private static final String REVIEW_URL = "http://j.mp/1MzokBf";
+    private static final MovieReview REVIEW = new MovieReview(REVIEW_ID, REVIEW_AUTHOR, REVIEW_CONTENT, REVIEW_URL);
 
     static {
         DATA = new ArrayList<>();
         ANTMAN.addTrailer(TRAILER);
+        ANTMAN.addReview(REVIEW);
         addMovie(ANTMAN);
     }
 

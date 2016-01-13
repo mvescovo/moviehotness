@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,11 +43,13 @@ import com.google.android.youtube.player.YouTubeIntents;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.model.MovieInterface;
 import com.michaelvescovo.moviehotness.model.MovieRepositories;
+import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
-import com.michaelvescovo.moviehotness.view_full_plot.PlotActivity;
+import com.michaelvescovo.moviehotness.view_full_plot.ViewFullPlotActivity;
+import com.michaelvescovo.moviehotness.view_full_review.ViewFullReviewActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -66,6 +67,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private RatingBar mRatingBar;
     private ArrayList<MovieTrailerInterface> mTrailers;
     private Button mMoreTrailers;
+    private ArrayList<MovieReviewInterface> mReviews;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -90,9 +92,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         mDetailposter = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         mReleaseDate = (TextView) root.findViewById(R.id.fragment_detail_release_date);
-        mPlot = (TextView) root.findViewById(R.id.fragment_detail_plot);
-        TextView plotMore = (TextView) root.findViewById(R.id.fragment_detail_read_more);
 
+        mPlot = (TextView) root.findViewById(R.id.fragment_detail_plot);
         mPlot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +101,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
+        TextView plotMore = (TextView) root.findViewById(R.id.fragment_detail_read_more);
         plotMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,7 +110,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         });
 
         mRatingBar = (RatingBar) root.findViewById(R.id.fragment_detail_rating);
-        mMoreTrailers = (Button) root.findViewById(R.id.more_trailers);
+        mMoreTrailers = (Button) root.findViewById(R.id.more_trailers_button);
 
         mMoreTrailers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +124,22 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 mActionsListener.openFirstTrailer(mTrailers.get(0).getYouTubeId());
+            }
+        });
+
+        TextView review = (TextView) root.findViewById(R.id.review_content);
+        review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+            }
+        });
+
+        TextView reviewMore = (TextView) root.findViewById(R.id.review_content_read_more);
+        reviewMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
             }
         });
 
@@ -155,13 +173,13 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     @Override
     public void showMovieDetails(MovieInterface movie) {
 
-        Log.i(TAG, "showMovieDetails: id: " + movie.getId());
-        Log.i(TAG, "showMovieDetails: title: " + movie.getTitle());
-        Log.i(TAG, "showMovieDetails: release date: " + movie.getReleaseDate());
-        Log.i(TAG, "showMovieDetails: poster: " + movie.getPosterUrl());
-        Log.i(TAG, "showMovieDetails: vote average: " + movie.getVoteAverage());
-        Log.i(TAG, "showMovieDetails: plot: " + movie.getPlot());
-        Log.i(TAG, "showMovieDetails: backdrop: " + movie.getBackdropUrl());
+//        Log.i(TAG, "showMovieDetails: id: " + movie.getId());
+//        Log.i(TAG, "showMovieDetails: title: " + movie.getTitle());
+//        Log.i(TAG, "showMovieDetails: release date: " + movie.getReleaseDate());
+//        Log.i(TAG, "showMovieDetails: poster: " + movie.getPosterUrl());
+//        Log.i(TAG, "showMovieDetails: vote average: " + movie.getVoteAverage());
+//        Log.i(TAG, "showMovieDetails: plot: " + movie.getPlot());
+//        Log.i(TAG, "showMovieDetails: backdrop: " + movie.getBackdropUrl());
 
         // Title
         mTitle = movie.getTitle();
@@ -217,10 +235,29 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         // Trailers
         mTrailers = movie.getTrailers();
         if (movie.getTrailerCount() > 0) {
-            Log.i(TAG, "showMovieDetails: " + movie.getTrailer(0).getName() + movie.getTrailer(0).getYouTubeId());
+//            Log.i(TAG, "showMovieDetails: " + movie.getTrailer(0).getName() + movie.getTrailer(0).getYouTubeId());
             mMoreTrailers.setVisibility(View.VISIBLE);
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
             imageView.setVisibility(View.VISIBLE);
+        }
+
+        // Reviews
+        mReviews = movie.getReviews();
+        if (movie.getReviewCount() > 0) {
+            TextView reviewTitle = (TextView) getActivity().findViewById(R.id.review_title);
+            reviewTitle.setVisibility(View.VISIBLE);
+            TextView reviewAuthorLabel = (TextView) getActivity().findViewById(R.id.review_author_label);
+            reviewAuthorLabel.setVisibility(View.VISIBLE);
+            TextView reviewAuthor = (TextView) getActivity().findViewById(R.id.review_author);
+            reviewAuthor.setVisibility(View.VISIBLE);
+            reviewAuthor.setText(movie.getReview(0).getAuthor());
+            TextView reviewContent = (TextView) getActivity().findViewById(R.id.review_content);
+            reviewContent.setVisibility(View.VISIBLE);
+            reviewContent.setText(movie.getReview(0).getContent());
+            TextView reviewContentReadMore = (TextView) getActivity().findViewById(R.id.review_content_read_more);
+            reviewContentReadMore.setVisibility(View.VISIBLE);
+            Button reviewAllReviewsButton = (Button) getActivity().findViewById(R.id.review_all_reviews_button);
+            reviewAllReviewsButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -239,7 +276,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showFullPlotUi(String title, String plot) {
-        Intent intent = new Intent(getContext(), PlotActivity.class);
+        Intent intent = new Intent(getContext(), ViewFullPlotActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("plot", plot);
         startActivity(intent);
@@ -250,6 +287,21 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
         intent.putExtra("trailers", mTrailers);
         startActivity(intent);
+    }
+
+    @Override
+    public void showFullReview(String author, String content) {
+        Intent intent = new Intent(getContext(), ViewFullReviewActivity.class);
+        intent.putExtra(ViewFullReviewActivity.EXTRA_AUTHOR, author);
+        intent.putExtra(ViewFullReviewActivity.EXTRA_CONTENT, content);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews) {
+//        Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
+//        intent.putExtra("trailers", mTrailers);
+//        startActivity(intent);
     }
 
     @Override

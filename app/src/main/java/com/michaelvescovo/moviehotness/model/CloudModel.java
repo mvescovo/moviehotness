@@ -170,6 +170,40 @@ public class CloudModel extends DataModel {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                getReviews(movie, downloadMovieCallback);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                getReviews(movie, downloadMovieCallback);
+            }
+        });
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(jsObjRequest);
+    }
+
+    public void getReviews(final MovieInterface movie, final DownloadMovieCallback downloadMovieCallback) {
+        String url = "http://api.themoviedb.org/3/movie/" + movie.getId() + "/reviews" + "?api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                final JSONArray results;
+
+                try {
+                    results = response.getJSONArray("results");
+
+                    for (int i = 0; i < results.length(); i++) {
+                        String id = results.getJSONObject(i).getString("id");
+                        String author = results.getJSONObject(i).getString("author");
+                        String content = results.getJSONObject(i).getString("content");
+                        String url = results.getJSONObject(i).getString("url");
+                        MovieReviewInterface movieReview = new MovieReview(id, author, content, url);
+                        movie.addReview(movieReview);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 downloadMovieCallback.onMovieReceived(movie);
             }
         }, new Response.ErrorListener() {

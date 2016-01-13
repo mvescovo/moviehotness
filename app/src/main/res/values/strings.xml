@@ -14,6 +14,14 @@
     <string name="fragment_detail_read_more">Read more&#8230;</string>
     <string name="fragment_detail_view_trailers">View all trailers</string>
 
+    <!--ReviewCard-->
+    <string name="review_title">Top Review</string>
+    <string name="review_author_label">Author: </string>
+    <string name="review_all_reviews_button">View all reviews</string>
+    
+    <!--ViewFullReview-->
+    <string name="full_review_author_label">Author: </string>
+
     <!--Image sizes-->
     <string name="poster_x_small">w92</string>
     <string name="poster_small">w154</string>

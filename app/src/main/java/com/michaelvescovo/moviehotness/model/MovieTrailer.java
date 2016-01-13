@@ -7,6 +7,7 @@ import java.io.Serializable;
  *
  */
 public class MovieTrailer implements MovieTrailerInterface, Serializable {
+
     private String mYouTubeId;
     private String mName;
 

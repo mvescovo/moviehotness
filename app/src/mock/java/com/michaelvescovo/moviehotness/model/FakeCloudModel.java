@@ -30,6 +30,6 @@ public class FakeCloudModel extends DataModel {
 
     @Override
     public void refreshData() {
-
+        // no data deleted on cloud.
     }
 }
