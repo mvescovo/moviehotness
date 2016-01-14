@@ -26,6 +26,7 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 
 import android.content.Intent;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -45,6 +46,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.michaelvescovo.moviehotness.custom.matcher.CollapsingToolBarLayoutTitleMatcher.withCollapsingToolbarLayoutTitle;
@@ -112,7 +114,7 @@ public class ViewMovieDetailsScreenTest {
 
         // Plot
         onView(withId(R.id.fragment_detail_plot)).check(matches(withText(PLOT_THE_MARTIAN)));
-        if (THE_MARTIAN.getPlot().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.short_plot_max_chars)) {
+        if (THE_MARTIAN.getPlot().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.preview_text_max_chars)) {
             onView(withId(R.id.fragment_detail_read_more)).check(matches(isDisplayed()));
         } else {
             onView(withId(R.id.fragment_detail_read_more)).check(matches(not(isDisplayed())));
@@ -134,6 +136,19 @@ public class ViewMovieDetailsScreenTest {
         // Reviews
         if (THE_MARTIAN.getReviewCount() > 0) {
 
+            // Check visibility
+            onView(withId(R.id.review_title)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.review_author_label)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.review_author)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.review_content)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            if (THE_MARTIAN.getReview(0).getContent().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.preview_text_max_chars)) {
+                onView(withId(R.id.review_content_read_more)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            } else {
+                onView(withId(R.id.review_content_read_more)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            }
+            onView(withId(R.id.review_all_reviews_button)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+
+            // Check text
             onView(withId(R.id.review_title)).check(matches(withText(R.string.review_title)));
             onView(withId(R.id.review_author_label)).check(matches(withText(R.string.review_author_label)));
             onView(withId(R.id.review_author)).check(matches(withText(THE_MARTIAN.getReview(0).getAuthor())));
@@ -141,33 +156,15 @@ public class ViewMovieDetailsScreenTest {
             onView(withId(R.id.review_content_read_more)).check(matches(withText(R.string.fragment_detail_read_more)));
             onView(withId(R.id.review_all_reviews_button)).check(matches(withText(R.string.review_all_reviews_button)));
 
-            /*
-            * need to find out how to scroll inside coordinatorlayout for the isDisplayed lines to work
-            *
-            * onView(withId(R.id.review_title)).check(matches(isDisplayed()));
-            * onView(withId(R.id.review_author_label)).check(matches(isDisplayed()));
-            * onView(withId(R.id.review_author)).check(matches(isDisplayed()));
-            * onView(withId(R.id.review_content)).check(matches(isDisplayed()));
-            * if (THE_MARTIAN.getReview(0).getContent().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.preview_text_max_chars)) {
-            *     onView(withId(R.id.review_content_read_more)).check(matches(isDisplayed()));
-            * } else {
-            *     onView(withId(R.id.review_content_read_more)).check(matches(not(isDisplayed()));
-            * }
-            * onView(withId(R.id.review_all_reviews_button)).check(matches(isDisplayed()));
-            *
-            * */
-
         } else {
-            onView(withId(R.id.review_title)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.review_author_label)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.review_author)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.review_content)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.review_content_read_more)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.review_all_reviews_button)).check(matches(not(isDisplayed())));
-
+            // Check visibility
+            onView(withId(R.id.review_title)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.review_author_label)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.review_author)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.review_content)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.review_content_read_more)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.review_all_reviews_button)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
         }
-
-        // Thread.sleep(15000);
     }
 
     private void registerIdlingResource() {
