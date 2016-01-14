@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import org.hamcrest.Description;
 
 public class ImageViewHasDrawableMatcher {
+
     public static BoundedMatcher<View, ImageView> hasDrawable() {
         return new BoundedMatcher<View, ImageView>(ImageView.class) {
             @Override

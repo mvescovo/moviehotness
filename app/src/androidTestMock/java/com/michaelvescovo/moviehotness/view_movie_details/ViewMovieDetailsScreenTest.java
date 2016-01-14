@@ -25,6 +25,9 @@
 package com.michaelvescovo.moviehotness.view_movie_details;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -45,7 +48,6 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -100,6 +102,18 @@ public class ViewMovieDetailsScreenTest {
     @Test
     public void movieDetails_DisplayedInUi() throws Exception {
 
+        // Check screen in portrait
+        checkDetailsDisplayedCorrectly();
+
+        // Rotate to landscape
+        rotateScreen();
+
+        // Check screen in landscape after rotation
+        checkDetailsDisplayedCorrectly();
+    }
+
+    private void checkDetailsDisplayedCorrectly() {
+
         // Title
         onView(withId(R.id.toolbar_layout)).check(matches(withCollapsingToolbarLayoutTitle(TITLE_THE_MARTIAN)));
 
@@ -107,7 +121,7 @@ public class ViewMovieDetailsScreenTest {
         onView(withId(R.id.fragment_detail_release_date)).check(matches(withText(RELEASE_DATE_THE_MARTIAN)));
 
         // Poster
-        onView(withId(R.id.fragment_detail_poster)).check(matches(allOf(hasDrawable(), isDisplayed())));
+        onView(withId(R.id.fragment_detail_poster)).check(matches(allOf(hasDrawable(), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
 
         // Rating
         onView(withId(R.id.fragment_detail_rating)).check(matches(withRatingBar(VOTE_AVERAGE_RESULT_THE_MARTIAN)));
@@ -115,22 +129,22 @@ public class ViewMovieDetailsScreenTest {
         // Plot
         onView(withId(R.id.fragment_detail_plot)).check(matches(withText(PLOT_THE_MARTIAN)));
         if (THE_MARTIAN.getPlot().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.preview_text_max_chars)) {
-            onView(withId(R.id.fragment_detail_read_more)).check(matches(isDisplayed()));
+            onView(withId(R.id.fragment_detail_read_more)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         } else {
-            onView(withId(R.id.fragment_detail_read_more)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.fragment_detail_read_more)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
         }
 
         // Backdrop
-        onView(withId(R.id.backdrop)).check(matches(allOf(hasDrawable(), isDisplayed())));
+        onView(withId(R.id.backdrop)).check(matches(allOf(hasDrawable(), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
 
         // Trailers
         if (THE_MARTIAN.getTrailerCount() > 0) {
-            onView(withId(R.id.main_trailer_play_button)).check(matches(isDisplayed()));
-            onView(withId(R.id.more_trailers_button)).check(matches(isDisplayed()));
+            onView(withId(R.id.main_trailer_play_button)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            onView(withId(R.id.more_trailers_button)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
             onView(withId(R.id.more_trailers_button)).check(matches(withText(R.string.fragment_detail_view_trailers)));
         } else {
-            onView(withId(R.id.main_trailer_play_button)).check(matches(not(isDisplayed())));
-            onView(withId(R.id.more_trailers_button)).check(matches(not(isDisplayed())));
+            onView(withId(R.id.main_trailer_play_button)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
+            onView(withId(R.id.more_trailers_button)).check(matches(not(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))));
         }
 
         // Reviews
@@ -174,5 +188,13 @@ public class ViewMovieDetailsScreenTest {
     @After
     public void unregisterIdlingResource() {
         Espresso.unregisterIdlingResources(mViewMovieDetailsActivityTestRule.getActivity().getCountingIdlingResource());
+    }
+
+    private void rotateScreen() {
+        if (InstrumentationRegistry.getTargetContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mViewMovieDetailsActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            mViewMovieDetailsActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 }
