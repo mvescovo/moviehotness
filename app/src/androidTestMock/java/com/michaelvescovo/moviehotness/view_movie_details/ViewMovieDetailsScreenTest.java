@@ -148,7 +148,11 @@ public class ViewMovieDetailsScreenTest {
             * onView(withId(R.id.review_author_label)).check(matches(isDisplayed()));
             * onView(withId(R.id.review_author)).check(matches(isDisplayed()));
             * onView(withId(R.id.review_content)).check(matches(isDisplayed()));
-            * onView(withId(R.id.review_content_read_more)).check(matches(isDisplayed()));
+            * if (THE_MARTIAN.getReview(0).getContent().length() > mViewMovieDetailsActivityTestRule.getActivity().getResources().getInteger(R.integer.preview_text_max_chars)) {
+            *     onView(withId(R.id.review_content_read_more)).check(matches(isDisplayed()));
+            * } else {
+            *     onView(withId(R.id.review_content_read_more)).check(matches(not(isDisplayed()));
+            * }
             * onView(withId(R.id.review_all_reviews_button)).check(matches(isDisplayed()));
             *
             * */

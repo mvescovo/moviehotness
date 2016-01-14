@@ -21,6 +21,7 @@ import java.util.ArrayList;
  *
  */
 public class TrailerAdapter extends RecyclerView.Adapter implements Serializable {
+
     private ArrayList<MovieTrailerInterface> mDataset = new ArrayList<>();
 
     public TrailerAdapter(ArrayList<MovieTrailerInterface> dataset) {

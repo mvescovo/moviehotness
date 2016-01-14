@@ -3,6 +3,6 @@
     <integer name="popular">0</integer>
     <integer name="highest_rated">1</integer>
     <integer name="favourite">2</integer>
-    <integer name="short_plot_max_chars">120</integer>
+    <integer name="preview_text_max_chars">120</integer>
     <integer name="movie_preview_grid_cols">2</integer>
 </resources>

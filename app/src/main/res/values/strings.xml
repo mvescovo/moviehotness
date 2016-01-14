@@ -16,6 +16,7 @@
 
     <!--ReviewCard-->
     <string name="review_title">Top Review</string>
+    <string name="review_title_no_review">No reviews.</string>
     <string name="review_author_label">Author: </string>
     <string name="review_all_reviews_button">View all reviews</string>
     

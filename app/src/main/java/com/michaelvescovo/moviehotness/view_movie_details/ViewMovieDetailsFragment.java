@@ -46,6 +46,7 @@ import com.michaelvescovo.moviehotness.model.MovieRepositories;
 import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
+import com.michaelvescovo.moviehotness.view_all_reviews.ViewAllReviewsActivity;
 import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_full_plot.ViewFullPlotActivity;
@@ -66,8 +67,9 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private TextView mPlot;
     private RatingBar mRatingBar;
     private ArrayList<MovieTrailerInterface> mTrailers;
-    private Button mMoreTrailers;
+    private Button mMoreTrailersButton;
     private ArrayList<MovieReviewInterface> mReviews;
+    private Button mAllReviewsButton;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -110,9 +112,9 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         });
 
         mRatingBar = (RatingBar) root.findViewById(R.id.fragment_detail_rating);
-        mMoreTrailers = (Button) root.findViewById(R.id.more_trailers_button);
 
-        mMoreTrailers.setOnClickListener(new View.OnClickListener() {
+        mMoreTrailersButton = (Button) root.findViewById(R.id.more_trailers_button);
+        mMoreTrailersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openAllTrailers(mTrailers);
@@ -140,6 +142,14 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+            }
+        });
+
+        mAllReviewsButton = (Button) root.findViewById(R.id.review_all_reviews_button);
+        mAllReviewsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActionsListener.openAllReviews(mReviews);
             }
         });
 
@@ -210,7 +220,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         // Plot
         mPlot.setText(movie.getPlot());
-        if (movie.getPlot().length() > getResources().getInteger(R.integer.short_plot_max_chars)) {
+        if (movie.getPlot().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
             if (getView() != null) {
                 TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
                 textViewMore.setVisibility(View.VISIBLE);
@@ -236,7 +246,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mTrailers = movie.getTrailers();
         if (movie.getTrailerCount() > 0) {
 //            Log.i(TAG, "showMovieDetails: " + movie.getTrailer(0).getName() + movie.getTrailer(0).getYouTubeId());
-            mMoreTrailers.setVisibility(View.VISIBLE);
+            mMoreTrailersButton.setVisibility(View.VISIBLE);
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
             imageView.setVisibility(View.VISIBLE);
         }
@@ -254,10 +264,16 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             TextView reviewContent = (TextView) getActivity().findViewById(R.id.review_content);
             reviewContent.setVisibility(View.VISIBLE);
             reviewContent.setText(movie.getReview(0).getContent());
-            TextView reviewContentReadMore = (TextView) getActivity().findViewById(R.id.review_content_read_more);
-            reviewContentReadMore.setVisibility(View.VISIBLE);
+            if (movie.getReview(0).getContent().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
+                TextView reviewContentReadMore = (TextView) getActivity().findViewById(R.id.review_content_read_more);
+                reviewContentReadMore.setVisibility(View.VISIBLE);
+            }
             Button reviewAllReviewsButton = (Button) getActivity().findViewById(R.id.review_all_reviews_button);
             reviewAllReviewsButton.setVisibility(View.VISIBLE);
+        } else {
+            TextView reviewTitle = (TextView) getActivity().findViewById(R.id.review_title);
+            reviewTitle.setText(R.string.review_title_no_review);
+            reviewTitle.setVisibility(View.VISIBLE);
         }
     }
 
@@ -299,9 +315,9 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews) {
-//        Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
-//        intent.putExtra("trailers", mTrailers);
-//        startActivity(intent);
+        Intent intent = new Intent(getContext(), ViewAllReviewsActivity.class);
+        intent.putExtra(ViewAllReviewsActivity.EXTRA_REVIEWS, mReviews);
+        startActivity(intent);
     }
 
     @Override

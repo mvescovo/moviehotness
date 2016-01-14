@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  */
 public class TrailerViewHolder extends RecyclerView.ViewHolder {
-    private static final String TAG = "TrailerViewHolder";
+
     private View mView;
     private ArrayList<MovieTrailerInterface> mAdapter;
 

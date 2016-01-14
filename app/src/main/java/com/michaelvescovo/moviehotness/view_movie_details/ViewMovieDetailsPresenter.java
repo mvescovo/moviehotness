@@ -96,7 +96,7 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
 
     @Override
     public void openAllReviews(ArrayList<MovieReviewInterface> reviews) {
-
+        mViewMovieDetailsView.showAllReviewsUi(reviews);
     }
 
     @Override

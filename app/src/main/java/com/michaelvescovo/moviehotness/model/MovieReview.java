@@ -1,10 +1,12 @@
 package com.michaelvescovo.moviehotness.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Michael Vescovo on 12/01/16.
  *
  */
-public class MovieReview implements MovieReviewInterface {
+public class MovieReview implements MovieReviewInterface, Serializable {
 
     private String mId;
     private String mAuthor;

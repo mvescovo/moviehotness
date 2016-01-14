@@ -12,6 +12,7 @@ import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
 import java.util.ArrayList;
 
 public class ViewAllTrailersActivity extends AppCompatActivity {
+
     private ArrayList<MovieTrailerInterface> mTrailers;
     private RecyclerView.Adapter mAdapter;
 
@@ -37,7 +38,6 @@ public class ViewAllTrailersActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
-//        recyclerView.setNestedScrollingEnabled(false);
     }
 
     @Override
