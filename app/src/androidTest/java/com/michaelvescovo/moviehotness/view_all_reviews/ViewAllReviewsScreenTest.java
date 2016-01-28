@@ -33,11 +33,9 @@ import static com.michaelvescovo.moviehotness.custom.matcher.WithItemText.withIt
 @LargeTest
 public class ViewAllReviewsScreenTest {
 
-    private static final String REVIEW_ID_THE_MARTIAN = "5619f70d9251415d3100129c";
     private static final String REVIEW_AUTHOR_THE_MARTIAN = "Frank Ochieng";
     private static final String REVIEW_CONTENT_THE_MARTIAN = "The Martian’ is definitely in the creative wheelhouse of filmmaker Ridley Scott whose Science Fiction sensibilities are grounded in colorful futuristic fantasies that tiptoe in grand whimsy.  The veteran auteur responsible for such pop cultural high-minded spectacles in ‘Alien’, ‘Blade Runner’ and even the mixed bag reception of ‘Prometheus’ certainly brings a sophisticated and thought-provoking vibe to the probing aura of ‘The Martian’.";
-    private static final String REVIEW_URL = "http://j.mp/1OtCJjC";
-    private static final MovieReview REVIEW_THE_MARTIAN = new MovieReview(REVIEW_ID_THE_MARTIAN, REVIEW_AUTHOR_THE_MARTIAN, REVIEW_CONTENT_THE_MARTIAN, REVIEW_URL);
+    private static final MovieReview REVIEW_THE_MARTIAN = new MovieReview(REVIEW_AUTHOR_THE_MARTIAN, REVIEW_CONTENT_THE_MARTIAN);
     private static ArrayList<MovieReviewInterface> mReviews =  new ArrayList<>();
 
     @Rule

@@ -194,11 +194,9 @@ public class CloudModel extends DataModel {
                     results = response.getJSONArray("results");
 
                     for (int i = 0; i < results.length(); i++) {
-                        String id = results.getJSONObject(i).getString("id");
                         String author = results.getJSONObject(i).getString("author");
                         String content = results.getJSONObject(i).getString("content");
-                        String url = results.getJSONObject(i).getString("url");
-                        MovieReviewInterface movieReview = new MovieReview(id, author, content, url);
+                        MovieReviewInterface movieReview = new MovieReview(author, content);
                         movie.addReview(movieReview);
                     }
                 } catch (JSONException e) {

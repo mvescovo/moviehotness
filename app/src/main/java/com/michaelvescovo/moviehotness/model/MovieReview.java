@@ -8,26 +8,12 @@ import java.io.Serializable;
  */
 public class MovieReview implements MovieReviewInterface, Serializable {
 
-    private String mId;
     private String mAuthor;
     private String mContent;
-    private String mUrl;
 
-    public MovieReview(String id, String author, String content, String url) {
-        mId = id;
+    public MovieReview(String author, String content) {
         mAuthor = author;
         mContent = content;
-        mUrl = url;
-    }
-
-    @Override
-    public String getId() {
-        return mId;
-    }
-
-    @Override
-    public void setId(String id) {
-        mId = id;
     }
 
     @Override
@@ -48,15 +34,5 @@ public class MovieReview implements MovieReviewInterface, Serializable {
     @Override
     public void setContent(String content) {
         mContent = content;
-    }
-
-    @Override
-    public String getUrl() {
-        return mUrl;
-    }
-
-    @Override
-    public void setUrl(String url) {
-        mUrl = url;
     }
 }
