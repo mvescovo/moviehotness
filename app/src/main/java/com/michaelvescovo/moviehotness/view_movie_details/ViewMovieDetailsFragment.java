@@ -29,6 +29,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -57,7 +59,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetailsContract.View {
-    private static final String TAG = "ViewMovieDetailsFragment";
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     private ViewMovieDetailsContract.UserActionsListener mActionsListener;
@@ -70,6 +71,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private Button mMoreTrailersButton;
     private ArrayList<MovieReviewInterface> mReviews;
     private Button mAllReviewsButton;
+    private MovieInterface mMovie;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -125,7 +127,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openFirstTrailer(mTrailers.get(0).getYouTubeId());
+                mActionsListener.playFirstTrailer(mTrailers.get(0).getYouTubeId());
             }
         });
 
@@ -153,15 +155,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         return root;
     }
 
@@ -171,6 +164,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         String movieId = getArguments().getString(MOVIE_ID);
         mActionsListener.loadMovieDetails(movieId, false);
+        mActionsListener.loadFavouriteFab(movieId);
     }
 
     @Override
@@ -182,6 +176,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showMovieDetails(MovieInterface movie) {
+
+        mMovie = movie;
 
 //        Log.i(TAG, "showMovieDetails: id: " + movie.getId());
 //        Log.i(TAG, "showMovieDetails: title: " + movie.getTitle());
@@ -282,6 +278,29 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mTitle = "Movie not found.";
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(mTitle);
+    }
+
+    @Override
+    public void setFavouriteFab(int imageResource, final boolean addFavourite) {
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageResource(imageResource);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (addFavourite) {
+                    mActionsListener.addFavouriteMovie(mMovie);
+                } else {
+                    mActionsListener.removeFavouriteMovie(mMovie.getId());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showSnackbar(int stringResource) {
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        Snackbar.make(fab, getResources().getString(stringResource), Snackbar.LENGTH_LONG)
+            .setAction("Action", null).show();
     }
 
     @Override

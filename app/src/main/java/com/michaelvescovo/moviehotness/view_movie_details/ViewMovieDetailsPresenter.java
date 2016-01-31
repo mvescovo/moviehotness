@@ -24,9 +24,13 @@
 
 package com.michaelvescovo.moviehotness.view_movie_details;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.model.MovieHotnessContract;
 import com.michaelvescovo.moviehotness.model.MovieInterface;
 import com.michaelvescovo.moviehotness.model.MovieRepository;
 import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
@@ -75,7 +79,7 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     }
 
     @Override
-    public void openFirstTrailer(String youTubeId) {
+    public void playFirstTrailer(String youTubeId) {
         mViewMovieDetailsView.showFirstTrailerUi(youTubeId);
     }
 
@@ -102,5 +106,45 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     @Override
     public void openAttribution() {
         mViewMovieDetailsView.showAttributionUi();
+    }
+
+    @Override
+    public void loadFavouriteFab(String movieId) {
+        String selection = MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
+        String[] selectionArgs = {movieId};
+        Cursor cursor = mContext.getContentResolver().query(MovieHotnessContract.MovieEntry.CONTENT_URI, null, selection, selectionArgs, null);
+
+        if (cursor.getCount() == 0) {
+            mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_favorite_white_24dp, true);
+        } else {
+            mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_remove_24dp, false);
+        }
+
+        cursor.close();
+    }
+
+    @Override
+    public void addFavouriteMovie(MovieInterface movie) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL, movie.getPosterUrl());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_BACKDROP_URL, movie.getBackdropUrl());
+        mContext.getContentResolver().insert(MovieHotnessContract.MovieEntry.CONTENT_URI, contentValues);
+        mViewMovieDetailsView.showSnackbar(R.string.fragment_detail_favourite_added);
+        mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_remove_24dp, false);
+
+    }
+
+    @Override
+    public void removeFavouriteMovie(String movieId) {
+        String selection = MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
+        String[] selectionArgs = {movieId};
+        mContext.getContentResolver().delete(MovieHotnessContract.MovieEntry.CONTENT_URI, selection, selectionArgs);
+        mViewMovieDetailsView.showSnackbar(R.string.fragment_detail_favourite_removed);
+        mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_favorite_white_24dp, true);
     }
 }

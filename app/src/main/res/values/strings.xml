@@ -13,6 +13,8 @@
     <!--ViewMovieDetails-->
     <string name="fragment_detail_read_more">Read more&#8230;</string>
     <string name="fragment_detail_view_trailers">View all trailers</string>
+    <string name="fragment_detail_favourite_added">Movie added to favourites</string>
+    <string name="fragment_detail_favourite_removed">Movie removed from favourites</string>
 
     <!--ReviewCard-->
     <string name="review_title">Top Review</string>

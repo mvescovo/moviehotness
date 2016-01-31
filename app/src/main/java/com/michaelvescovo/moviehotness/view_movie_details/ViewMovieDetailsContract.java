@@ -54,13 +54,17 @@ public interface ViewMovieDetailsContract {
         void showAttributionUi();
 
         void showMissingMovie();
+
+        void setFavouriteFab(int imageResource, boolean addFavourite);
+
+        void showSnackbar(int stringResource);
     }
 
     interface UserActionsListener {
 
         void loadMovieDetails(String movieId, boolean forceUpdate);
 
-        void openFirstTrailer(String youTubeId);
+        void playFirstTrailer(String youTubeId);
 
         void openFullPlot(String title, String plot);
 
@@ -71,5 +75,11 @@ public interface ViewMovieDetailsContract {
         void openAllReviews(ArrayList<MovieReviewInterface> reviews);
 
         void openAttribution();
+
+        void loadFavouriteFab(String movieId);
+
+        void addFavouriteMovie(MovieInterface movie);
+
+        void removeFavouriteMovie(String movieId);
     }
 }

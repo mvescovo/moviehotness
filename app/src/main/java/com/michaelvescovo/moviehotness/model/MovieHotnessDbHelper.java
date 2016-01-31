@@ -41,7 +41,7 @@ public class MovieHotnessDbHelper extends SQLiteOpenHelper {
                 MovieHotnessContract.TrailerEntry.COLUMN_NAME + " TEXT NOT NULL, " +
 
                 " FOREIGN KEY (" + MovieHotnessContract.TrailerEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
-                MovieHotnessContract.MovieEntry.TABLE_NAME + " (" + MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID +
+                MovieHotnessContract.MovieEntry.TABLE_NAME + " (" + MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID + ")," +
 
                 " UNIQUE (" + MovieHotnessContract.TrailerEntry.COLUMN_YOUTUBE_ID + ") ON CONFLICT REPLACE);";
 
