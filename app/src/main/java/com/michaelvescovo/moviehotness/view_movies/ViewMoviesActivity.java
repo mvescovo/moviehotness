@@ -17,6 +17,7 @@ public class ViewMoviesActivity extends AppCompatActivity {
     ViewPager mViewPager;
     ViewMoviesFragment mPopularMovieGridFragment;
     ViewMoviesFragment mHighestRatedMovieGridFragment;
+    ViewMoviesFragment mFavouriteMovieGridFragment;
     Menu mMenu;
     TabLayout mTabLayout;
 
@@ -48,6 +49,12 @@ public class ViewMoviesActivity extends AppCompatActivity {
         mHighestRatedMovieGridFragment = new ViewMoviesFragment();
         mHighestRatedMovieGridFragment.setArguments(bundle);
         ((MovieSortByPagerAdapter)pagerAdapter).addFragment(mHighestRatedMovieGridFragment, "Highest Rated");
+
+        bundle = new Bundle();
+        bundle.putInt("sortBy", getResources().getInteger(R.integer.favourite));
+        mFavouriteMovieGridFragment = new ViewMoviesFragment();
+        mFavouriteMovieGridFragment.setArguments(bundle);
+        ((MovieSortByPagerAdapter)pagerAdapter).addFragment(mFavouriteMovieGridFragment, "Favourite");
 
         viewPager.setAdapter(pagerAdapter);
     }

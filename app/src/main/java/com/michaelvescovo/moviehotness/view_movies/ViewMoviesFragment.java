@@ -60,15 +60,14 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
         if (savedInstanceState != null) {
             mSortBy = savedInstanceState.getInt("sortBy");
-            mAdapter = (RecyclerView.Adapter) savedInstanceState.getSerializable("adapter");
         } else {
             if (getArguments() != null) {
                 mSortBy = getArguments().getInt("sortBy");
             }
-
-            mActionsListener = new ViewMoviesPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), mSortBy), this);
-            mAdapter = new PosterAdapter(getContext(), mActionsListener);
         }
+
+        mActionsListener = new ViewMoviesPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), mSortBy), this);
+        mAdapter = new PosterAdapter(getContext(), mActionsListener);
     }
 
     @Override
@@ -82,18 +81,6 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
 
-        // Set up floating action button
-//        FloatingActionButton fab =
-//                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_notes);
-//
-//        fab.setImageResource(R.drawable.ic_add);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mActionsListener.addNewNote();
-//            }
-//        });
-//
         // Pull-to-refresh
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
@@ -120,6 +107,13 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public void onResume() {
         super.onResume();
         mActionsListener.loadMovies(mSortBy, false);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("sortBy", mSortBy);
     }
 
     @Override

@@ -179,14 +179,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         mMovie = movie;
 
-//        Log.i(TAG, "showMovieDetails: id: " + movie.getId());
-//        Log.i(TAG, "showMovieDetails: title: " + movie.getTitle());
-//        Log.i(TAG, "showMovieDetails: release date: " + movie.getReleaseDate());
-//        Log.i(TAG, "showMovieDetails: poster: " + movie.getPosterUrl());
-//        Log.i(TAG, "showMovieDetails: vote average: " + movie.getVoteAverage());
-//        Log.i(TAG, "showMovieDetails: plot: " + movie.getPlot());
-//        Log.i(TAG, "showMovieDetails: backdrop: " + movie.getBackdropUrl());
-
         // Title
         mTitle = movie.getTitle();
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);

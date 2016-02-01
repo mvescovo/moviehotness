@@ -41,6 +41,7 @@ public class MovieRepositories {
 
     private static MovieRepository popularMemoryRepository = null;
     private static MovieRepository highestRatedMemoryRepository = null;
+    private static MovieRepository favouriteMemoryRepository = null;
 
     public synchronized static MovieRepository getMovieRepository(Context context, int sortBy) {
         if (sortBy == context.getResources().getInteger(R.integer.popular)) {
@@ -63,6 +64,14 @@ public class MovieRepositories {
                 ((DataModel) dbRepository).setSuccessor((DataModel) cloudRepository);
             }
             return highestRatedMemoryRepository;
+        } else if (sortBy == context.getResources().getInteger(R.integer.favourite)) {
+            if (null == favouriteMemoryRepository) {
+                favouriteMemoryRepository = Injection.provideMemoryRepository();
+                MovieRepository dbRepository = Injection.provideDbRepository();
+
+                ((DataModel) favouriteMemoryRepository).setSuccessor((DataModel) dbRepository);
+            }
+            return favouriteMemoryRepository;
         } else {
             return null;
         }
