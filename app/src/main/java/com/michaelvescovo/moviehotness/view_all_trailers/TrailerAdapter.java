@@ -11,7 +11,7 @@ import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.michaelvescovo.moviehotness.BuildConfig;
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 
 import java.io.Serializable;
 import java.util.ArrayList;

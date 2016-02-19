@@ -24,9 +24,9 @@
 
 package com.michaelvescovo.moviehotness.view_movie_details;
 
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 
 import java.util.ArrayList;
 
@@ -36,8 +36,6 @@ import java.util.ArrayList;
  */
 public interface ViewMovieDetailsContract {
     interface View {
-
-        void setProgressIndicator(boolean active);
 
         void showMovieDetails(MovieInterface movie);
 

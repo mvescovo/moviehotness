@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 
 import java.util.ArrayList;
 

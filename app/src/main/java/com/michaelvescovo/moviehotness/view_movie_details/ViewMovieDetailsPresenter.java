@@ -30,11 +30,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieHotnessContract;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepository;
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieHotnessContract;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepository;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
 import java.util.ArrayList;
@@ -58,8 +58,6 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
 
     @Override
     public void loadMovieDetails(String movieId, boolean forceUpdate) {
-        mViewMovieDetailsView.setProgressIndicator(true);
-
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
@@ -67,8 +65,6 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
             @Override
             public void onMovieLoaded(MovieInterface movie) {
                 EspressoIdlingResource.decrement(); // Set app as idle.
-                mViewMovieDetailsView.setProgressIndicator(false);
-
                 if (movie == null) {
                     mViewMovieDetailsView.showMissingMovie();
                 } else {
@@ -114,13 +110,15 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
         String[] selectionArgs = {movieId};
         Cursor cursor = mContext.getContentResolver().query(MovieHotnessContract.MovieEntry.CONTENT_URI, null, selection, selectionArgs, null);
 
-        if (cursor.getCount() == 0) {
-            mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_favorite_white_24dp, true);
-        } else {
-            mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_remove_24dp, false);
-        }
+        if (cursor != null) {
+            if (cursor.getCount() == 0) {
+                mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_favorite_white_24dp, true);
+            } else {
+                mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_remove_24dp, false);
+            }
 
-        cursor.close();
+            cursor.close();
+        }
     }
 
     @Override
@@ -134,9 +132,29 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_BACKDROP_URL, movie.getBackdropUrl());
         mContext.getContentResolver().insert(MovieHotnessContract.MovieEntry.CONTENT_URI, contentValues);
+
+        if (movie.getTrailerCount() > 0) {
+            for (int i = 0; i < movie.getTrailerCount(); i++) {
+                contentValues = new ContentValues();
+                contentValues.put(MovieHotnessContract.TrailerEntry.COLUMN_MOVIE_ID, movie.getId());
+                contentValues.put(MovieHotnessContract.TrailerEntry.COLUMN_YOUTUBE_ID, movie.getTrailer(i).getYouTubeId());
+                contentValues.put(MovieHotnessContract.TrailerEntry.COLUMN_NAME, movie.getTrailer(i).getName());
+                mContext.getContentResolver().insert(MovieHotnessContract.TrailerEntry.CONTENT_URI, contentValues);
+            }
+        }
+
+        if (movie.getReviewCount() > 0) {
+            for (int i = 0; i < movie.getReviewCount(); i++) {
+                contentValues = new ContentValues();
+                contentValues.put(MovieHotnessContract.ReviewEntry.COLUMN_MOVIE_ID, movie.getId());
+                contentValues.put(MovieHotnessContract.ReviewEntry.COLUMN_AUTHOR, movie.getReview(i).getAuthor());
+                contentValues.put(MovieHotnessContract.ReviewEntry.COLUMN_CONTENT, movie.getReview(i).getContent());
+                mContext.getContentResolver().insert(MovieHotnessContract.ReviewEntry.CONTENT_URI, contentValues);
+            }
+        }
+
         mViewMovieDetailsView.showSnackbar(R.string.fragment_detail_favourite_added);
         mViewMovieDetailsView.setFavouriteFab(R.drawable.ic_remove_24dp, false);
-
     }
 
     @Override

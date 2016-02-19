@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import java.io.Serializable;
 

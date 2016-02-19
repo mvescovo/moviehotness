@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -20,13 +20,13 @@ import java.util.List;
  * Created by Michael on 25/11/15.
  *
  */
-public class PosterAdapter extends RecyclerView.Adapter implements Serializable {
+public class PosterApiAdapter extends RecyclerView.Adapter implements Serializable {
 
-    private ArrayList<MovieInterface> mDataset = new ArrayList<>();
     private Context mContext;
+    private ArrayList<MovieInterface> mDataset = new ArrayList<>();
     private ViewMoviesContract.UserActionsListener mActionsListener;
 
-    public PosterAdapter(Context context, ViewMoviesContract.UserActionsListener userActionsListener) {
+    public PosterApiAdapter(Context context, ViewMoviesContract.UserActionsListener userActionsListener) {
         mContext = context;
         mActionsListener = userActionsListener;
     }
@@ -34,11 +34,12 @@ public class PosterAdapter extends RecyclerView.Adapter implements Serializable 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_preview_card, parent, false);
-        return new MovieViewHolder(v, mDataset, mActionsListener);
+        return new MovieApiViewHolder(v);
     }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ImageView imageView = (ImageView) ((MovieViewHolder) holder).getView().findViewById(R.id.poster_image);
+        ImageView imageView = (ImageView) ((MovieApiViewHolder) holder).getView().findViewById(R.id.poster_image);
         Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + mDataset.get(position).getPosterUrl()).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
@@ -59,7 +60,31 @@ public class PosterAdapter extends RecyclerView.Adapter implements Serializable 
 
     public void updateDataset(List<MovieInterface> movies) {
         mDataset.clear();
-        mDataset.addAll(movies);
-        notifyDataSetChanged();
+        if (movies != null) {
+            mDataset.addAll(movies);
+            notifyDataSetChanged();
+        }
+    }
+
+    public class MovieApiViewHolder extends RecyclerView.ViewHolder {
+
+        private View mView;
+
+        public MovieApiViewHolder(View itemView) {
+            super(itemView);
+            mView = itemView;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mActionsListener != null)
+                        mActionsListener.openMovieDetails(mDataset.get(getAdapterPosition()));
+                }
+            });
+        }
+
+        public View getView() {
+            return mView;
+        }
     }
 }

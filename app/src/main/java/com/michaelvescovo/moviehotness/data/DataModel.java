@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 /**
  * Created by Michael on 4/12/15.

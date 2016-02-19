@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.view_full_review.ViewFullReviewActivity;
 
 import java.util.ArrayList;

@@ -24,10 +24,10 @@
 
 package com.michaelvescovo.moviehotness;
 
-import com.michaelvescovo.moviehotness.model.CloudModel;
-import com.michaelvescovo.moviehotness.model.DbModel;
-import com.michaelvescovo.moviehotness.model.MemoryModel;
-import com.michaelvescovo.moviehotness.model.MovieRepository;
+import com.michaelvescovo.moviehotness.data.CloudModel;
+import com.michaelvescovo.moviehotness.data.DbModel;
+import com.michaelvescovo.moviehotness.data.MemoryModel;
+import com.michaelvescovo.moviehotness.data.MovieRepository;
 
 /**
  * Created by Michael Vescovo on 5/01/16.

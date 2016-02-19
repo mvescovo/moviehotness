@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 
 import android.content.Context;
@@ -215,12 +215,7 @@ public class CloudModel extends DataModel {
     }
 
     @Override
-    public void saveMovie(@NonNull MovieInterface movie) {
-        // no data saved back to cloud.
-    }
-
-    @Override
     public void refreshData() {
-        // no data deleted on cloud.
+        // nothing to do
     }
 }

@@ -35,10 +35,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.FakeEndPoint;
-import com.michaelvescovo.moviehotness.model.Movie;
-import com.michaelvescovo.moviehotness.model.MovieReview;
-import com.michaelvescovo.moviehotness.model.MovieTrailer;
+import com.michaelvescovo.moviehotness.data.FakeEndPoint;
+import com.michaelvescovo.moviehotness.data.Movie;
+import com.michaelvescovo.moviehotness.data.MovieReview;
+import com.michaelvescovo.moviehotness.data.MovieTrailer;
 
 import org.junit.After;
 import org.junit.Before;

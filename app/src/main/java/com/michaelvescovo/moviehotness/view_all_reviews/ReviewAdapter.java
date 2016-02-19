@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 
 import java.io.Serializable;
 import java.util.ArrayList;

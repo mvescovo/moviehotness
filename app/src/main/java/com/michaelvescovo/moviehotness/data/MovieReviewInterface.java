@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 /**
  * Created by Michael Vescovo on 12/01/16.

@@ -22,7 +22,7 @@
  *
  */
 
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -47,8 +47,6 @@ public interface MovieRepository {
     void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull LoadMoviesCallback callback);
 
     void getMovie(@NonNull Context context, @NonNull String movieId, @NonNull GetMovieCallback callback);
-
-    void saveMovie(@NonNull MovieInterface movie);
 
     void refreshData();
 }

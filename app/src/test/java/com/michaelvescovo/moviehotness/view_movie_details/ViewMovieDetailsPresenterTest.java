@@ -26,10 +26,10 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 
 import android.content.Context;
 
-import com.michaelvescovo.moviehotness.model.Movie;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepository;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.Movie;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepository;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 
 import org.junit.Before;
 import org.junit.Test;

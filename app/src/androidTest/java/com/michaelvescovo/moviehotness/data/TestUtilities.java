@@ -16,7 +16,7 @@
  * I have made modifications. Based on Udacity lesson.
  */
 
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import android.content.ContentValues;
 import android.database.ContentObserver;

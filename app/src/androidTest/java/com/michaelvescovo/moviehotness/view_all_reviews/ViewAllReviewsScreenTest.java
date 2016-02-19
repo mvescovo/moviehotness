@@ -6,8 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieReview;
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieReview;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 
 import org.junit.Before;
 import org.junit.Rule;

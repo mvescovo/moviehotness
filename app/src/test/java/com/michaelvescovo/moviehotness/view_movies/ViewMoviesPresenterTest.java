@@ -27,9 +27,9 @@ package com.michaelvescovo.moviehotness.view_movies;
 import android.content.Context;
 
 import com.google.common.collect.Lists;
-import com.michaelvescovo.moviehotness.model.Movie;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepository;
+import com.michaelvescovo.moviehotness.data.Movie;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepository;
 
 import org.junit.Before;
 import org.junit.Test;

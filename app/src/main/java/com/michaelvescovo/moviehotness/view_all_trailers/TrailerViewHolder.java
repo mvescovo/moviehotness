@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.google.android.youtube.player.YouTubeIntents;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 
 import java.util.ArrayList;
 

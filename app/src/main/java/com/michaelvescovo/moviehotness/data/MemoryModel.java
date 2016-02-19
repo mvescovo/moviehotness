@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -57,11 +57,6 @@ public class MemoryModel extends DataModel {
                 }
             }
         }
-    }
-
-    @Override
-    public void saveMovie(@NonNull MovieInterface movie) {
-        successor.saveMovie(movie);
     }
 
     @Override

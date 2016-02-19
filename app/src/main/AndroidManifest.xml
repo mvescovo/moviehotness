@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
         <provider
             android:authorities="com.michaelvescovo.moviehotness"
-            android:name=".model.MovieHotnessProvider"/>
+            android:name=".data.MovieHotnessProvider"/>
         <activity android:name=".view_movies.ViewMoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

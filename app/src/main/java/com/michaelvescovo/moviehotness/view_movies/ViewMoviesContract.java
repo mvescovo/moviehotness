@@ -26,7 +26,7 @@ package com.michaelvescovo.moviehotness.view_movies;
 
 import android.support.annotation.NonNull;
 
-import com.michaelvescovo.moviehotness.model.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
 
 import java.util.List;
 

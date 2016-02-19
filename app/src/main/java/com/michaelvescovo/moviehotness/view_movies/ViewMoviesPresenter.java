@@ -27,8 +27,8 @@ package com.michaelvescovo.moviehotness.view_movies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepository;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepository;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
 import java.util.List;

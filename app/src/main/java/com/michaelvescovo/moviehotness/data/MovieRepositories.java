@@ -22,7 +22,7 @@
  *
  */
 
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import android.content.Context;
 
@@ -73,7 +73,16 @@ public class MovieRepositories {
             }
             return favouriteMemoryRepository;
         } else {
-            return null;
+            // Just return popular in this case.
+            if (null == popularMemoryRepository) {
+                popularMemoryRepository = Injection.provideMemoryRepository();
+                MovieRepository dbRepository = Injection.provideDbRepository();
+                MovieRepository cloudRepository = Injection.provideCloudRepository();
+
+                ((DataModel) popularMemoryRepository).setSuccessor((DataModel) dbRepository);
+                ((DataModel) dbRepository).setSuccessor((DataModel) cloudRepository);
+            }
+            return popularMemoryRepository;
         }
     }
 }

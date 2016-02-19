@@ -25,9 +25,13 @@
 package com.michaelvescovo.moviehotness.view_movies;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,14 +41,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepositories;
+import com.michaelvescovo.moviehotness.data.MovieHotnessContract;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetailsActivity;
 
 import java.util.List;
 
-public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View {
+public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
 
     private RecyclerView.Adapter mAdapter;
     private int mSortBy = -1;
@@ -55,7 +60,6 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         super.onCreate(savedInstanceState);
 
         mSortBy = -1;
-
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
@@ -67,7 +71,13 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         }
 
         mActionsListener = new ViewMoviesPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), mSortBy), this);
-        mAdapter = new PosterAdapter(getContext(), mActionsListener);
+
+        // If viewing favourites create cursor adapter, otherwise create arraylist adapter
+        if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
+            mAdapter = new PosterCursorAdapter(getContext(), mActionsListener);
+        } else {
+            mAdapter = new PosterApiAdapter(getContext(), mActionsListener);
+        }
     }
 
     @Override
@@ -90,7 +100,11 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mActionsListener.loadMovies(mSortBy, true);
+                if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
+                    mActionsListener.loadMovies(mSortBy, true);
+                } else {
+                    setProgressIndicator(false);
+                }
             }
         });
         return root;
@@ -101,12 +115,21 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         super.onActivityCreated(savedInstanceState);
 
         setRetainInstance(true);
+
+        // Only use loader when viewing favourites
+        if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
+            getLoaderManager().initLoader(0, null, this);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mActionsListener.loadMovies(mSortBy, false);
+
+        // Only load movies from API if not viewing favourites
+        if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
+            mActionsListener.loadMovies(mSortBy, false);
+        }
     }
 
     @Override
@@ -121,6 +144,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         if (getView() == null) {
             return;
         }
+
         final SwipeRefreshLayout srl = (SwipeRefreshLayout)getView().findViewById(R.id.refresh_layout);
 
         // Make sure setRefreshing() is called after the layout is done with everything else.
@@ -135,7 +159,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void showMovies(List<MovieInterface> movies) {
         if (mAdapter != null) {
-            ((PosterAdapter)mAdapter).updateDataset(movies);
+            ((PosterApiAdapter)mAdapter).updateDataset(movies);
         }
     }
 
@@ -162,5 +186,25 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), MovieHotnessContract.MovieEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        ((PosterCursorAdapter)mAdapter).swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        ((PosterCursorAdapter)mAdapter).swapCursor(null);
     }
 }

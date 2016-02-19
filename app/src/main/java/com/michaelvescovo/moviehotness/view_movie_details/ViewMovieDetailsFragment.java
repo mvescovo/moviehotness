@@ -26,6 +26,7 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -43,10 +44,10 @@ import android.widget.TextView;
 
 import com.google.android.youtube.player.YouTubeIntents;
 import com.michaelvescovo.moviehotness.R;
-import com.michaelvescovo.moviehotness.model.MovieInterface;
-import com.michaelvescovo.moviehotness.model.MovieRepositories;
-import com.michaelvescovo.moviehotness.model.MovieReviewInterface;
-import com.michaelvescovo.moviehotness.model.MovieTrailerInterface;
+import com.michaelvescovo.moviehotness.data.MovieInterface;
+import com.michaelvescovo.moviehotness.data.MovieRepositories;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.moviehotness.view_all_reviews.ViewAllReviewsActivity;
 import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity;
@@ -59,6 +60,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetailsContract.View {
+
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     private ViewMovieDetailsContract.UserActionsListener mActionsListener;
@@ -70,7 +72,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private ArrayList<MovieTrailerInterface> mTrailers;
     private Button mMoreTrailersButton;
     private ArrayList<MovieReviewInterface> mReviews;
-    private Button mAllReviewsButton;
     private MovieInterface mMovie;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
@@ -147,8 +148,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        mAllReviewsButton = (Button) root.findViewById(R.id.review_all_reviews_button);
-        mAllReviewsButton.setOnClickListener(new View.OnClickListener() {
+        Button allReviewsButton = (Button) root.findViewById(R.id.review_all_reviews_button);
+        allReviewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openAllReviews(mReviews);
@@ -165,13 +166,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         String movieId = getArguments().getString(MOVIE_ID);
         mActionsListener.loadMovieDetails(movieId, false);
         mActionsListener.loadFavouriteFab(movieId);
-    }
-
-    @Override
-    public void setProgressIndicator(boolean active) {
-        if (active) {
-            // TODO set a progress indicator
-        }
     }
 
     @Override
@@ -233,7 +227,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         // Trailers
         mTrailers = movie.getTrailers();
         if (movie.getTrailerCount() > 0) {
-//            Log.i(TAG, "showMovieDetails: " + movie.getTrailer(0).getName() + movie.getTrailer(0).getYouTubeId());
             mMoreTrailersButton.setVisibility(View.VISIBLE);
             ImageView imageView = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
             imageView.setVisibility(View.VISIBLE);
@@ -291,14 +284,37 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     @Override
     public void showSnackbar(int stringResource) {
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        Snackbar.make(fab, getResources().getString(stringResource), Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show();
+        Snackbar snackbar = Snackbar.make(fab, getResources().getString(stringResource), Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
+        }
+        snackbar.show();
     }
 
     @Override
     public void showFirstTrailerUi(String youTubeId) {
-        Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getContext(), youTubeId, true, true);
-        startActivity(intent);
+        if (YouTubeIntents.isYouTubeInstalled(getContext())) {
+            Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getContext(), youTubeId, true, true);
+            startActivity(intent);
+        } else {
+            Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_trailer_play_button), getResources().getString(R.string.youtube_not_installed), Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            int snackbarTextId = android.support.design.R.id.snackbar_text;
+            TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
+            }
+            snackbar.show();
+        }
     }
 
     @Override

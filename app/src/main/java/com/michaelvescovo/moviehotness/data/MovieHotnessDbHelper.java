@@ -1,4 +1,4 @@
-package com.michaelvescovo.moviehotness.model;
+package com.michaelvescovo.moviehotness.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -72,5 +72,6 @@ public class MovieHotnessDbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + MovieHotnessContract.MovieEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MovieHotnessContract.TrailerEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MovieHotnessContract.ReviewEntry.TABLE_NAME);
-        onCreate(db);    }
+        onCreate(db);
+    }
 }
