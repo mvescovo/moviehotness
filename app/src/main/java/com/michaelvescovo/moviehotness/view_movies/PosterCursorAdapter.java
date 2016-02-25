@@ -46,7 +46,7 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
             mCursor.moveToPosition(position);
             posterUrl = mCursor.getString(posterUrlColumnIndex);
 
-            Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + posterUrl).into(imageView, new Callback() {
+            Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + posterUrl).error(R.drawable.no_image).into(imageView, new Callback() {
                 @Override
                 public void onSuccess() {
 

@@ -40,7 +40,7 @@ public class PosterApiAdapter extends RecyclerView.Adapter implements Serializab
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ImageView imageView = (ImageView) ((MovieApiViewHolder) holder).getView().findViewById(R.id.poster_image);
-        Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + mDataset.get(position).getPosterUrl()).into(imageView, new Callback() {
+        Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + mDataset.get(position).getPosterUrl()).error(R.drawable.no_image).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
 
