@@ -27,6 +27,7 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,8 +35,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +81,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private ArrayList<MovieReviewInterface> mReviews;
     private MovieInterface mMovie;
     private DetailSelectedCallback mDetailSelectedCallback;
-
+    private ShareActionProvider mShareActionProvider;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -417,11 +421,43 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        if (mTrailers.size() > 0) {
+            menu.findItem(R.id.menu_item_share).setVisible(true);
+            MenuItem item = menu.findItem(R.id.menu_item_share);
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        }
+    }
+
+    private void setShareIntent(Intent shareIntent) {
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
             mActionsListener.openAttribution();
+        } else if (id == R.id.menu_item_share) {
+            Uri.Builder builder = new Uri.Builder();
+            String url = builder.scheme("https")
+                    .authority("www.youtube.com")
+                    .appendPath("embed")
+                    .appendPath(mTrailers.get(0).getYouTubeId())
+                    .build()
+                    .toString();
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, mTitle + " " + getResources().getText(R.string.share_message) + " " + url);
+            intent.setType("text/plain");
+            setShareIntent(intent);
+            getActivity().startActivity(Intent.createChooser(intent, getResources().getText(R.string.send_to)));
         }
 
         return super.onOptionsItemSelected(item);
