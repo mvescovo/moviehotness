@@ -27,6 +27,7 @@ package com.michaelvescovo.moviehotness.view_movies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.data.MovieInterface;
 import com.michaelvescovo.moviehotness.data.MovieRepository;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
@@ -40,7 +41,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListener {
-    private static final String TAG = "ViewMoviesPresenter";
 
     private final MovieRepository mMovieRepository;
     private final ViewMoviesContract.View mViewMoviesView;
@@ -68,6 +68,9 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
                 EspressoIdlingResource.decrement(); // Set app as idle.
                 mViewMoviesView.setProgressIndicator(false);
                 mViewMoviesView.showMovies(movies);
+                if ((ViewMoviesActivity.mTwoPane) && ((ViewMoviesFragment) mViewMoviesView).mSortBy == mContext.getResources().getInteger(R.integer.popular)) {
+                    mViewMoviesView.showTopMovie(movies.get(0));
+                }
             }
         });
     }

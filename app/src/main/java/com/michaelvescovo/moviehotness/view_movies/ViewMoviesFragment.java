@@ -24,6 +24,7 @@
 
 package com.michaelvescovo.moviehotness.view_movies;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -52,8 +53,9 @@ import java.util.List;
 public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
 
     private RecyclerView.Adapter mAdapter;
-    private int mSortBy = -1;
+    public int mSortBy = -1;
     private ViewMoviesContract.UserActionsListener mActionsListener;
+    private  Callback mCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,13 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.view_movies_list);
         recyclerView.setAdapter(mAdapter);
 
-        int numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols);
+        int numColumns;
+
+        if (((ViewMoviesActivity) getActivity()).mTwoPane) {
+            numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_twopane);
+        } else {
+            numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_onepane);
+        }
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
@@ -107,7 +115,18 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
                 }
             }
         });
+
         return root;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (Callback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement Callback");
+        }
     }
 
     @Override
@@ -164,11 +183,20 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     }
 
     @Override
+    public void showTopMovie(MovieInterface movie) {
+        showMovieDetailUi(movie.getId());
+    }
+
+    @Override
     public void showMovieDetailUi(String movieId) {
-        Intent intent = new Intent(getContext(), ViewMovieDetailsActivity.class);
-        intent.putExtra("SORT_BY", mSortBy);
-        intent.putExtra("MOVIE_ID", movieId);
-        startActivity(intent);
+        if (((ViewMoviesActivity) getActivity()).mTwoPane) {
+            mCallback.onItemSelected(mSortBy, movieId);
+        } else {
+            Intent intent = new Intent(getContext(), ViewMovieDetailsActivity.class);
+            intent.putExtra("SORT_BY", mSortBy);
+            intent.putExtra("MOVIE_ID", movieId);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -206,5 +234,17 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         ((PosterCursorAdapter)mAdapter).swapCursor(null);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(int sortBy, String movieId);
     }
 }

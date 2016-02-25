@@ -1,17 +1,17 @@
 package com.michaelvescovo.moviehotness.view_full_review;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
 
 public class ViewFullReviewActivity extends AppCompatActivity {
 
-    public static final String EXTRA_AUTHOR = "AUTHOR";
-    public static final String EXTRA_CONTENT = "CONTENT";
-
+    public static final String AUTHOR = "AUTHOR";
+    public static final String CONTENT = "CONTENT";
     private String mAuthor;
     private String mContent;
 
@@ -21,21 +21,18 @@ public class ViewFullReviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_full_review);
 
         if (getIntent() != null) {
-            mAuthor = getIntent().getStringExtra(EXTRA_AUTHOR);
-            mContent = getIntent().getStringExtra(EXTRA_CONTENT);
+            mAuthor = getIntent().getStringExtra(AUTHOR);
+            mContent = getIntent().getStringExtra(CONTENT);
         }
 
-        ((TextView) findViewById(R.id.full_review_author)).setText(mAuthor);
-        ((TextView) findViewById(R.id.full_review_content)).setText(mContent);
+        initFragment(ViewFullReviewFragment.newInstance(mAuthor, mContent));
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-            getSupportActionBar().setTitle("Review");
-        }
+    private void initFragment(Fragment detailFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_full_review, detailFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

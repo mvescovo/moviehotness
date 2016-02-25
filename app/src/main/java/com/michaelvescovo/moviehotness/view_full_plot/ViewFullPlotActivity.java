@@ -1,44 +1,38 @@
 package com.michaelvescovo.moviehotness.view_full_plot;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
 
 public class ViewFullPlotActivity extends AppCompatActivity {
-    private static final String TAG = "ViewFullPlotActivity";
-    private static final String PLOT = "plot";
-    private static final String TITLE = "title";
 
+    public static final String PLOT = "plot";
+    public static final String TITLE = "title";
     private String mPlot;
     private String mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_full_plot);
 
         if (getIntent() != null) {
-            Log.i(TAG, "onCreate: plot: " + getIntent().getStringExtra(PLOT));
             mPlot = getIntent().getStringExtra(PLOT);
             mTitle = getIntent().getStringExtra(TITLE);
         }
 
-        setContentView(R.layout.activity_view_full_plot);
+        initFragment(ViewFullPlotFragment.newInstance(mTitle, mPlot));
+    }
 
-        ((TextView) findViewById(R.id.plot_title)).setText(mTitle);
-        ((TextView) findViewById(R.id.plot_text)).setText(mPlot);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-            getSupportActionBar().setTitle("Plot");
-        }
+    private void initFragment(Fragment detailFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_full_plot, detailFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -25,6 +25,7 @@
 package com.michaelvescovo.moviehotness.view_movie_details;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +56,7 @@ import com.michaelvescovo.moviehotness.view_all_trailers.ViewAllTrailersActivity
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_full_plot.ViewFullPlotActivity;
 import com.michaelvescovo.moviehotness.view_full_review.ViewFullReviewActivity;
+import com.michaelvescovo.moviehotness.view_movies.ViewMoviesActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -73,6 +76,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private Button mMoreTrailersButton;
     private ArrayList<MovieReviewInterface> mReviews;
     private MovieInterface mMovie;
+    private DetailSelectedCallback mDetailSelectedCallback;
+
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -93,7 +98,17 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
+
+        if (!ViewMoviesActivity.mTwoPane) {
+            Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
+            ((ViewMovieDetailsActivity)getActivity()).setSupportActionBar(toolbar);
+
+            if (((ViewMovieDetailsActivity)getActivity()).getSupportActionBar() != null) {
+                ((ViewMovieDetailsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
 
         mDetailposter = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         mReleaseDate = (TextView) root.findViewById(R.id.fragment_detail_release_date);
@@ -102,7 +117,11 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mPlot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlot.getText().toString());
+                } else {
+                    mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                }
             }
         });
 
@@ -110,7 +129,11 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         plotMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlot.getText().toString());
+                } else {
+                    mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                }
             }
         });
 
@@ -120,23 +143,41 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mMoreTrailersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openAllTrailers(mTrailers);
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onAllTrailersSelected(mTrailers);
+                } else {
+                    mActionsListener.openAllTrailers(mTrailers);
+                }
             }
         });
 
-        ImageView playFirstTrailerButton = (ImageView) getActivity().findViewById(R.id.main_trailer_play_button);
-        playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mActionsListener.playFirstTrailer(mTrailers.get(0).getYouTubeId());
-            }
-        });
+        if (ViewMoviesActivity.mTwoPane) {
+            ImageView playFirstTrailerButton = (ImageView) root.findViewById(R.id.main_trailer_play_button);
+            playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActionsListener.playFirstTrailer(mTrailers.get(0).getYouTubeId());
+                }
+            });
+        } else {
+            ImageView playFirstTrailerButton = (ImageView) root.findViewById(R.id.main_trailer_play_button);
+            playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActionsListener.playFirstTrailer(mTrailers.get(0).getYouTubeId());
+                }
+            });
+        }
 
         TextView review = (TextView) root.findViewById(R.id.review_content);
         review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onFullReviewSelected(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                } else {
+                    mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                }
             }
         });
 
@@ -144,7 +185,11 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         reviewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onFullReviewSelected(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                } else {
+                    mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0).getContent());
+                }
             }
         });
 
@@ -152,11 +197,25 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         allReviewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActionsListener.openAllReviews(mReviews);
+                if (ViewMoviesActivity.mTwoPane) {
+                    mDetailSelectedCallback.onAllReviewsSelected(mReviews);
+                } else {
+                    mActionsListener.openAllReviews(mReviews);
+                }
             }
         });
 
         return root;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mDetailSelectedCallback = (DetailSelectedCallback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement DetailSelectedCallback");
+        }
     }
 
     @Override
@@ -182,18 +241,22 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mReleaseDate.setText(movie.getReleaseDate());
 
         // Poster
-        EspressoIdlingResource.increment();
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).into(mDetailposter, new Callback() {
-            @Override
-            public void onSuccess() {
-                EspressoIdlingResource.decrement();
-            }
+        if (ViewMoviesActivity.mTwoPane) {
+            mDetailposter.setVisibility(View.GONE);
+        } else {
+            EspressoIdlingResource.increment();
+            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).into(mDetailposter, new Callback() {
+                @Override
+                public void onSuccess() {
+                    EspressoIdlingResource.decrement();
+                }
 
-            @Override
-            public void onError() {
-                EspressoIdlingResource.decrement();
-            }
-        });
+                @Override
+                public void onError() {
+                    EspressoIdlingResource.decrement();
+                }
+            });
+        }
 
         // Rating
         mRatingBar.setStepSize((float) 0.25);
@@ -328,22 +391,22 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     @Override
     public void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers) {
         Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
-        intent.putExtra("trailers", mTrailers);
+        intent.putExtra(ViewAllTrailersActivity.TRAILERS, mTrailers);
         startActivity(intent);
     }
 
     @Override
     public void showFullReview(String author, String content) {
         Intent intent = new Intent(getContext(), ViewFullReviewActivity.class);
-        intent.putExtra(ViewFullReviewActivity.EXTRA_AUTHOR, author);
-        intent.putExtra(ViewFullReviewActivity.EXTRA_CONTENT, content);
+        intent.putExtra(ViewFullReviewActivity.AUTHOR, author);
+        intent.putExtra(ViewFullReviewActivity.CONTENT, content);
         startActivity(intent);
     }
 
     @Override
     public void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews) {
         Intent intent = new Intent(getContext(), ViewAllReviewsActivity.class);
-        intent.putExtra(ViewAllReviewsActivity.EXTRA_REVIEWS, mReviews);
+        intent.putExtra(ViewAllReviewsActivity.REVIEWS, mReviews);
         startActivity(intent);
     }
 
@@ -362,5 +425,16 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of detail clicks.
+     */
+    public interface DetailSelectedCallback {
+        void onFullPlotSelected(String title, String plot);
+        void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers);
+        void onFullReviewSelected(String author, String content);
+        void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews);
     }
 }

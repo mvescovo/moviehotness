@@ -1,44 +1,38 @@
 package com.michaelvescovo.moviehotness.view_all_reviews;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 
 import java.util.ArrayList;
 
-public class ViewAllReviewsActivity extends AppCompatActivity {
+public class ViewAllReviewsActivity extends AppCompatActivity implements ViewAllReviewsFragment.ReviewSelectedCallback {
 
-    public static final String EXTRA_REVIEWS = "REVIEWS";
+    public static final String REVIEWS = "REVIEWS";
     private ArrayList<MovieReviewInterface> mReviews;
-    private RecyclerView.Adapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all_reviews);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-            getSupportActionBar().setTitle("Reviews");
+        if (getIntent() != null) {
+            mReviews = (ArrayList<MovieReviewInterface>)getIntent().getSerializableExtra(REVIEWS);
         }
 
-        mReviews = (ArrayList<MovieReviewInterface>)getIntent().getSerializableExtra(EXTRA_REVIEWS);
-        mAdapter = new ReviewAdapter(mReviews);
+        initFragment(ViewAllReviewsFragment.newInstance(mReviews));
+    }
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter);
+    private void initFragment(Fragment detailFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_reviews, detailFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -46,5 +40,10 @@ public class ViewAllReviewsActivity extends AppCompatActivity {
         // Make it so the activity closes instead of going up to it's parent (like the back button)
         finish();
         return true;
+    }
+
+    @Override
+    public void onFullReviewSelected(String author, String content) {
+
     }
 }

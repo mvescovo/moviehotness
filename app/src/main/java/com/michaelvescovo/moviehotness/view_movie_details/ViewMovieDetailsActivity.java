@@ -7,31 +7,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.michaelvescovo.moviehotness.R;
+import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
+import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
 
-public class ViewMovieDetailsActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
-    public static final String EXTRA_MOVIE_ID = "MOVIE_ID";
-    public static final String EXTRA_SORT_BY = "SORT_BY";
+public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewMovieDetailsFragment.DetailSelectedCallback {
+
+    public static final String MOVIE_ID = "MOVIE_ID";
+    public static final String SORT_BY = "SORT_BY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_view_movie_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        String movieId = getIntent().getStringExtra(EXTRA_MOVIE_ID);
-        int sortBy = getIntent().getIntExtra(EXTRA_SORT_BY, -1);
+        int sortBy = getIntent().getIntExtra(SORT_BY, -1);
+        String movieId = getIntent().getStringExtra(MOVIE_ID);
         initFragment(ViewMovieDetailsFragment.newInstance(sortBy, movieId));
     }
 
@@ -51,5 +48,25 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onFullPlotSelected(String title, String plot) {
+
+    }
+
+    @Override
+    public void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers) {
+
+    }
+
+    @Override
+    public void onFullReviewSelected(String authory, String content) {
+
+    }
+
+    @Override
+    public void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews) {
+
     }
 }

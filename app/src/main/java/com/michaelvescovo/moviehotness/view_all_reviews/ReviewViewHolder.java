@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.view_full_review.ViewFullReviewActivity;
+import com.michaelvescovo.moviehotness.view_movies.ViewMoviesActivity;
 
 import java.util.ArrayList;
 
@@ -15,21 +16,27 @@ import java.util.ArrayList;
  */
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
+    private ViewAllReviewsFragment mViewAllReviewsFragment;
     private View mView;
     private ArrayList<MovieReviewInterface> mAdapter;
 
-    public ReviewViewHolder(final View itemView, ArrayList<MovieReviewInterface> adapter) {
+    public ReviewViewHolder(ViewAllReviewsFragment viewAllReviewsFragment, final View itemView, ArrayList<MovieReviewInterface> adapter) {
         super(itemView);
+        mViewAllReviewsFragment = viewAllReviewsFragment;
         mView = itemView;
         mAdapter = adapter;
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), ViewFullReviewActivity.class);
-                intent.putExtra(ViewFullReviewActivity.EXTRA_AUTHOR, mAdapter.get(getAdapterPosition()).getAuthor());
-                intent.putExtra(ViewFullReviewActivity.EXTRA_CONTENT, mAdapter.get(getAdapterPosition()).getContent());
-                v.getContext().startActivity(intent);
+                if (ViewMoviesActivity.mTwoPane) {
+                    mViewAllReviewsFragment.mReviewSelectedCallback.onFullReviewSelected(mAdapter.get(getAdapterPosition()).getAuthor(), mAdapter.get(getAdapterPosition()).getContent());
+                } else {
+                    Intent intent = new Intent(v.getContext(), ViewFullReviewActivity.class);
+                    intent.putExtra(ViewFullReviewActivity.AUTHOR, mAdapter.get(getAdapterPosition()).getAuthor());
+                    intent.putExtra(ViewFullReviewActivity.CONTENT, mAdapter.get(getAdapterPosition()).getContent());
+                    v.getContext().startActivity(intent);
+                }
             }
         });
     }

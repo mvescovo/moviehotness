@@ -47,7 +47,7 @@ public class ViewAllReviewsScreenTest {
         mReviews.add(REVIEW_THE_MARTIAN);
 
         Intent intent = new Intent();
-        intent.putExtra(ViewAllReviewsActivity.EXTRA_REVIEWS, mReviews);
+        intent.putExtra(ViewAllReviewsActivity.REVIEWS, mReviews);
         mViewAllReviewsActivityTestRule.launchActivity(intent);
 
     }

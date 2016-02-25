@@ -30,12 +30,17 @@ public class TrailerAdapter extends RecyclerView.Adapter implements Serializable
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.trailer_card, parent, false);
+        View v = LayoutInflater.from(parent.getContext().getApplicationContext()).inflate(R.layout.trailer_card, parent, false);
         return new TrailerViewHolder(v, mDataset);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (mDataset.size() > position + 1) {
+            View border = ((TrailerViewHolder) holder).getView().findViewById(R.id.border);
+            border.setVisibility(View.VISIBLE);
+        }
+
         TextView textViewName = (TextView) ((TrailerViewHolder) holder).getView().findViewById(R.id.trailer_name);
         YouTubeThumbnailView youTubeThumbnailView = (YouTubeThumbnailView) ((TrailerViewHolder) holder).getView().findViewById(R.id.youTube_thumbnail_trailer);
 

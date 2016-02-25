@@ -19,19 +19,26 @@ import java.util.ArrayList;
 public class ReviewAdapter extends RecyclerView.Adapter implements Serializable {
 
     private ArrayList<MovieReviewInterface> mDataset = new ArrayList<>();
+    private ViewAllReviewsFragment mViewAllReviewsFragment;
 
-    public ReviewAdapter(ArrayList<MovieReviewInterface> dataset) {
+    public ReviewAdapter(ViewAllReviewsFragment viewAllReviewsFragment, ArrayList<MovieReviewInterface> dataset) {
+        mViewAllReviewsFragment = viewAllReviewsFragment;
         mDataset = dataset;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_card, parent, false);
-        return new ReviewViewHolder(v, mDataset);
+        return new ReviewViewHolder(mViewAllReviewsFragment, v, mDataset);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (mDataset.size() > position + 1) {
+            View border = ((ReviewViewHolder) holder).getView().findViewById(R.id.border);
+            border.setVisibility(View.VISIBLE);
+        }
+
         TextView authorLabel = (TextView) ((ReviewViewHolder) holder).getView().findViewById(R.id.review_author_label);
         authorLabel.setVisibility(View.VISIBLE);
         TextView author = (TextView) ((ReviewViewHolder) holder).getView().findViewById(R.id.review_author);

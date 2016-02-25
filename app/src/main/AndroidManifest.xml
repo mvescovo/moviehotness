@@ -12,9 +12,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <provider
             android:authorities="com.michaelvescovo.moviehotness"
-            android:name=".data.MovieHotnessProvider"/>
+            android:name=".data.MovieHotnessProvider"
+            android:enabled="true"
+            android:exported="false"/>
+
         <activity android:name=".view_movies.ViewMoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".view_movie_details.ViewMovieDetailsActivity"
             android:label=""
@@ -30,16 +35,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view_movies.ViewMoviesActivity"/>
         </activity>
+
         <activity android:name=".view_full_plot.ViewFullPlotActivity">
         </activity>
+
         <activity android:name=".view_attribution.AttributionActivity">
         </activity>
+
         <activity android:name=".view_all_trailers.ViewAllTrailersActivity">
         </activity>
+
         <activity android:name=".view_all_reviews.ViewAllReviewsActivity">
         </activity>
+
         <activity android:name=".view_full_review.ViewFullReviewActivity">
         </activity>
+
     </application>
 
 </manifest>

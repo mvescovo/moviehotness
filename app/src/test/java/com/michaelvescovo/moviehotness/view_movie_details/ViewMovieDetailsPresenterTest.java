@@ -98,14 +98,12 @@ public class ViewMovieDetailsPresenterTest {
         mViewMovieDetailsPresenter.loadMovieDetails(movie.getId(), false);
 
         // Then the movie is loaded from the model, a callback is captured and the progress indicator is shown
-        verify(mViewMovieDetailsView).setProgressIndicator(true);
         verify(mMovieRepository).getMovie(eq(mContext), eq(movie.getId()), mGetMovieCallbackCaptor.capture());
 
         // When movie is finally loaded
         mGetMovieCallbackCaptor.getValue().onMovieLoaded(movie);
 
         // Then progress indicator is hidden and details are shown in UI
-        verify(mViewMovieDetailsView).setProgressIndicator(false);
         verify(mViewMovieDetailsView).showMovieDetails(movie);
     }
 
@@ -115,14 +113,12 @@ public class ViewMovieDetailsPresenterTest {
         mViewMovieDetailsPresenter.loadMovieDetails(INVALID_ID, false);
 
         // Then the movie with invalid id is attempted to load from model, callback is captured and progress indicator is shown.
-        verify(mViewMovieDetailsView).setProgressIndicator(true);
         verify(mMovieRepository).getMovie(eq(mContext), eq(INVALID_ID), mGetMovieCallbackCaptor.capture());
 
         // When movie is finally loaded
         mGetMovieCallbackCaptor.getValue().onMovieLoaded(null);
 
         // Then progress indicator is hidden and missing movie UI is shown
-        verify(mViewMovieDetailsView).setProgressIndicator(false);
         verify(mViewMovieDetailsView).showMissingMovie();
     }
 

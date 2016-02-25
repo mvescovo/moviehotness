@@ -5,20 +5,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/standard_padding"
     app:cardCornerRadius="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/standard_padding"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/standard_padding">
 
         <TextView
             android:id="@+id/review_title"
             style="@style/Base.TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/standard_padding"
+            android:paddingLeft="@dimen/standard_padding"
+            android:paddingRight="@dimen/standard_padding"
+            android:paddingStart="@dimen/standard_padding"
             android:text="@string/review_title"
             android:visibility="gone"/>
 
@@ -33,6 +36,10 @@
                 style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/standard_padding"
+                android:paddingLeft="@dimen/standard_padding"
+                android:paddingRight="@dimen/standard_padding"
+                android:paddingStart="@dimen/standard_padding"
                 android:text="@string/review_author_label"
                 android:visibility="gone"/>
 
@@ -41,43 +48,62 @@
                 style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/standard_padding"
                 android:visibility="gone"/>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/review_content"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/standard_padding"
-            android:maxLines="4"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/review_content_read_more"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_detail_read_more"
-            android:visibility="gone"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/review_content"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_padding"
+                android:maxLines="4"
+                android:paddingEnd="@dimen/standard_padding"
+                android:paddingLeft="@dimen/standard_padding"
+                android:paddingRight="@dimen/standard_padding"
+                android:paddingStart="@dimen/standard_padding"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/review_content_read_more"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/review_content"
+                android:paddingEnd="@dimen/standard_padding"
+                android:paddingLeft="@dimen/standard_padding"
+                android:paddingRight="@dimen/standard_padding"
+                android:paddingStart="@dimen/standard_padding"
+                android:paddingTop="@dimen/standard_padding"
+                android:text="@string/fragment_detail_read_more"
+                android:visibility="invisible"/>
+
             <Button
                 android:id="@+id/review_all_reviews_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_below="@id/review_content_read_more"
+                android:layout_marginEnd="@dimen/standard_padding"
+                android:layout_marginRight="@dimen/standard_padding"
                 android:text="@string/review_all_reviews_button"
                 android:visibility="gone"/>
 
         </RelativeLayout>
+
+        <View
+            android:id="@+id/border"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:background="@color/cardview_light_background"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

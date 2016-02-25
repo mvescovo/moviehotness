@@ -90,8 +90,8 @@ public class ViewMovieDetailsScreenTest {
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
         Intent intent = new Intent();
-        intent.putExtra(ViewMovieDetailsActivity.EXTRA_SORT_BY, 0);
-        intent.putExtra(ViewMovieDetailsActivity.EXTRA_MOVIE_ID, THE_MARTIAN.getId());
+        intent.putExtra(ViewMovieDetailsActivity.SORT_BY, 0);
+        intent.putExtra(ViewMovieDetailsActivity.MOVIE_ID, THE_MARTIAN.getId());
         mViewMovieDetailsActivityTestRule.launchActivity(intent);
 
         registerIdlingResource();

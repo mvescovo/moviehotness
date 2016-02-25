@@ -36,8 +36,8 @@ public class ViewFullReviewScreenTest {
     public void intentWithStubbedAuthorAndContent() {
         // Lazily start the Activity from the ActivityTestRule to inject the start Intent
         Intent intent = new Intent();
-        intent.putExtra(ViewFullReviewActivity.EXTRA_AUTHOR, AUTHOR);
-        intent.putExtra(ViewFullReviewActivity.EXTRA_CONTENT, CONTENT);
+        intent.putExtra(ViewFullReviewActivity.AUTHOR, AUTHOR);
+        intent.putExtra(ViewFullReviewActivity.CONTENT, CONTENT);
         mViewFullReviewActivityTestRule.launchActivity(intent);
     }
 

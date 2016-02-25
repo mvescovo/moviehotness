@@ -41,6 +41,8 @@ public interface ViewMoviesContract {
 
         void showMovies(List<MovieInterface> movies);
 
+        void showTopMovie(MovieInterface movie);
+
         void showMovieDetailUi(String movieId);
 
         void showAttributionUi();
