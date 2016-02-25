@@ -42,7 +42,9 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     public void onBackPressed() {
         super.onBackPressed();
 
-        mSelectedMovieIds.remove(mSelectedMovieIds.size() - 1);
+        if (mSelectedMovieIds.size() > 0) {
+            mSelectedMovieIds.remove(mSelectedMovieIds.size() - 1);
+        }
         if (mSelectedMovieIds.size() == 0) {
             finish();
         }
