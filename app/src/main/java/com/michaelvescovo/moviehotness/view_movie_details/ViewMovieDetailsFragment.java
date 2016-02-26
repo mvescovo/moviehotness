@@ -465,8 +465,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             Uri.Builder builder = new Uri.Builder();
             String url = builder.scheme("https")
                     .authority("www.youtube.com")
-                    .appendPath("embed")
-                    .appendPath(mTrailers.get(0).getYouTubeId())
+                    .appendPath("watch")
+                    .appendQueryParameter("v", mTrailers.get(0).getYouTubeId())
                     .build()
                     .toString();
 
