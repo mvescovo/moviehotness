@@ -1,8 +1,15 @@
 package com.michaelvescovo.moviehotness.data;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,9 +41,14 @@ public class CloudModel extends DataModel {
         void onFail();
     }
 
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
     @Override
     public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
-
         mContext = context;
         mResultsSize = 0;
         mDownloaded = 0;
@@ -49,21 +61,37 @@ public class CloudModel extends DataModel {
             url = "https://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
         }
 
-        downloadMovies(url, new DownloadMovieCallback() {
-            @Override
-            public void onMovieReceived(MovieInterface movie) {
-                movies.add(movie);
-                mDownloaded++;
-                if (mResultsSize == mDownloaded) {
-                    callback.onMoviesLoaded(movies);
+        if (isOnline()) {
+            downloadMovies(url, new DownloadMovieCallback() {
+                @Override
+                public void onMovieReceived(MovieInterface movie) {
+                    movies.add(movie);
+                    mDownloaded++;
+                    if (mResultsSize == mDownloaded) {
+                        callback.onMoviesLoaded(movies);
+                    }
                 }
-            }
 
-            @Override
-            public void onFail() {
-                callback.onMoviesLoaded(null);
+                @Override
+                public void onFail() {
+                    callback.onMoviesLoaded(null);
+                }
+            });
+        } else {
+            Snackbar snackbar = Snackbar.make(((Activity)mContext).findViewById(R.id.toolbar), mContext.getResources().getString(R.string.network_not_connected), Snackbar.LENGTH_LONG);
+            View snackbarView = snackbar.getView();
+            int snackbarTextId = android.support.design.R.id.snackbar_text;
+            TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                textView.setTextColor(mContext.getResources().getColor(R.color.black, mContext.getResources().newTheme()));
             }
-        });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                snackbarView.setBackgroundColor(mContext.getResources().getColor(R.color.white, mContext.getResources().newTheme()));
+            }
+            snackbar.show();
+
+            callback.onMoviesLoaded(null);
+        }
     }
 
     public void downloadMovies(String url, final DownloadMovieCallback downloadMovieCallback) {

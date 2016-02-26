@@ -1,6 +1,11 @@
 package com.michaelvescovo.moviehotness.view_movies;
 
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +26,6 @@ import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetailsFragme
 
 import java.util.ArrayList;
 
-
 public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesFragment.Callback, ViewMovieDetailsFragment.DetailSelectedCallback, ViewAllReviewsFragment.ReviewSelectedCallback {
 
     ViewPager mViewPager;
@@ -37,6 +41,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     private static final String ALL_TRAILERS_FRAGMENT_TAG = "ALL_TRAILERS_TAG";
     private static final String ALL_REVIEWS_FRAGMENT_TAG = "ALL_REVIEWS_TAG";
     private ArrayList<String> mSelectedMovieIds = new ArrayList<>();
+    private NetworkReceiver receiver = new NetworkReceiver();
 
     @Override
     public void onBackPressed() {
@@ -71,6 +76,11 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
         setupViewPager(mViewPager);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // Register BroadcastReceiver to track connection changes.
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReceiver();
+        this.registerReceiver(receiver, filter);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -153,5 +163,27 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
                 .replace(R.id.fragment_container_scroll_view, viewAllReviewsFragment, ALL_REVIEWS_FRAGMENT_TAG)
                 .addToBackStack(ALL_TRAILERS_FRAGMENT_TAG)
                 .commit();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (receiver != null) {
+            this.unregisterReceiver(receiver);
+        }
+    }
+
+    public class NetworkReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = conn.getActiveNetworkInfo();
+
+            if (networkInfo != null) {
+                mPopularMovieGridFragment.loadMovies();
+                mHighestRatedMovieGridFragment.loadMovies();
+            }
+        }
     }
 }

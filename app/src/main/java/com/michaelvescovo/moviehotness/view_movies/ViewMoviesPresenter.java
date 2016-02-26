@@ -69,7 +69,9 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
                 mViewMoviesView.setProgressIndicator(false);
                 mViewMoviesView.showMovies(movies);
                 if ((ViewMoviesActivity.mTwoPane) && ((ViewMoviesFragment) mViewMoviesView).mSortBy == mContext.getResources().getInteger(R.integer.popular)) {
-                    mViewMoviesView.showTopMovie(movies.get(0));
+                    if (movies != null) {
+                        mViewMoviesView.showTopMovie(movies.get(0));
+                    }
                 }
             }
         });

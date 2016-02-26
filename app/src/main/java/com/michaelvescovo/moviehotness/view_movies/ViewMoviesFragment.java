@@ -144,9 +144,12 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void onResume() {
         super.onResume();
+        loadMovies();
+    }
 
+    public void loadMovies() {
         // Only load movies from API if not viewing favourites
-        if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
+        if ((mSortBy != -1) && (mSortBy != getContext().getResources().getInteger(R.integer.favourite))) {
             mActionsListener.loadMovies(mSortBy, false);
         }
     }

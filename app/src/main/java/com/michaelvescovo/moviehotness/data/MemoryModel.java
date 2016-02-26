@@ -2,7 +2,6 @@ package com.michaelvescovo.moviehotness.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
@@ -14,7 +13,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class MemoryModel extends DataModel {
 
-    private static final String TAG = "MemoryModel";
     List<MovieInterface> cachedMovies;
 
     @Override
@@ -27,7 +25,6 @@ public class MemoryModel extends DataModel {
                     public void onMoviesLoaded(List<MovieInterface> movies) {
                         cachedMovies = movies;
                         callback.onMoviesLoaded(cachedMovies);
-                        Log.i(TAG, "onMoviesLoaded: called popmovies callback");
                     }
                 });
             }
