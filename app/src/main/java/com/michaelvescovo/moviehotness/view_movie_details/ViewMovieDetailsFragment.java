@@ -64,6 +64,7 @@ import com.michaelvescovo.moviehotness.view_movies.ViewMoviesActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetailsContract.View {
@@ -249,17 +250,34 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             mDetailposter.setVisibility(View.GONE);
         } else {
             EspressoIdlingResource.increment();
-            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposter, new Callback() {
-                @Override
-                public void onSuccess() {
-                    EspressoIdlingResource.decrement();
-                }
+            // Load poster from local storage if selecting from favourites
+            if ((getArguments() != null) && (getArguments().getInt(SORT_BY) == getResources().getInteger(R.integer.favourite))) {
+                String filename = movie.getId() + ".png";
+                File file = new File(getContext().getFilesDir(), filename);
+                Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(mDetailposter, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        EspressoIdlingResource.decrement();
+                    }
 
-                @Override
-                public void onError() {
-                    EspressoIdlingResource.decrement();
-                }
-            });
+                    @Override
+                    public void onError() {
+                        EspressoIdlingResource.decrement();
+                    }
+                });
+            } else {
+                Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposter, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        EspressoIdlingResource.decrement();
+                    }
+
+                    @Override
+                    public void onError() {
+                        EspressoIdlingResource.decrement();
+                    }
+                });
+            }
         }
 
         // Rating

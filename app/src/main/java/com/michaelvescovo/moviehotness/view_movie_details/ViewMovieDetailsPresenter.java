@@ -27,8 +27,12 @@ package com.michaelvescovo.moviehotness.view_movie_details;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.data.MovieHotnessContract;
 import com.michaelvescovo.moviehotness.data.MovieInterface;
@@ -36,7 +40,9 @@ import com.michaelvescovo.moviehotness.data.MovieRepository;
 import com.michaelvescovo.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
+import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -122,12 +128,36 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     }
 
     @Override
-    public void addFavouriteMovie(MovieInterface movie) {
+    public void addFavouriteMovie(final MovieInterface movie) {
+        // Save movie poster to local storage
+        final String filename = movie.getId() + ".png";
+        ImageRequest request = new ImageRequest("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + movie.getPosterUrl(),
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap bitmap) {
+                        FileOutputStream outputStream;
+                        try {
+                            outputStream = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                            outputStream.close();
+                        } catch (java.io.IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 0, 0, null, Bitmap.Config.ARGB_8888,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                });
+        VolleyRequestQueue.getInstance(mContext).addToRequestQueue(request);
+        // Save movie to local db using local file as the poster url
         ContentValues contentValues = new ContentValues();
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
-        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL, movie.getPosterUrl());
+        contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL, filename);
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_VOTE_AVERAGE, movie.getVoteAverage());
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_PLOT, movie.getPlot());
         contentValues.put(MovieHotnessContract.MovieEntry.COLUMN_BACKDROP_URL, movie.getBackdropUrl());
@@ -159,6 +189,9 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
 
     @Override
     public void removeFavouriteMovie(String movieId) {
+        // Delete poster from local storage
+        mContext.deleteFile(movieId);
+        // Delete the local db row
         String selection = MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID + "=?";
         String[] selectionArgs = {movieId};
         mContext.getContentResolver().delete(MovieHotnessContract.MovieEntry.CONTENT_URI, selection, selectionArgs);

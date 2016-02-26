@@ -15,6 +15,8 @@ import com.michaelvescovo.moviehotness.data.MovieHotnessContract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 /**
  * Created by Michael Vescovo on 19/02/16.
  *
@@ -38,6 +40,7 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // Posters are from local storage when getting details from local db. PosterUrl holds the full filename.
         ImageView imageView = (ImageView) ((MovieCursorViewHolder) holder).getView().findViewById(R.id.poster_image);
         int posterUrlColumnIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL);
         String posterUrl;
@@ -46,7 +49,9 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
             mCursor.moveToPosition(position);
             posterUrl = mCursor.getString(posterUrlColumnIndex);
 
-            Picasso.with(mContext).load("https://image.tmdb.org/t/p/" + mContext.getResources().getString(R.string.poster_large) + posterUrl).error(R.drawable.no_image).into(imageView, new Callback() {
+            String filename = posterUrl;
+            File file = new File(mContext.getFilesDir(), filename);
+            Picasso.with(mContext).load(file).error(R.drawable.no_image).into(imageView, new Callback() {
                 @Override
                 public void onSuccess() {
 
