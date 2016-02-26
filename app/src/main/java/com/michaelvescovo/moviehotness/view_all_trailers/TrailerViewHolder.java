@@ -1,6 +1,7 @@
 package com.michaelvescovo.moviehotness.view_all_trailers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +48,7 @@ public class TrailerViewHolder extends RecyclerView.ViewHolder {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         snackbarView.setBackgroundColor(v.getContext().getResources().getColor(R.color.white, v.getContext().getResources().newTheme()));
                     }
+                    snackbar.setAction(R.string.install, new InstallYoutube());
                     snackbar.show();
                 }
             }
@@ -55,5 +57,23 @@ public class TrailerViewHolder extends RecyclerView.ViewHolder {
 
     public View getView() {
         return mView;
+    }
+
+    public class InstallYoutube implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            try {
+                mView.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=com.google.android.youtube"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+            catch (android.content.ActivityNotFoundException e) {
+                e.printStackTrace();
+                mView.getContext().startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.youtube"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+        }
     }
 }

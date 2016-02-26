@@ -398,6 +398,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
             }
+            snackbar.setAction(R.string.install, new InstallYoutube());
             snackbar.show();
         }
     }
@@ -490,5 +491,19 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers);
         void onFullReviewSelected(String author, String content);
         void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews);
+    }
+
+    public class InstallYoutube implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.youtube")));
+            }
+            catch (android.content.ActivityNotFoundException e) {
+                e.printStackTrace();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.youtube")));
+            }
+        }
     }
 }
