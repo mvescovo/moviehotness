@@ -52,10 +52,20 @@ import java.util.List;
 
 public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String MOVIE_ID = "MOVIE_ID";
+    public static final String SORT_BY = "SORT_BY";
+    public static final String SHOWN_TOP_MOVIE = "SHOWN_TOP_MOVIE";
     private RecyclerView.Adapter mAdapter;
     public int mSortBy = -1;
     private ViewMoviesContract.UserActionsListener mActionsListener;
     private  Callback mCallback;
+    private int mCurrentPage = 1;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int mTotalItemCount = 0;
+    private int mLastVisibleItem;
+    private boolean mShownTopMovie = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +75,8 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
-            mSortBy = savedInstanceState.getInt("sortBy");
+            mSortBy = savedInstanceState.getInt(SORT_BY);
+            mShownTopMovie = savedInstanceState.getBoolean(SHOWN_TOP_MOVIE);
         } else {
             if (getArguments() != null) {
                 mSortBy = getArguments().getInt("sortBy");
@@ -90,14 +101,41 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
         int numColumns;
 
-        if (((ViewMoviesActivity) getActivity()).mTwoPane) {
+        if (ViewMoviesActivity.mTwoPane) {
             numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_twopane);
         } else {
             numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_onepane);
         }
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+        mLayoutManager = new GridLayoutManager(getContext(), numColumns);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    mTotalItemCount = recyclerView.getLayoutManager().getItemCount();
+                    mLastVisibleItem = ((GridLayoutManager)mLayoutManager).findLastVisibleItemPosition();
+
+                    if (mLastVisibleItem == mTotalItemCount - 1) {
+                        if (loading) {
+                            if (mTotalItemCount > previousTotal) {
+                                loading = false;
+                                previousTotal = mTotalItemCount;
+                            }
+                        }
+                        if (!loading) {
+                            mCurrentPage++;
+                            loadMovies();
+                            loading = true;
+                        }
+                    }
+                }
+            }
+        });
 
         // Pull-to-refresh
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
@@ -108,8 +146,10 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
-                    mActionsListener.loadMovies(mSortBy, true);
+                if (mSortBy != R.integer.favourite) {
+                    mCurrentPage = 1;
+                    previousTotal = 0;
+                    mActionsListener.loadMovies(mSortBy, true, mCurrentPage);
                 } else {
                     setProgressIndicator(false);
                 }
@@ -133,7 +173,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setRetainInstance(true);
+//        setRetainInstance(true);
 
         // Only use loader when viewing favourites
         if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
@@ -150,15 +190,15 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public void loadMovies() {
         // Only load movies from API if not viewing favourites
         if ((mSortBy != -1) && (mSortBy != getContext().getResources().getInteger(R.integer.favourite))) {
-            mActionsListener.loadMovies(mSortBy, false);
+            mActionsListener.loadMovies(mSortBy, false, mCurrentPage);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putInt("sortBy", mSortBy);
+        outState.putInt(SORT_BY, mSortBy);
+        outState.putBoolean(SHOWN_TOP_MOVIE, mShownTopMovie);
     }
 
     @Override
@@ -183,21 +223,29 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         if (mAdapter != null) {
             ((PosterApiAdapter)mAdapter).updateDataset(movies);
         }
+        if ((ViewMoviesActivity.mTwoPane) && (mSortBy == getContext().getResources().getInteger(R.integer.popular))) {
+            if (movies.size() != 0) {
+                showTopMovie(movies.get(0));
+            }
+        }
     }
 
     @Override
     public void showTopMovie(MovieInterface movie) {
-        showMovieDetailUi(movie.getId());
+        if (!mShownTopMovie) {
+            showMovieDetailUi(movie.getId());
+            mShownTopMovie = true;
+        }
     }
 
     @Override
     public void showMovieDetailUi(String movieId) {
-        if (((ViewMoviesActivity) getActivity()).mTwoPane) {
+        if (ViewMoviesActivity.mTwoPane) {
             mCallback.onItemSelected(mSortBy, movieId);
         } else {
             Intent intent = new Intent(getContext(), ViewMovieDetailsActivity.class);
-            intent.putExtra("SORT_BY", mSortBy);
-            intent.putExtra("MOVIE_ID", movieId);
+            intent.putExtra(SORT_BY, mSortBy);
+            intent.putExtra(MOVIE_ID, movieId);
             startActivity(intent);
         }
     }
@@ -248,6 +296,6 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(int sortBy, String movieId);
+        void onItemSelected(int sortBy, String movieId);
     }
 }

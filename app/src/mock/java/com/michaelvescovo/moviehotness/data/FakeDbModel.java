@@ -12,8 +12,8 @@ import java.util.List;
 public class FakeDbModel extends DataModel {
 
     @Override
-    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
-        successor.getMovies(context, sortBy, new LoadMoviesCallback() {
+    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull final LoadMoviesCallback callback) {
+        successor.getMovies(context, sortBy, page, new LoadMoviesCallback() {
             @Override
             public void onMoviesLoaded(List<MovieInterface> movies) {
                 callback.onMoviesLoaded(movies);
@@ -29,11 +29,6 @@ public class FakeDbModel extends DataModel {
                 callback.onMovieLoaded(movie);
             }
         });
-    }
-
-    @Override
-    public void saveMovie(@NonNull MovieInterface movie) {
-
     }
 
     @Override

@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 public class FakeCloudModel extends DataModel {
 
     @Override
-    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull LoadMoviesCallback callback) {
+    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull LoadMoviesCallback callback) {
         callback.onMoviesLoaded(FakeEndPoint.loadPersistedMovies());
     }
 
@@ -21,11 +21,6 @@ public class FakeCloudModel extends DataModel {
                 callback.onMovieLoaded(FakeEndPoint.loadPersistedMovies().get(i));
             }
         }
-    }
-
-    @Override
-    public void saveMovie(@NonNull MovieInterface movie) {
-
     }
 
     @Override

@@ -45,12 +45,21 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
 
     @Override
     public void onBackPressed() {
+        int lastBackStackIndex = getSupportFragmentManager().getBackStackEntryCount() - 1;
+
+        // Remove selected id only if the user presses back on a main detail screen
+        if (mTwoPane) {
+            if (getSupportFragmentManager().getBackStackEntryAt(lastBackStackIndex).getName().contentEquals(DETAIL_FRAGMENT_TAG)) {
+                if (mSelectedMovieIds.size() > 0) {
+                    mSelectedMovieIds.remove(mSelectedMovieIds.size() - 1);
+                }
+            }
+        }
+
         super.onBackPressed();
 
-        if (mSelectedMovieIds.size() > 0) {
-            mSelectedMovieIds.remove(mSelectedMovieIds.size() - 1);
-        }
-        if (mSelectedMovieIds.size() == 0) {
+        // Close the app if there are no more detail screens selected (so use doesn't see blank screen
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             finish();
         }
     }
@@ -117,6 +126,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
 
     @Override
     public void onItemSelected(int sortBy, String movieId) {
+        // Only select an item (movie poster) if it's not already selected
         if ((mSelectedMovieIds.size() == 0) || (!mSelectedMovieIds.get(mSelectedMovieIds.size() - 1).contentEquals(movieId))) {
             mSelectedMovieIds.add(movieId);
             ViewMovieDetailsFragment viewMovieDetailsFragment = ViewMovieDetailsFragment.newInstance(sortBy, movieId);

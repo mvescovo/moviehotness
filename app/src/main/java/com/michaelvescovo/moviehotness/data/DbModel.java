@@ -17,9 +17,9 @@ public class DbModel extends DataModel {
     private static final String TAG = "DbModel";
 
     @Override
-    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull LoadMoviesCallback callback) {
         if (successor != null) {
-            successor.getMovies(context, sortBy, callback);
+            successor.getMovies(context, sortBy, page, callback);
         } else {
             List<MovieInterface> cachedMovies = new ArrayList<>();
 

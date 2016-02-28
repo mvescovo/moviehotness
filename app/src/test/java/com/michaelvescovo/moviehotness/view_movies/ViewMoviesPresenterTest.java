@@ -84,10 +84,10 @@ public class ViewMoviesPresenterTest {
 
         // Given an initialized ViewMoviesPresenter with initialized movies
         // When loading of Movies is requested
-        mViewMoviesPresenter.loadMovies(anyInt(), true);
+        mViewMoviesPresenter.loadMovies(anyInt(), true, 1);
 
         // Callback is captured and invoked with stubbed movies
-        verify(mMovieRepository).getMovies(eq(mContext), anyInt(), mLoadMoviesCallbackCaptor.capture());
+        verify(mMovieRepository).getMovies(eq(mContext), anyInt(), anyInt(), mLoadMoviesCallbackCaptor.capture());
         mLoadMoviesCallbackCaptor.getValue().onMoviesLoaded(EMPTY_MOVIES);
 
         // Then progress indicator is hidden and movies are shown in UI

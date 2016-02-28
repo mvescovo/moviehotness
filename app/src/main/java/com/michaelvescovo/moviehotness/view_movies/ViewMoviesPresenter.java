@@ -27,7 +27,6 @@ package com.michaelvescovo.moviehotness.view_movies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.data.MovieInterface;
 import com.michaelvescovo.moviehotness.data.MovieRepository;
 import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
@@ -53,7 +52,7 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
     }
 
     @Override
-    public void loadMovies(int sortBy, boolean forceUpdate) {
+    public void loadMovies(int sortBy, boolean forceUpdate, int page) {
         mViewMoviesView.setProgressIndicator(true);
         if (forceUpdate) {
             mMovieRepository.refreshData();
@@ -62,17 +61,12 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
         // The network request might be handled in a different thread so make sure Espresso knows
         // that the app is busy until the response is handled.
         EspressoIdlingResource.increment(); // App is busy until further notice
-        mMovieRepository.getMovies(mContext, sortBy, new MovieRepository.LoadMoviesCallback() {
+        mMovieRepository.getMovies(mContext, sortBy, page, new MovieRepository.LoadMoviesCallback() {
             @Override
             public void onMoviesLoaded(List<MovieInterface> movies) {
                 EspressoIdlingResource.decrement(); // Set app as idle.
                 mViewMoviesView.setProgressIndicator(false);
                 mViewMoviesView.showMovies(movies);
-                if ((ViewMoviesActivity.mTwoPane) && ((ViewMoviesFragment) mViewMoviesView).mSortBy == mContext.getResources().getInteger(R.integer.popular)) {
-                    if (movies != null) {
-                        mViewMoviesView.showTopMovie(movies.get(0));
-                    }
-                }
             }
         });
     }
@@ -80,10 +74,5 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
     @Override
     public void openMovieDetails(@NonNull MovieInterface requestedMovie) {
         mViewMoviesView.showMovieDetailUi(requestedMovie.getId());
-    }
-
-    @Override
-    public void openAttribution() {
-        mViewMoviesView.showAttributionUi();
     }
 }

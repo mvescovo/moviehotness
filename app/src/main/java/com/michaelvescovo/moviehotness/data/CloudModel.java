@@ -48,7 +48,7 @@ public class CloudModel extends DataModel {
     }
 
     @Override
-    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull final LoadMoviesCallback callback) {
         mContext = context;
         mResultsSize = 0;
         mDownloaded = 0;
@@ -56,9 +56,9 @@ public class CloudModel extends DataModel {
         String url = "";
 
         if (sortBy.equals(mContext.getResources().getInteger(R.integer.popular))) {
-            url = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
+            url = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=" + page + "&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
         } else if (sortBy.equals(mContext.getResources().getInteger(R.integer.highest_rated))) {
-            url = "https://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
+            url = "https://api.themoviedb.org/3/discover/movie?sort_by=vote_average.desc&page=" + page + "&api_key=" + BuildConfig.THE_MOVIE_DB_API_KEY;
         }
 
         if (isOnline()) {
@@ -74,7 +74,7 @@ public class CloudModel extends DataModel {
 
                 @Override
                 public void onFail() {
-                    callback.onMoviesLoaded(null);
+                    mResultsSize--;
                 }
             });
         } else {
@@ -90,11 +90,11 @@ public class CloudModel extends DataModel {
             }
             snackbar.show();
 
-            callback.onMoviesLoaded(null);
+            callback.onMoviesLoaded(movies);
         }
     }
 
-    public void downloadMovies(String url, final DownloadMovieCallback downloadMovieCallback) {
+    public void downloadMovies(final String url, final DownloadMovieCallback downloadMovieCallback) {
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -119,6 +119,7 @@ public class CloudModel extends DataModel {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            downloadMovieCallback.onFail();
                         }
                     }
                 }, new Response.ErrorListener() {

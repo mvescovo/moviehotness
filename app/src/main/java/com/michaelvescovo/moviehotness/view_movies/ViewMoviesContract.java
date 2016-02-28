@@ -50,10 +50,8 @@ public interface ViewMoviesContract {
 
     interface UserActionsListener {
 
-        void loadMovies(int sortBy, boolean forceUpdate);
+        void loadMovies(int sortBy, boolean forceUpdate, int page);
 
         void openMovieDetails(@NonNull MovieInterface requestedMovie);
-
-        void openAttribution();
     }
 }

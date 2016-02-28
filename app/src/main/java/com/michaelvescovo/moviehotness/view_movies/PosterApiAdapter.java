@@ -60,10 +60,8 @@ public class PosterApiAdapter extends RecyclerView.Adapter implements Serializab
 
     public void updateDataset(List<MovieInterface> movies) {
         mDataset.clear();
-        if (movies != null) {
-            mDataset.addAll(movies);
-            notifyDataSetChanged();
-        }
+        mDataset.addAll(movies);
+        notifyDataSetChanged();
     }
 
     public class MovieApiViewHolder extends RecyclerView.ViewHolder {

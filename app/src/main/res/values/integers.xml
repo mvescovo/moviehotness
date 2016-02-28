@@ -6,4 +6,6 @@
     <integer name="preview_text_max_chars">120</integer>
     <integer name="movie_preview_grid_cols_twopane">2</integer>
     <integer name="movie_preview_grid_cols_onepane">2</integer>
+    <integer name="page_size">20</integer>
+
 </resources>

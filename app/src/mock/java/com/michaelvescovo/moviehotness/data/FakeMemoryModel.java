@@ -14,9 +14,9 @@ public class FakeMemoryModel extends DataModel {
     List<MovieInterface> cachedMovies;
 
     @Override
-    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
+    public void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull final LoadMoviesCallback callback) {
         if (null == cachedMovies) {
-            successor.getMovies(context, sortBy, new LoadMoviesCallback() {
+            successor.getMovies(context, sortBy, page, new LoadMoviesCallback() {
                 @Override
                 public void onMoviesLoaded(List<MovieInterface> movies) {
                     cachedMovies = movies;
@@ -44,11 +44,6 @@ public class FakeMemoryModel extends DataModel {
                 }
             }
         }
-    }
-
-    @Override
-    public void saveMovie(@NonNull MovieInterface movie) {
-
     }
 
     @Override

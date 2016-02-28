@@ -3,6 +3,7 @@ package com.michaelvescovo.moviehotness.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,24 +14,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class MemoryModel extends DataModel {
 
-    List<MovieInterface> cachedMovies;
+    private List<MovieInterface> mCachedMovies = new ArrayList<>();
+    private int mLastPage = 0;
 
     @Override
-    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull final LoadMoviesCallback callback) {
         checkNotNull(callback);
-        if (cachedMovies == null) {
-            if (successor != null) {
-                successor.getMovies(context, sortBy, new LoadMoviesCallback() {
-                    @Override
-                    public void onMoviesLoaded(List<MovieInterface> movies) {
-                        cachedMovies = movies;
-                        callback.onMoviesLoaded(cachedMovies);
-                    }
-                });
-            }
-
+        if ((page != mLastPage) && (successor != null)) {
+            mLastPage = page;
+            successor.getMovies(context, sortBy, page, new LoadMoviesCallback() {
+                @Override
+                public void onMoviesLoaded(List<MovieInterface> movies) {
+                    mCachedMovies.addAll(movies);
+                    callback.onMoviesLoaded(mCachedMovies);
+                }
+            });
         } else {
-            callback.onMoviesLoaded(cachedMovies);
+            callback.onMoviesLoaded(mCachedMovies);
         }
     }
 
@@ -38,26 +38,26 @@ public class MemoryModel extends DataModel {
     public void getMovie(@NonNull Context context, @NonNull String movieId, @NonNull final GetMovieCallback callback) {
         checkNotNull(movieId);
         checkNotNull(callback);
-        if (cachedMovies == null) {
-            if (successor != null) {
-                successor.getMovie(context, movieId, new GetMovieCallback() {
-                    @Override
-                    public void onMovieLoaded(MovieInterface movie) {
-                        callback.onMovieLoaded(movie);
-                    }
-                });
-            }
-        } else {
-            for (int i = 0; i < cachedMovies.size(); i++) {
-                if (cachedMovies.get(i).getId().contentEquals(movieId)) {
-                    callback.onMovieLoaded(cachedMovies.get(i));
+        if (mCachedMovies.size() > 0) {
+            for (int i = 0; i < mCachedMovies.size(); i++) {
+                if (mCachedMovies.get(i).getId().contentEquals(movieId)) {
+                    callback.onMovieLoaded(mCachedMovies.get(i));
                 }
             }
+        } else if (successor != null) {
+            successor.getMovie(context, movieId, new GetMovieCallback() {
+                @Override
+                public void onMovieLoaded(MovieInterface movie) {
+                    callback.onMovieLoaded(movie);
+                }
+            });
+        } else {
+            callback.onMovieLoaded(null);
         }
     }
 
     @Override
     public void refreshData() {
-        cachedMovies =  null;
+        mCachedMovies.clear();
     }
 }
