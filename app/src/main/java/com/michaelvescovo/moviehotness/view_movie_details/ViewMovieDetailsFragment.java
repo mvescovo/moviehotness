@@ -246,7 +246,6 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(mTitle);
 
-
         // Release date
         if (movie.getReleaseDate() != null) {
             mReleaseDateView.setText(movie.getReleaseDate());

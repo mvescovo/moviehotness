@@ -16,12 +16,10 @@
     <dimen name="view_pager_margin_top">8dp</dimen>
     <dimen name="card_layout_width">185dp</dimen>
     <dimen name="card_layout_height">287dp</dimen>
-    <dimen name="horizontal_progress_bar_layout_height">8dp</dimen>
 
     <!--ViewMovieDetails-->
     <dimen name="app_bar_height_backdrop">300dp</dimen>
     <dimen name="poster_detail_width">154dp</dimen>
     <dimen name="poster_detail_height">231dp</dimen>
     <dimen name="play_trailer_button_width">70dp</dimen>
-
 </resources>

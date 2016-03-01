@@ -35,14 +35,6 @@
         android:layout_marginTop="@dimen/view_pager_margin_top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-    <ProgressBar
-        android:id="@+id/view_movies_progress"
-        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/horizontal_progress_bar_layout_height"
-        android:visibility="invisible"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
     <RelativeLayout
         android:id="@+id/view_movies_relative_layout"
         android:layout_width="match_parent"
