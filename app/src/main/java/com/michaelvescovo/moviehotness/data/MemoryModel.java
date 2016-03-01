@@ -26,7 +26,9 @@ public class MemoryModel extends DataModel {
                 @Override
                 public void onMoviesLoaded(List<MovieInterface> movies) {
                     mCachedMovies.addAll(movies);
-                    mLastPage++;
+                    if (movies.size() > 0) {
+                        mLastPage++;
+                    }
                     if (callback != null) {
                         callback.onMoviesLoaded(mCachedMovies);
                     }

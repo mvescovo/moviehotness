@@ -62,10 +62,7 @@ public class CloudModel extends DataModel {
 
             @Override
             public void onFail() {
-                mResultsSize--;
-                if (mResultsSize == mDownloaded) {
-                    callback.onMoviesLoaded(movies);
-                }
+                callback.onMoviesLoaded(movies);
             }
         });
     }
