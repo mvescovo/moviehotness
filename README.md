@@ -1,0 +1,2 @@
+# moviehotness
+A simple app to display popular and highest rated movies according to themoviedb.org API. Primarly this app was for learning and is not intended to solve any interesting problems. The usefulness is limited to viewing these lists and then saving movies to a local favourites database, and also sharing movies via any available means on the installed device. Movies saved locally are available offline.
