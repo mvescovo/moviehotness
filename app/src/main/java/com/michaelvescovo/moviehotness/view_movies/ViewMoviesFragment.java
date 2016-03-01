@@ -330,7 +330,9 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            showAttributionUi();
+            if (!ViewMoviesActivity.mTwoPane) {
+                showAttributionUi();
+            }
         }
 
         return super.onOptionsItemSelected(item);
