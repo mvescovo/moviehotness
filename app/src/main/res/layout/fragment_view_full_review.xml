@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:theme="@style/AppTheme.AppBarOverlay_ActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -35,19 +35,19 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Base.TextAppearance.AppCompat.Title"
                     android:id="@+id/full_review_author_label"
+                    style="@style/Base.TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/full_review_author_label"/>
 
                 <TextView
-                    android:layout_marginLeft="@dimen/standard_padding"
-                    android:layout_marginStart="@dimen/standard_padding"
-                    style="@style/Base.TextAppearance.AppCompat.Title"
                     android:id="@+id/full_review_author"
+                    style="@style/Base.TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/standard_padding"
+                    android:layout_marginStart="@dimen/standard_padding"/>
 
             </LinearLayout>
 

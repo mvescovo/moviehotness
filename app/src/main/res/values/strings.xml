@@ -18,6 +18,7 @@
     <string name="fragment_detail_favourite_removed">Movie removed from favourites</string>
     <string name="youtube_not_installed">Youtube app not installed</string>
     <string name="install">Install</string>
+    <string name="main_trailer_button">Play main trailer</string>
 
     <!--ReviewCard-->
     <string name="review_title">Top Review</string>
