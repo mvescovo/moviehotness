@@ -73,12 +73,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     public static final String SORT_BY = "SORT_BY";
     private ViewMovieDetailsContract.UserActionsListener mActionsListener;
     private String mTitle;
-    private ImageView mDetailposter;
-    private TextView mReleaseDate;
-    private TextView mPlot;
-    private RatingBar mRatingBar;
-    private ArrayList<MovieTrailerInterface> mTrailers;
+    private ImageView mDetailposterView;
+    private TextView mReleaseDateView;
+    private TextView mPlotView;
+    private RatingBar mRatingBarView;
     private Button mMoreTrailersButton;
+    private ArrayList<MovieTrailerInterface> mTrailers;
     private ArrayList<MovieReviewInterface> mReviews;
     private MovieInterface mMovie;
     private DetailSelectedCallback mDetailSelectedCallback;
@@ -115,17 +115,17 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         }
 
-        mDetailposter = (ImageView) root.findViewById(R.id.fragment_detail_poster);
-        mReleaseDate = (TextView) root.findViewById(R.id.fragment_detail_release_date);
+        mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
+        mReleaseDateView = (TextView) root.findViewById(R.id.fragment_detail_release_date);
 
-        mPlot = (TextView) root.findViewById(R.id.fragment_detail_plot);
-        mPlot.setOnClickListener(new View.OnClickListener() {
+        mPlotView = (TextView) root.findViewById(R.id.fragment_detail_plot);
+        mPlotView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlot.getText().toString());
+                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlotView.getText().toString());
                 } else {
-                    mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                    mActionsListener.openFullPlot(mTitle, mPlotView.getText().toString());
                 }
             }
         });
@@ -135,14 +135,14 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlot.getText().toString());
+                    mDetailSelectedCallback.onFullPlotSelected(mTitle, mPlotView.getText().toString());
                 } else {
-                    mActionsListener.openFullPlot(mTitle, mPlot.getText().toString());
+                    mActionsListener.openFullPlot(mTitle, mPlotView.getText().toString());
                 }
             }
         });
 
-        mRatingBar = (RatingBar) root.findViewById(R.id.fragment_detail_rating);
+        mRatingBarView = (RatingBar) root.findViewById(R.id.fragment_detail_rating);
 
         mMoreTrailersButton = (Button) root.findViewById(R.id.more_trailers_button);
         mMoreTrailersButton.setOnClickListener(new View.OnClickListener() {
@@ -238,23 +238,32 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mMovie = movie;
 
         // Title
-        mTitle = movie.getTitle();
+        if (movie.getTitle() != null) {
+            mTitle = movie.getTitle();
+        } else {
+            mTitle = getContext().getResources().getString(R.string.title_unavailable);
+        }
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setTitle(mTitle);
 
+
         // Release date
-        mReleaseDate.setText(movie.getReleaseDate());
+        if (movie.getReleaseDate() != null) {
+            mReleaseDateView.setText(movie.getReleaseDate());
+        } else {
+            mReleaseDateView.setText(getContext().getString(R.string.release_date_unavailable));
+        }
 
         // Poster
         if (ViewMoviesActivity.mTwoPane) {
-            mDetailposter.setVisibility(View.GONE);
+            mDetailposterView.setVisibility(View.GONE);
         } else {
             EspressoIdlingResource.increment();
             // Load poster from local storage if selecting from favourites
             if ((getArguments() != null) && (getArguments().getInt(SORT_BY) == getResources().getInteger(R.integer.favourite))) {
                 String filename = movie.getId() + ".png";
                 File file = new File(getContext().getFilesDir(), filename);
-                Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(mDetailposter, new Callback() {
+                Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(mDetailposterView, new Callback() {
                     @Override
                     public void onSuccess() {
                         EspressoIdlingResource.decrement();
@@ -266,7 +275,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                     }
                 });
             } else {
-                Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposter, new Callback() {
+                Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposterView, new Callback() {
                     @Override
                     public void onSuccess() {
                         EspressoIdlingResource.decrement();
@@ -281,17 +290,23 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         }
 
         // Rating
-        mRatingBar.setStepSize((float) 0.25);
-        mRatingBar.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
-        mRatingBar.setVisibility(View.VISIBLE);
+        if (movie.getVoteAverage() != null) {
+            mRatingBarView.setStepSize((float) 0.25);
+            mRatingBarView.setRating(Float.parseFloat(movie.getVoteAverage()) / 2);
+            mRatingBarView.setVisibility(View.VISIBLE);
+        }
 
         // Plot
-        mPlot.setText(movie.getPlot());
-        if (movie.getPlot().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
-            if (getView() != null) {
-                TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
-                textViewMore.setVisibility(View.VISIBLE);
+        if (movie.getPlot() != null) {
+            mPlotView.setText(movie.getPlot());
+            if (movie.getPlot().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
+                if (getView() != null) {
+                    TextView textViewMore = (TextView) getView().findViewById(R.id.fragment_detail_read_more);
+                    textViewMore.setVisibility(View.VISIBLE);
+                }
             }
+        } else {
+            mPlotView.setText(getContext().getString(R.string.plot_unavailable));
         }
 
         // Backdrop
@@ -326,13 +341,21 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             reviewAuthorLabel.setVisibility(View.VISIBLE);
             TextView reviewAuthor = (TextView) getActivity().findViewById(R.id.review_author);
             reviewAuthor.setVisibility(View.VISIBLE);
-            reviewAuthor.setText(movie.getReview(0).getAuthor());
+            if (movie.getReview(0).getAuthor() != null) {
+                reviewAuthor.setText(movie.getReview(0).getAuthor());
+            } else {
+                reviewAuthor.setText(getContext().getResources().getString(R.string.author_unavailable));
+            }
             TextView reviewContent = (TextView) getActivity().findViewById(R.id.review_content);
             reviewContent.setVisibility(View.VISIBLE);
-            reviewContent.setText(movie.getReview(0).getContent());
-            if (movie.getReview(0).getContent().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
-                TextView reviewContentReadMore = (TextView) getActivity().findViewById(R.id.review_content_read_more);
-                reviewContentReadMore.setVisibility(View.VISIBLE);
+            if (movie.getReview(0).getContent() != null) {
+                reviewContent.setText(movie.getReview(0).getContent());
+                if (movie.getReview(0).getContent().length() > getResources().getInteger(R.integer.preview_text_max_chars)) {
+                    TextView reviewContentReadMore = (TextView) getActivity().findViewById(R.id.review_content_read_more);
+                    reviewContentReadMore.setVisibility(View.VISIBLE);
+                }
+            } else {
+                reviewAuthor.setText(getContext().getResources().getString(R.string.review_unavailable));
             }
             Button reviewAllReviewsButton = (Button) getActivity().findViewById(R.id.review_all_reviews_button);
             reviewAllReviewsButton.setVisibility(View.VISIBLE);

@@ -19,6 +19,11 @@
     <string name="youtube_not_installed">Youtube app not installed</string>
     <string name="install">Install</string>
     <string name="main_trailer_button">Play main trailer</string>
+    <string name="title_unavailable">Title unavailable</string>
+    <string name="release_date_unavailable">Release data unavailable</string>
+    <string name="plot_unavailable">Plot unavailable</string>
+    <string name="author_unavailable">Author unavailable</string>
+    <string name="review_unavailable">Review unavailable</string>
 
     <!--ReviewCard-->
     <string name="review_title">Top Review</string>
