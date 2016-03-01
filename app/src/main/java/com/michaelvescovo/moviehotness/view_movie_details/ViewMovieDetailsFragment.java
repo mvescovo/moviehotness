@@ -368,18 +368,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showSnackbar(int stringResource) {
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        Snackbar snackbar = Snackbar.make(fab, getResources().getString(stringResource), Snackbar.LENGTH_LONG);
-        View snackbarView = snackbar.getView();
-        int snackbarTextId = android.support.design.R.id.snackbar_text;
-        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
-        }
-        snackbar.show();
+        showSnackbar(getContext().getResources().getString(stringResource));
     }
 
     @Override
@@ -388,18 +377,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             Intent intent = YouTubeIntents.createPlayVideoIntentWithOptions(getContext(), youTubeId, true, true);
             startActivity(intent);
         } else {
-            Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.main_trailer_play_button), getResources().getString(R.string.youtube_not_installed), Snackbar.LENGTH_LONG);
-            View snackbarView = snackbar.getView();
-            int snackbarTextId = android.support.design.R.id.snackbar_text;
-            TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
-            }
-            snackbar.setAction(R.string.install, new InstallYoutube());
-            snackbar.show();
+            showSnackbar(getResources().getString(R.string.youtube_not_installed));
         }
     }
 
@@ -505,5 +483,19 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.youtube")));
             }
         }
+    }
+
+    public void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.nested_scroll_view), message, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
+        }
+        snackbar.show();
     }
 }

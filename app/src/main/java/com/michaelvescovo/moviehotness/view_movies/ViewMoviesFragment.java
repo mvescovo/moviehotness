@@ -27,7 +27,11 @@ package com.michaelvescovo.moviehotness.view_movies;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -40,11 +44,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.michaelvescovo.moviehotness.R;
 import com.michaelvescovo.moviehotness.data.MovieHotnessContract;
 import com.michaelvescovo.moviehotness.data.MovieInterface;
 import com.michaelvescovo.moviehotness.data.MovieRepositories;
+import com.michaelvescovo.moviehotness.util.EspressoIdlingResource;
+import com.michaelvescovo.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.moviehotness.view_movie_details.ViewMovieDetailsActivity;
 
@@ -52,20 +59,31 @@ import java.util.List;
 
 public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
 
+//    private static final String TAG = "ViewMoviesFragment";
+
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
+    public static final String CURRENT_PAGE = "CURRENT_PAGE";
+    public static final String NEXT_PAGE = "NEXT_PAGE";
+    public static final String PREVIOUS_TOTAL = "PREVIOUS_TOTAL";
+    public static final String TOTAL_ITEM_COUNT = "TOTAL_ITEM_COUNT";
+    public static final String LOADING = "LOADING";
     public static final String SHOWN_TOP_MOVIE = "SHOWN_TOP_MOVIE";
-    private RecyclerView.Adapter mAdapter;
-    public int mSortBy = -1;
+    public static final String CONNECTED = "CONNECTED";
+
     private ViewMoviesContract.UserActionsListener mActionsListener;
-    private  Callback mCallback;
-    private int mCurrentPage = 1;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int previousTotal = 0;
-    private boolean loading = true;
+    private RecyclerView.Adapter mAdapter;
+    private  Callback mCallback;
+    public int mSortBy = -1;
+    private int mCurrentPage = 0;
+    private int mNextPage = 1;
+    private int mPreviousTotal = 0;
     private int mTotalItemCount = 0;
     private int mLastVisibleItem;
+    private boolean mLoading = true;
     private boolean mShownTopMovie = false;
+    private boolean mConnected = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +94,14 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
         if (savedInstanceState != null) {
             mSortBy = savedInstanceState.getInt(SORT_BY);
+            mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
+            mNextPage = savedInstanceState.getInt(NEXT_PAGE);
+            mPreviousTotal = savedInstanceState.getInt(PREVIOUS_TOTAL);
+            mTotalItemCount = savedInstanceState.getInt(TOTAL_ITEM_COUNT);
+            mLoading = savedInstanceState.getBoolean(LOADING);
             mShownTopMovie = savedInstanceState.getBoolean(SHOWN_TOP_MOVIE);
+            mConnected = savedInstanceState.getBoolean(CONNECTED);
+
         } else {
             if (getArguments() != null) {
                 mSortBy = getArguments().getInt("sortBy");
@@ -84,17 +109,17 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         }
 
         mActionsListener = new ViewMoviesPresenter(getContext(), MovieRepositories.getMovieRepository(getContext(), mSortBy), this);
-
-        // If viewing favourites create cursor adapter, otherwise create arraylist adapter
-        if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
-            mAdapter = new PosterCursorAdapter(getContext(), mActionsListener);
-        } else {
-            mAdapter = new PosterApiAdapter(getContext(), mActionsListener);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // If viewing favourites create cursor adapter, otherwise create arraylist adapter
+        if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
+            mAdapter = new PosterCursorAdapter(getContext(), mActionsListener);
+        } else {
+            mAdapter = new PosterApiAdapter(mActionsListener);
+        }
+
         View root = inflater.inflate(R.layout.fragment_view_movies, container, false);
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.view_movies_list);
         recyclerView.setAdapter(mAdapter);
@@ -110,27 +135,18 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getContext(), numColumns);
         recyclerView.setLayoutManager(mLayoutManager);
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (dy > 0) {
-                    mTotalItemCount = recyclerView.getLayoutManager().getItemCount();
+                    // user scrolled down
                     mLastVisibleItem = ((GridLayoutManager)mLayoutManager).findLastVisibleItemPosition();
-
                     if (mLastVisibleItem == mTotalItemCount - 1) {
-                        if (loading) {
-                            if (mTotalItemCount > previousTotal) {
-                                loading = false;
-                                previousTotal = mTotalItemCount;
-                            }
-                        }
-                        if (!loading) {
-                            mCurrentPage++;
-                            loadMovies();
-                            loading = true;
+                        // user scrolled to the bottom
+                        if (!mLoading) {
+                            loadMovies(mNextPage);
                         }
                     }
                 }
@@ -147,9 +163,12 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             @Override
             public void onRefresh() {
                 if (mSortBy != R.integer.favourite) {
-                    mCurrentPage = 1;
-                    previousTotal = 0;
-                    mActionsListener.loadMovies(mSortBy, true, mCurrentPage);
+                    mCurrentPage = 0;
+                    mNextPage = 1;
+                    mTotalItemCount = 0;
+                    mPreviousTotal = 0;
+                    mActionsListener.loadMovies(mSortBy, true, mNextPage);
+
                 } else {
                     setProgressIndicator(false);
                 }
@@ -172,9 +191,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        setRetainInstance(true);
-
+        setRetainInstance(true);
         // Only use loader when viewing favourites
         if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
             getLoaderManager().initLoader(0, null, this);
@@ -184,13 +201,30 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void onResume() {
         super.onResume();
-        loadMovies();
+
+//        Log.i(TAG, "onResume: sortBy: " + mSortBy);
+//        Log.i(TAG, "onResume: currentPage: " + mCurrentPage);
+//        Log.i(TAG, "onResume: nextPage: " + mNextPage);
+//        Log.i(TAG, "onResume: previousTotal: " + mPreviousTotal);
+//        Log.i(TAG, "onResume: totalItemCount: " + mTotalItemCount);
+//        Log.i(TAG, "onResume: loading: " + mLoading);
+
+        if (mLoading) {
+            loadMovies(mNextPage);
+        } else {
+            loadMovies(mCurrentPage);
+        }
     }
 
-    public void loadMovies() {
+    public void loadMovies(int page) {
+        mLoading = true;
         // Only load movies from API if not viewing favourites
         if ((mSortBy != -1) && (mSortBy != getContext().getResources().getInteger(R.integer.favourite))) {
-            mActionsListener.loadMovies(mSortBy, false, mCurrentPage);
+            if (isOnline()) {
+                mActionsListener.loadMovies(mSortBy, false, page);
+            } else {
+                showSnackbar(getResources().getString(R.string.network_not_connected));
+            }
         }
     }
 
@@ -198,7 +232,33 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SORT_BY, mSortBy);
+        outState.putInt(CURRENT_PAGE, mCurrentPage);
+        outState.putInt(NEXT_PAGE, mNextPage);
+        outState.putInt(PREVIOUS_TOTAL, mPreviousTotal);
+        outState.putInt(TOTAL_ITEM_COUNT, mTotalItemCount);
+        outState.putBoolean(LOADING, mLoading);
         outState.putBoolean(SHOWN_TOP_MOVIE, mShownTopMovie);
+        outState.putBoolean(CONNECTED, mConnected);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mLoading) {
+            if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
+                setProgressIndicator(false);
+                VolleyRequestQueue.getInstance(getContext()).getRequestQueue().cancelAll(mSortBy);
+                EspressoIdlingResource.decrement();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Required to avoid frozen old recyclerview on top of the new one.
+        // Happens when using ViewPager after fragment is destroyed and recreated.
+        mLayoutManager.removeAllViews();
     }
 
     @Override
@@ -223,6 +283,15 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         if (mAdapter != null) {
             ((PosterApiAdapter)mAdapter).updateDataset(movies);
         }
+        mLoading = false;
+        mTotalItemCount = mLayoutManager.getItemCount();
+        if (mTotalItemCount > mPreviousTotal) {
+            // new paged was loaded
+            mPreviousTotal = mTotalItemCount;
+            mCurrentPage++;
+            mNextPage++;
+        }
+
         if ((ViewMoviesActivity.mTwoPane) && (mSortBy == getContext().getResources().getInteger(R.integer.popular))) {
             if (movies.size() != 0) {
                 showTopMovie(movies.get(0));
@@ -297,5 +366,44 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
          * DetailFragmentCallback for when an item has been selected.
          */
         void onItemSelected(int sortBy, String movieId);
+    }
+
+    public void networkChanged(boolean connected) {
+        if (connected) {
+            if (!mConnected) {
+                mConnected = true;
+                if (mLoading) {
+                    loadMovies(mNextPage);
+                }
+            }
+        } else {
+            showSnackbar(getResources().getString(R.string.network_not_connected));
+            mConnected = false;
+            if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
+                setProgressIndicator(false);
+                VolleyRequestQueue.getInstance(getContext()).getRequestQueue().cancelAll(mSortBy);
+                EspressoIdlingResource.decrement();
+            }
+        }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    public void showSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.recycler_view), message, Snackbar.LENGTH_LONG);
+        View snackbarView = snackbar.getView();
+        int snackbarTextId = android.support.design.R.id.snackbar_text;
+        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
+        }
+        snackbar.show();
     }
 }

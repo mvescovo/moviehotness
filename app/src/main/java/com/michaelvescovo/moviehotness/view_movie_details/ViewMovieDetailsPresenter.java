@@ -52,6 +52,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserActionsListener {
+
     private Context mContext;
     private final MovieRepository mMovieRepository;
     private final ViewMovieDetailsContract.View mViewMovieDetailsView;

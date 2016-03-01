@@ -13,6 +13,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 
 import com.michaelvescovo.moviehotness.R;
@@ -190,9 +191,12 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
             ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = conn.getActiveNetworkInfo();
 
-            if (networkInfo != null) {
-                mPopularMovieGridFragment.loadMovies();
-                mHighestRatedMovieGridFragment.loadMovies();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                mPopularMovieGridFragment.networkChanged(true);
+                mHighestRatedMovieGridFragment.networkChanged(true);
+            } else if (networkInfo != null && !networkInfo.isConnected()) {
+                mPopularMovieGridFragment.networkChanged(false);
+                mHighestRatedMovieGridFragment.networkChanged(false);
             }
         }
     }

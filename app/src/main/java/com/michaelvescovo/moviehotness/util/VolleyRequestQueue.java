@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley;
  * Code from Android documentation: http://developer.android.com/training/volley/requestqueue.html#singleton
  */
 public class VolleyRequestQueue {
+
     private static VolleyRequestQueue mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;

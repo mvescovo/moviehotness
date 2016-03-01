@@ -6,7 +6,6 @@
     <string name="activity_about_themoviedb_logo">themoviedb.org logo</string>
     <string name="action_about_attribution">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
     <string name="read_movies">Read movies</string>
-    <string name="network_not_connected">Network not connected</string>
 
     <!--ViewMovies-->
     <string name="movie_poster">Movie poster</string>
@@ -54,7 +53,6 @@
     <string name="share_message">trailer:</string>
 
     <!--Network-->
-    <string name="wifi_connected">Wifi connected</string>
-    <string name="lost_connection">Lost connection</string>
+    <string name="network_not_connected">Network not connected</string>
 
 </resources>

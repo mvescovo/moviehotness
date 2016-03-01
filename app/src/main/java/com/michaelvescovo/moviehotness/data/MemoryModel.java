@@ -18,19 +18,24 @@ public class MemoryModel extends DataModel {
     private int mLastPage = 0;
 
     @Override
-    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull final LoadMoviesCallback callback) {
+    public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull final Integer page, @NonNull final LoadMoviesCallback callback) {
         checkNotNull(callback);
+
         if ((page != mLastPage) && (successor != null)) {
-            mLastPage = page;
             successor.getMovies(context, sortBy, page, new LoadMoviesCallback() {
                 @Override
                 public void onMoviesLoaded(List<MovieInterface> movies) {
                     mCachedMovies.addAll(movies);
-                    callback.onMoviesLoaded(mCachedMovies);
+                    mLastPage++;
+                    if (callback != null) {
+                        callback.onMoviesLoaded(mCachedMovies);
+                    }
                 }
             });
         } else {
-            callback.onMoviesLoaded(mCachedMovies);
+            if (callback != null) {
+                callback.onMoviesLoaded(mCachedMovies);
+            }
         }
     }
 
@@ -59,5 +64,6 @@ public class MemoryModel extends DataModel {
     @Override
     public void refreshData() {
         mCachedMovies.clear();
+        mLastPage = 0;
     }
 }

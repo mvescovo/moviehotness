@@ -3,7 +3,6 @@ package com.michaelvescovo.moviehotness.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,6 @@ import java.util.List;
  *
  */
 public class DbModel extends DataModel {
-
-    private static final String TAG = "DbModel";
 
     @Override
     public synchronized void getMovies(@NonNull Context context, @NonNull Integer sortBy, @NonNull Integer page, @NonNull LoadMoviesCallback callback) {
@@ -91,7 +88,6 @@ public class DbModel extends DataModel {
                                 String youtubeid = trailerCursor.getString(youtubeidIndex);
                                 String name = trailerCursor.getString(nameIndex);
                                 MovieTrailer trailer = new MovieTrailer(youtubeid, name);
-                                Log.i(TAG, "getMovie: trailer name: " + name);
                                 movie.addTrailer(trailer);
                             }
                             trailerCursor.close();
