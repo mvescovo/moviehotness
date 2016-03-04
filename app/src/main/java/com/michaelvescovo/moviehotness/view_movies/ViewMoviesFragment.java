@@ -162,7 +162,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mSortBy != R.integer.favourite) {
+                if (mSortBy != getResources().getInteger(R.integer.favourite)) {
                     mCurrentPage = 0;
                     mNextPage = 1;
                     mTotalItemCount = 0;
