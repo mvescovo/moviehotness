@@ -36,7 +36,7 @@ public class PosterApiAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ImageView imageView = (ImageView) ((MovieApiViewHolder) holder).getView().findViewById(R.id.poster_image);
-        Picasso.with(imageView.getContext()).load("https://image.tmdb.org/t/p/" + imageView.getContext().getResources().getString(R.string.poster_large) + mDataset.get(position).getPosterUrl()).error(R.drawable.no_image).into(imageView, new Callback() {
+        Picasso.with(imageView.getContext()).load("https://image.tmdb.org/t/p/" + imageView.getContext().getResources().getString(R.string.poster_medium) + mDataset.get(position).getPosterUrl()).error(R.drawable.no_image).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
 
