@@ -106,12 +106,12 @@ public class ViewMoviesPresenterTest {
         verify(mViewMoviesView).showMovieDetailUi(any(String.class));
     }
 
-    @Test
-    public void clickOnAboutMenuItem_ShowsAttributionUi() {
-        // When open attribution/about is requested
-        mViewMoviesPresenter.openAttribution();
-
-        // Then attribution UI is shown
-        verify(mViewMoviesView).showAttributionUi();
-    }
+//    @Test
+//    public void clickOnAboutMenuItem_ShowsAttributionUi() {
+//        // When open attribution/about is requested
+//        mViewMoviesPresenter.openAttribution();
+//
+//        // Then attribution UI is shown
+//        verify(mViewMoviesView).showAttributionUi();
+//    }
 }
