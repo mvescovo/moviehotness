@@ -311,7 +311,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         // Backdrop
         ImageView backdrop = (ImageView) getActivity().findViewById(R.id.backdrop);
         EspressoIdlingResource.increment();
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getBackdropUrl()).error(R.drawable.no_image).into(backdrop, new Callback() {
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_xx_large) + movie.getBackdropUrl()).error(R.drawable.no_image).into(backdrop, new Callback() {
             @Override
             public void onSuccess() {
                 EspressoIdlingResource.decrement();
