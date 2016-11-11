@@ -265,25 +265,29 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                 Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(mDetailposterView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        EspressoIdlingResource.decrement();
-                    }
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement();
+                        }                    }
 
                     @Override
                     public void onError() {
-                        EspressoIdlingResource.decrement();
-                    }
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement();
+                        }                    }
                 });
             } else {
                 Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_large) + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposterView, new Callback() {
                     @Override
                     public void onSuccess() {
-                        EspressoIdlingResource.decrement();
-                    }
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement();
+                        }                    }
 
                     @Override
                     public void onError() {
-                        EspressoIdlingResource.decrement();
-                    }
+                        if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                            EspressoIdlingResource.decrement();
+                        }                    }
                 });
             }
         }
@@ -314,12 +318,16 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         Picasso.with(getContext()).load("https://image.tmdb.org/t/p/" + getResources().getString(R.string.poster_xx_large) + movie.getBackdropUrl()).error(R.drawable.no_image).into(backdrop, new Callback() {
             @Override
             public void onSuccess() {
-                EspressoIdlingResource.decrement();
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
             }
 
             @Override
             public void onError() {
-                EspressoIdlingResource.decrement();
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
             }
         });
 

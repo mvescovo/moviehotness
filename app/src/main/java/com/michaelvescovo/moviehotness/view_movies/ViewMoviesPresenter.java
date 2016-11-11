@@ -63,7 +63,9 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
         mMovieRepository.getMovies(mContext, sortBy, page, new MovieRepository.LoadMoviesCallback() {
             @Override
             public void onMoviesLoaded(List<MovieInterface> movies) {
-                EspressoIdlingResource.decrement(); // Set app as idle.
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
                 mViewMoviesView.setProgressIndicator(false);
                 mViewMoviesView.showMovies(movies);
             }

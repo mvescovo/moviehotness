@@ -71,7 +71,9 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
         mMovieRepository.getMovie(mContext, movieId, new MovieRepository.GetMovieCallback() {
             @Override
             public void onMovieLoaded(MovieInterface movie) {
-                EspressoIdlingResource.decrement(); // Set app as idle.
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
                 if (movie == null) {
                     mViewMovieDetailsView.showMissingMovie();
                 } else {

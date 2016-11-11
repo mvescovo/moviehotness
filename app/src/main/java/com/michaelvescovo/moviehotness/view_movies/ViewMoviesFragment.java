@@ -70,12 +70,11 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public static final String LOADING = "LOADING";
     public static final String SHOWN_TOP_MOVIE = "SHOWN_TOP_MOVIE";
     public static final String CONNECTED = "CONNECTED";
-
+    public int mSortBy = -1;
     private ViewMoviesContract.UserActionsListener mActionsListener;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private  Callback mCallback;
-    public int mSortBy = -1;
+    private Callback mCallback;
     private int mCurrentPage = 0;
     private int mNextPage = 1;
     private int mPreviousTotal = 0;
@@ -142,7 +141,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
                 if (dy > 0) {
                     // user scrolled down
-                    mLastVisibleItem = ((GridLayoutManager)mLayoutManager).findLastVisibleItemPosition();
+                    mLastVisibleItem = ((GridLayoutManager) mLayoutManager).findLastVisibleItemPosition();
                     if (mLastVisibleItem == mTotalItemCount - 1) {
                         // user scrolled to the bottom
                         if (!mLoading) {
@@ -220,11 +219,11 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         mLoading = true;
         // Only load movies from API if not viewing favourites
         if ((mSortBy != -1) && (mSortBy != getContext().getResources().getInteger(R.integer.favourite))) {
-            if (isOnline()) {
-                mActionsListener.loadMovies(mSortBy, false, page);
-            } else {
+            if (!isOnline()) {
                 showSnackbar(getResources().getString(R.string.network_not_connected));
+            } else {
             }
+            mActionsListener.loadMovies(mSortBy, false, page);
         }
     }
 
@@ -248,7 +247,9 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
                 setProgressIndicator(false);
                 VolleyRequestQueue.getInstance(getContext()).getRequestQueue().cancelAll(mSortBy);
-                EspressoIdlingResource.decrement();
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
             }
         }
     }
@@ -267,7 +268,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             return;
         }
 
-        final SwipeRefreshLayout srl = (SwipeRefreshLayout)getView().findViewById(R.id.refresh_layout);
+        final SwipeRefreshLayout srl = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
 
         // Make sure setRefreshing() is called after the layout is done with everything else.
         srl.post(new Runnable() {
@@ -281,7 +282,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void showMovies(List<MovieInterface> movies) {
         if (mAdapter != null) {
-            ((PosterApiAdapter)mAdapter).updateDataset(movies);
+            ((PosterApiAdapter) mAdapter).updateDataset(movies);
         }
         mLoading = false;
         mTotalItemCount = mLayoutManager.getItemCount();
@@ -350,24 +351,12 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        ((PosterCursorAdapter)mAdapter).swapCursor(data);
+        ((PosterCursorAdapter) mAdapter).swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        ((PosterCursorAdapter)mAdapter).swapCursor(null);
-    }
-
-    /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
-     */
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        void onItemSelected(int sortBy, String movieId);
+        ((PosterCursorAdapter) mAdapter).swapCursor(null);
     }
 
     public void networkChanged(boolean connected) {
@@ -384,7 +373,9 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             if (mSortBy != getContext().getResources().getInteger(R.integer.favourite)) {
                 setProgressIndicator(false);
                 VolleyRequestQueue.getInstance(getContext()).getRequestQueue().cancelAll(mSortBy);
-                EspressoIdlingResource.decrement();
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
             }
         }
     }
@@ -396,10 +387,10 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     }
 
     public void showSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.recycler_view), message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG);
         View snackbarView = snackbar.getView();
         int snackbarTextId = android.support.design.R.id.snackbar_text;
-        TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+        TextView textView = (TextView) snackbarView.findViewById(snackbarTextId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextColor(getResources().getColor(R.color.black, getResources().newTheme()));
         }
@@ -407,5 +398,17 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             snackbarView.setBackgroundColor(getResources().getColor(R.color.white, getResources().newTheme()));
         }
         snackbar.show();
+    }
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        void onItemSelected(int sortBy, String movieId);
     }
 }
