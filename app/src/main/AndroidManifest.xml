@@ -9,13 +9,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_theaters_24dp"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <provider
-            android:authorities="com.michaelvescovo.moviehotness"
+            android:authorities="com.michaelvescovo.android.moviehotness"
             android:name="com.michaelvescovo.android.moviehotness.data.MovieHotnessProvider"
             android:enabled="true"
             android:exported="false"/>
