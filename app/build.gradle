@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.michaelvescovo.moviehotness"
+        applicationId "com.michaelvescovo.android.moviehotness"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -28,11 +28,11 @@ android {
     productFlavors {
         mock {
             applicationIdSuffix = ".mock"
-            applicationId "com.michaelvescovo.moviehotness.mock"
+            applicationId "com.michaelvescovo.android.moviehotness.mock"
             versionName "1.0-mock"
         }
         prod {
-            applicationId "com.michaelvescovo.moviehotness.prod"
+            applicationId "com.michaelvescovo.android.moviehotness.prod"
             versionName "1.0-prod"
         }
     }

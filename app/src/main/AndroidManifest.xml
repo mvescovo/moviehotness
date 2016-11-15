@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.michaelvescovo.moviehotness"
+<manifest package="com.michaelvescovo.android.moviehotness"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission-sdk-23 android:name="android.permission.INTERNET"/>
@@ -16,11 +16,11 @@
 
         <provider
             android:authorities="com.michaelvescovo.moviehotness"
-            android:name=".data.MovieHotnessProvider"
+            android:name="com.michaelvescovo.android.moviehotness.data.MovieHotnessProvider"
             android:enabled="true"
             android:exported="false"/>
 
-        <activity android:name=".view_movies.ViewMoviesActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -29,27 +29,27 @@
         </activity>
 
         <activity
-            android:name=".view_movie_details.ViewMovieDetailsActivity"
+            android:name="com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsActivity"
             android:label=""
-            android:parentActivityName=".view_movies.ViewMoviesActivity">
+            android:parentActivityName="com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view_movies.ViewMoviesActivity"/>
+                android:value="com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity"/>
         </activity>
 
-        <activity android:name=".view_full_plot.ViewFullPlotActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_full_plot.ViewFullPlotActivity">
         </activity>
 
-        <activity android:name=".view_attribution.AttributionActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity">
         </activity>
 
-        <activity android:name=".view_all_trailers.ViewAllTrailersActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_all_trailers.ViewAllTrailersActivity">
         </activity>
 
-        <activity android:name=".view_all_reviews.ViewAllReviewsActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_all_reviews.ViewAllReviewsActivity">
         </activity>
 
-        <activity android:name=".view_full_review.ViewFullReviewActivity">
+        <activity android:name="com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewActivity">
         </activity>
 
     </application>
