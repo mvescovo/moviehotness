@@ -3,7 +3,6 @@ package com.michaelvescovo.android.moviehotness.view_movies;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +80,6 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
 
     public class MovieCursorViewHolder extends RecyclerView.ViewHolder  {
 
-        private static final String TAG = "MovieCursorViewHolder";
-
         private View mView;
 
         public MovieCursorViewHolder(View itemView) {
@@ -108,7 +105,6 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
                     String voteAverage = mCursor.getString(voteAverageIndex);
                     String plot = mCursor.getString(plotIndex);
                     String backdropUrl = mCursor.getString(backdropUrlIndex);
-                    Log.i(TAG, "onClick: movie title: " + title);
                     Movie movie = new Movie(id, title, releaseDate, posterUrl, voteAverage, plot, backdropUrl);
 
                     if (mActionsListener != null) {

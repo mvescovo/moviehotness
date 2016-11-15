@@ -1,9 +1,20 @@
 apply plugin: 'com.android.application'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "com.michaelvescovo.android.moviehotness"
         minSdkVersion 16
@@ -16,6 +27,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     buildTypes.each {
@@ -36,7 +48,6 @@ android {
             versionName "1.0-prod"
         }
     }
-
     // Remove mockRelease as it's not needed.
     android.variantFilter { variant ->
         if (variant.buildType.name.equals('release')
@@ -69,7 +80,8 @@ dependencies {
     androidTestCompile "org.hamcrest:hamcrest-library:$rootProject.ext.hamcrestVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion") {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion")
+    {
         exclude module: 'recyclerview-v7'
     }
 }

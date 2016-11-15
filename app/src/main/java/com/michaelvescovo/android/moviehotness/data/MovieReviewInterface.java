@@ -6,11 +6,11 @@ package com.michaelvescovo.android.moviehotness.data;
  */
 public interface MovieReviewInterface {
 
-    public void setAuthor(String author);
+    void setAuthor(String author);
 
-    public String getAuthor();
+    String getAuthor();
 
-    public void setContent(String content);
+    void setContent(String content);
 
-    public String getContent();
+    String getContent();
 }

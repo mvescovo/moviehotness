@@ -5,11 +5,11 @@ package com.michaelvescovo.android.moviehotness.data;
  *
  */
 public interface MovieTrailerInterface {
-    public void setYouTubeId(String youTubeId);
+    void setYouTubeId(String youTubeId);
 
-    public String getYouTubeId();
+    String getYouTubeId();
 
-    public void setName(String name);
+    void setName(String name);
 
-    public String getName();
+    String getName();
 }
