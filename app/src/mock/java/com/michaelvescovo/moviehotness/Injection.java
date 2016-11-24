@@ -24,10 +24,10 @@
 
 package com.michaelvescovo.moviehotness;
 
+import com.michaelvescovo.android.moviehotness.data.MovieRepository;
 import com.michaelvescovo.moviehotness.data.FakeCloudModel;
 import com.michaelvescovo.moviehotness.data.FakeDbModel;
 import com.michaelvescovo.moviehotness.data.FakeMemoryModel;
-import com.michaelvescovo.moviehotness.data.MovieRepository;
 
 /**
  * Created by Michael Vescovo on 9/01/16.

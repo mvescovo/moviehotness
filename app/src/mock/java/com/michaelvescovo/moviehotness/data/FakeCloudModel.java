@@ -3,6 +3,8 @@ package com.michaelvescovo.moviehotness.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.michaelvescovo.android.moviehotness.data.DataModel;
+
 /**
  * Created by Michael Vescovo on 11/01/16.
  *

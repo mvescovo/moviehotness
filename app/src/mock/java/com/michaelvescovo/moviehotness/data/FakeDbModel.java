@@ -3,7 +3,11 @@ package com.michaelvescovo.moviehotness.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.michaelvescovo.android.moviehotness.data.DataModel;
+import com.michaelvescovo.android.moviehotness.data.MovieInterface;
+
 import java.util.List;
+
 
 /**
  * Created by Michael Vescovo on 11/01/16.

@@ -24,6 +24,11 @@
 
 package com.michaelvescovo.moviehotness.data;
 
+import com.michaelvescovo.android.moviehotness.data.Movie;
+import com.michaelvescovo.android.moviehotness.data.MovieInterface;
+import com.michaelvescovo.android.moviehotness.data.MovieReview;
+import com.michaelvescovo.android.moviehotness.data.MovieTrailer;
+
 import java.util.ArrayList;
 
 /**
