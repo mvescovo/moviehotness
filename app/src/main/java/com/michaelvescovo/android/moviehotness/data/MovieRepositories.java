@@ -26,8 +26,8 @@ package com.michaelvescovo.android.moviehotness.data;
 
 import android.content.Context;
 
+import com.michaelvescovo.android.moviehotness.Injection;
 import com.michaelvescovo.android.moviehotness.R;
-import com.michaelvescovo.moviehotness.Injection;
 
 /**
  * Created by Michael Vescovo on 5/01/16.
