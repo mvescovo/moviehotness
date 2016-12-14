@@ -2,6 +2,7 @@ package com.michaelvescovo.android.moviehotness.view_movies;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,10 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
                 }
             });
         }
+        ViewCompat.setTransitionName(
+                imageView,
+                imageView.getResources().getString(R.string.transition_poster)
+        );
     }
 
     @Override
@@ -108,7 +113,7 @@ public class PosterCursorAdapter extends RecyclerView.Adapter {
                     Movie movie = new Movie(id, title, releaseDate, posterUrl, voteAverage, plot, backdropUrl);
 
                     if (mActionsListener != null) {
-                        mActionsListener.openMovieDetails(movie);
+                        mActionsListener.openMovieDetails(v.findViewById(R.id.poster_image), movie);
                     }
                 }
             });

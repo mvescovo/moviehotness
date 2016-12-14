@@ -26,6 +26,7 @@ package com.michaelvescovo.android.moviehotness.view_movies;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.data.MovieInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieRepository;
@@ -73,7 +74,7 @@ public class ViewMoviesPresenter implements ViewMoviesContract.UserActionsListen
     }
 
     @Override
-    public void openMovieDetails(@NonNull MovieInterface requestedMovie) {
-        mViewMoviesView.showMovieDetailUi(requestedMovie.getId());
+    public void openMovieDetails(@NonNull View sharedView, @NonNull MovieInterface requestedMovie) {
+        mViewMoviesView.showMovieDetailUi(sharedView, requestedMovie.getId());
     }
 }

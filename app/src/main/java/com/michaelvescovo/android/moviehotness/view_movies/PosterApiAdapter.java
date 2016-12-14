@@ -1,5 +1,6 @@
 package com.michaelvescovo.android.moviehotness.view_movies;
 
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,10 @@ public class PosterApiAdapter extends RecyclerView.Adapter {
 
             }
         });
+        ViewCompat.setTransitionName(
+                imageView,
+                imageView.getResources().getString(R.string.transition_poster)
+        );
     }
 
     @Override
@@ -77,7 +82,8 @@ public class PosterApiAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if (mActionsListener != null)
-                        mActionsListener.openMovieDetails(mDataset.get(getAdapterPosition()));
+                        mActionsListener.openMovieDetails(v.findViewById(R.id.poster_image),
+                                mDataset.get(getAdapterPosition()));
                 }
             });
         }

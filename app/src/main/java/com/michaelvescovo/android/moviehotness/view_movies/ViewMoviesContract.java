@@ -25,6 +25,7 @@
 package com.michaelvescovo.android.moviehotness.view_movies;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.michaelvescovo.android.moviehotness.data.MovieInterface;
 
@@ -44,7 +45,7 @@ public interface ViewMoviesContract {
 
         void showTopMovie(MovieInterface movie);
 
-        void showMovieDetailUi(String movieId);
+        void showMovieDetailUi(@Nullable android.view.View sharedView, String movieId);
 
         void showAttributionUi();
     }
@@ -53,6 +54,7 @@ public interface ViewMoviesContract {
 
         void loadMovies(int sortBy, boolean forceUpdate, int page);
 
-        void openMovieDetails(@NonNull MovieInterface requestedMovie);
+        void openMovieDetails(@NonNull android.view.View sharedView,
+                              @NonNull MovieInterface requestedMovie);
     }
 }

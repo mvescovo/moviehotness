@@ -36,6 +36,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -120,6 +121,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         }
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
+        ViewCompat.setTransitionName(mDetailposterView, getString(R.string.transition_poster));
         mReleaseDateView = (TextView) root.findViewById(R.id.fragment_detail_release_date);
 
         mPlotView = (TextView) root.findViewById(R.id.fragment_detail_plot);

@@ -32,11 +32,13 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -303,20 +305,25 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void showTopMovie(MovieInterface movie) {
         if (!mShownTopMovie) {
-            showMovieDetailUi(movie.getId());
+            showMovieDetailUi(null, movie.getId());
             mShownTopMovie = true;
         }
     }
 
     @Override
-    public void showMovieDetailUi(String movieId) {
+    public void showMovieDetailUi(View sharedView, String movieId) {
         if (ViewMoviesActivity.mTwoPane) {
             mCallback.onItemSelected(mSortBy, movieId);
         } else {
             Intent intent = new Intent(getContext(), ViewMovieDetailsActivity.class);
             intent.putExtra(SORT_BY, mSortBy);
             intent.putExtra(MOVIE_ID, movieId);
-            startActivity(intent);
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    getActivity(),
+                    sharedView,
+                    ViewCompat.getTransitionName(sharedView)
+            ).toBundle();
+            startActivity(intent, bundle);
         }
     }
 
