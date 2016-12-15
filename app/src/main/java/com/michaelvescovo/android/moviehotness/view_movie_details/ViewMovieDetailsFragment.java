@@ -487,7 +487,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     public void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers) {
         Intent intent = new Intent(getContext(), ViewAllTrailersActivity.class);
         intent.putExtra(ViewAllTrailersActivity.TRAILERS, mTrailers);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity()
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
