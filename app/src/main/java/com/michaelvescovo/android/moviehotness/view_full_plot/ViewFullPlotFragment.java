@@ -3,6 +3,8 @@ package com.michaelvescovo.android.moviehotness.view_full_plot;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ public class ViewFullPlotFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_view_full_plot, container, false);
+        NestedScrollView nestedScrollView = (NestedScrollView) root.findViewById(R.id.full_plot_shared_view);
+        ViewCompat.setTransitionName(nestedScrollView, getString(R.string.transition_plot));
         TextView title = (TextView) root.findViewById(R.id.plot_title);
         title.setText(getArguments().getString(ViewFullPlotActivity.TITLE));
         TextView plot = (TextView) root.findViewById(R.id.plot_text);

@@ -41,7 +41,7 @@ public interface ViewMovieDetailsContract {
 
         void showFirstTrailerUi(String youTubeId);
 
-        void showFullPlotUi(String title, String plot);
+        void showFullPlotUi(android.view.View sharedView, String title, String plot);
 
         void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers);
 
@@ -64,7 +64,7 @@ public interface ViewMovieDetailsContract {
 
         void playFirstTrailer(String youTubeId);
 
-        void openFullPlot(String title, String plot);
+        void openFullPlot(android.view.View sharedView, String title, String plot);
 
         void openAllTrailers(ArrayList<MovieTrailerInterface> trailers);
 

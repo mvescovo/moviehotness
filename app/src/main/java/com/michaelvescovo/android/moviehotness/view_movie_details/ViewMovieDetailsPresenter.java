@@ -90,8 +90,8 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     }
 
     @Override
-    public void openFullPlot(String title, String plot) {
-        mViewMovieDetailsView.showFullPlotUi(title, plot);
+    public void openFullPlot(View sharedView, String title, String plot) {
+        mViewMovieDetailsView.showFullPlotUi(sharedView, title, plot);
     }
 
     @Override

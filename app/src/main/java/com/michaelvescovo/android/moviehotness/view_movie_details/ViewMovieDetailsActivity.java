@@ -53,7 +53,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
     }
 
     @Override
-    public void onFullPlotSelected(String title, String plot) {
+    public void onFullPlotSelected(View sharedView, String title, String plot) {
 
     }
 

@@ -20,8 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/standard_padding"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/standard_padding">
 
             <TextView
                 android:id="@+id/fragment_detail_release_date"
@@ -30,32 +29,38 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/standard_padding"/>
 
-            <TextView
-                android:id="@+id/fragment_detail_plot"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
                 android:layout_below="@id/fragment_detail_release_date"
-                android:lines="3"
-                android:paddingBottom="@dimen/standard_padding"
-                android:singleLine="false"/>
+                android:id="@+id/plot_preview_shared_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/fragment_detail_read_more"
-                style="@style/Base.TextAppearance.AppCompat.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_detail_plot"
-                android:paddingBottom="@dimen/standard_padding"
-                android:text="@string/fragment_detail_read_more"
-                android:visibility="invisible"/>
+                <TextView
+                    android:id="@+id/fragment_detail_plot"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="3"
+                    android:paddingBottom="@dimen/standard_padding" />
+
+                <TextView
+                    android:id="@+id/fragment_detail_read_more"
+                    style="@style/Base.TextAppearance.AppCompat.Body1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/standard_padding"
+                    android:text="@string/fragment_detail_read_more"
+                    android:visibility="invisible"/>
+
+            </LinearLayout>
 
             <android.support.v7.widget.AppCompatRatingBar
                 android:id="@+id/fragment_detail_rating"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_detail_read_more"
+                android:layout_below="@id/plot_preview_shared_view"
                 android:clickable="false"
                 android:numStars="5"
                 android:paddingBottom="@dimen/standard_padding"

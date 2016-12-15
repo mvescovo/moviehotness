@@ -110,7 +110,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
+        final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
 
         if (!ViewMoviesActivity.mTwoPane) {
             Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
@@ -124,6 +124,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         ViewCompat.setTransitionName(mDetailposterView, getString(R.string.transition_poster));
+
+        final View plotSharedView = root.findViewById(R.id.plot_preview_shared_view);
+        ViewCompat.setTransitionName(plotSharedView, getString(R.string.transition_plot));
+
         mReleaseDateView = (TextView) root.findViewById(R.id.fragment_detail_release_date);
 
         mPlotView = (TextView) root.findViewById(R.id.fragment_detail_plot);
@@ -131,10 +135,17 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullPlotSelected(mTitle,
-                            mPlotView.getText().toString());
+                    mDetailSelectedCallback.onFullPlotSelected(
+                            plotSharedView,
+                            mTitle,
+                            mPlotView.getText().toString()
+                    );
                 } else {
-                    mActionsListener.openFullPlot(mTitle, mPlotView.getText().toString());
+                    mActionsListener.openFullPlot(
+                            plotSharedView,
+                            mTitle,
+                            mPlotView.getText().toString()
+                    );
                 }
             }
         });
@@ -144,10 +155,17 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullPlotSelected(mTitle,
-                            mPlotView.getText().toString());
+                    mDetailSelectedCallback.onFullPlotSelected(
+                            plotSharedView,
+                            mTitle,
+                            mPlotView.getText().toString()
+                    );
                 } else {
-                    mActionsListener.openFullPlot(mTitle, mPlotView.getText().toString());
+                    mActionsListener.openFullPlot(
+                            plotSharedView,
+                            mTitle,
+                            mPlotView.getText().toString()
+                    );
                 }
             }
         });
@@ -453,11 +471,16 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     }
 
     @Override
-    public void showFullPlotUi(String title, String plot) {
+    public void showFullPlotUi(View sharedView, String title, String plot) {
         Intent intent = new Intent(getContext(), ViewFullPlotActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("plot", plot);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                sharedView,
+                ViewCompat.getTransitionName(sharedView)
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
@@ -543,7 +566,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
      * implement. This mechanism allows activities to be notified of detail clicks.
      */
     public interface DetailSelectedCallback {
-        void onFullPlotSelected(String title, String plot);
+        void onFullPlotSelected(View sharedView, String title, String plot);
         void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers);
         void onFullReviewSelected(View sharedView, String author, String content);
         void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews);

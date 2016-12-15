@@ -143,7 +143,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     }
 
     @Override
-    public void onFullPlotSelected(String title, String plot) {
+    public void onFullPlotSelected(View sharedView, String title, String plot) {
         ViewFullPlotFragment viewFullPlotFragment = ViewFullPlotFragment.newInstance(title, plot);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_scroll_view, viewFullPlotFragment, FULL_PLOT_FRAGMENT_TAG)
