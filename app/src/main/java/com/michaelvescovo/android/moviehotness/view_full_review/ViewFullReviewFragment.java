@@ -3,6 +3,8 @@ package com.michaelvescovo.android.moviehotness.view_full_review;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ public class ViewFullReviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_view_full_review, container, false);
+        NestedScrollView nestedScrollView = (NestedScrollView) root.findViewById(R.id.full_review_list);
+        ViewCompat.setTransitionName(nestedScrollView, getString(R.string.transition_review));
         TextView author = (TextView) root.findViewById(R.id.full_review_author);
         author.setText(getArguments().getString(ViewFullReviewActivity.AUTHOR));
         TextView content = (TextView) root.findViewById(R.id.full_review_content);

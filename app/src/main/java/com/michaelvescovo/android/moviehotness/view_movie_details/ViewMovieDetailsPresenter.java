@@ -29,6 +29,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -99,8 +100,8 @@ public class ViewMovieDetailsPresenter implements ViewMovieDetailsContract.UserA
     }
 
     @Override
-    public void openFullReview(String author, String content) {
-        mViewMovieDetailsView.showFullReview(author, content);
+    public void openFullReview(View sharedView, String author, String content) {
+        mViewMovieDetailsView.showFullReview(sharedView, author, content);
     }
 
     @Override

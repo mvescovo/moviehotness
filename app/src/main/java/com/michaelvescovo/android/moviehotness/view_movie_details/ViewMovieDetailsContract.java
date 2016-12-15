@@ -45,7 +45,7 @@ public interface ViewMovieDetailsContract {
 
         void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers);
 
-        void showFullReview(String author, String content);
+        void showFullReview(android.view.View sharedView, String author, String content);
 
         void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews);
 
@@ -68,7 +68,7 @@ public interface ViewMovieDetailsContract {
 
         void openAllTrailers(ArrayList<MovieTrailerInterface> trailers);
 
-        void openFullReview(String author, String content);
+        void openFullReview(android.view.View sharedView, String author, String content);
 
         void openAllReviews(ArrayList<MovieReviewInterface> reviews);
 

@@ -34,9 +34,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -184,15 +186,19 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             });
         }
 
+        final CardView reviewCard = (CardView) root.findViewById(R.id.full_review_card);
+        ViewCompat.setTransitionName(reviewCard, getString(R.string.transition_review));
+
         TextView review = (TextView) root.findViewById(R.id.review_content);
         review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullReviewSelected(mReviews.get(0).getAuthor(),
+                    mDetailSelectedCallback.onFullReviewSelected(reviewCard,
+                            mReviews.get(0).getAuthor(),
                             mReviews.get(0).getContent());
                 } else {
-                    mActionsListener.openFullReview(mReviews.get(0).getAuthor(),
+                    mActionsListener.openFullReview(reviewCard, mReviews.get(0).getAuthor(),
                             mReviews.get(0).getContent());
                 }
             }
@@ -203,10 +209,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mDetailSelectedCallback.onFullReviewSelected(mReviews.get(0).getAuthor(),
+                    mDetailSelectedCallback.onFullReviewSelected(reviewCard, mReviews.get(0).getAuthor(),
                             mReviews.get(0).getContent());
                 } else {
-                    mActionsListener.openFullReview(mReviews.get(0).getAuthor(), mReviews.get(0)
+                    mActionsListener.openFullReview(reviewCard, mReviews.get(0).getAuthor(), mReviews.get(0)
                             .getContent());
                 }
             }
@@ -462,11 +468,16 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     }
 
     @Override
-    public void showFullReview(String author, String content) {
+    public void showFullReview(View sharedView, String author, String content) {
         Intent intent = new Intent(getContext(), ViewFullReviewActivity.class);
         intent.putExtra(ViewFullReviewActivity.AUTHOR, author);
         intent.putExtra(ViewFullReviewActivity.CONTENT, content);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                sharedView,
+                ViewCompat.getTransitionName(sharedView)
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
@@ -534,7 +545,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     public interface DetailSelectedCallback {
         void onFullPlotSelected(String title, String plot);
         void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers);
-        void onFullReviewSelected(String author, String content);
+        void onFullReviewSelected(View sharedView, String author, String content);
         void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews);
     }
 

@@ -75,6 +75,6 @@ public class ViewAllReviewsFragment extends Fragment {
      * implement. This mechanism allows activities to be notified of detail clicks.
      */
     public interface ReviewSelectedCallback {
-        void onFullReviewSelected(String author, String content);
+        void onFullReviewSelected(View sharedView, String author, String content);
     }
 }

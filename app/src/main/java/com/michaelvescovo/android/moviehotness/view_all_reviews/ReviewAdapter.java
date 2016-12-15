@@ -1,5 +1,7 @@
 package com.michaelvescovo.android.moviehotness.view_all_reviews;
 
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +41,9 @@ public class ReviewAdapter extends RecyclerView.Adapter implements Serializable 
             View border = ((ReviewViewHolder) holder).getView().findViewById(R.id.border);
             border.setVisibility(View.VISIBLE);
         }
+
+        CardView cardView = (CardView) ((ReviewViewHolder)holder).getView();
+        ViewCompat.setTransitionName(cardView, mViewAllReviewsFragment.getString(R.string.transition_review));
 
         TextView authorLabel = (TextView) ((ReviewViewHolder) holder).getView().findViewById(R.id.review_author_label);
         authorLabel.setVisibility(View.VISIBLE);

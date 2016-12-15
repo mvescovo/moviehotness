@@ -7,6 +7,7 @@
     <string name="action_about_attribution">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
     <string name="read_movies">Read movies</string>
     <string name="transition_poster">transition_poster</string>
+    <string name="transition_review">transition_review</string>
 
     <!--ViewMovies-->
     <string name="movie_poster">Movie poster</string>

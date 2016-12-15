@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
@@ -44,7 +45,7 @@ public class ViewAllReviewsActivity extends AppCompatActivity implements ViewAll
     }
 
     @Override
-    public void onFullReviewSelected(String author, String content) {
+    public void onFullReviewSelected(View sharedView, String author, String content) {
 
     }
 }

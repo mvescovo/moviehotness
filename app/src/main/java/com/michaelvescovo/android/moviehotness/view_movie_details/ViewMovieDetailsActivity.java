@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
@@ -62,7 +63,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
     }
 
     @Override
-    public void onFullReviewSelected(String authory, String content) {
+    public void onFullReviewSelected(View sharedView, String authory, String content) {
 
     }
 

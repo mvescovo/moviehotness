@@ -1,6 +1,9 @@
 package com.michaelvescovo.android.moviehotness.view_all_reviews;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -31,12 +34,21 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (ViewMoviesActivity.mTwoPane) {
-                    mViewAllReviewsFragment.mReviewSelectedCallback.onFullReviewSelected(mAdapter.get(getAdapterPosition()).getAuthor(), mAdapter.get(getAdapterPosition()).getContent());
+                    mViewAllReviewsFragment.mReviewSelectedCallback.onFullReviewSelected(
+                            v,
+                            mAdapter.get(getAdapterPosition()).getAuthor(),
+                            mAdapter.get(getAdapterPosition()).getContent()
+                    );
                 } else {
                     Intent intent = new Intent(v.getContext(), ViewFullReviewActivity.class);
                     intent.putExtra(ViewFullReviewActivity.AUTHOR, mAdapter.get(getAdapterPosition()).getAuthor());
                     intent.putExtra(ViewFullReviewActivity.CONTENT, mAdapter.get(getAdapterPosition()).getContent());
-                    v.getContext().startActivity(intent);
+                    Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            mViewAllReviewsFragment.getActivity(),
+                            v,
+                            ViewCompat.getTransitionName(v)
+                    ).toBundle();
+                    v.getContext().startActivity(intent, bundle);
                 }
             }
         });

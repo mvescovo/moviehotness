@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
@@ -160,7 +161,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     }
 
     @Override
-    public void onFullReviewSelected(String author, String content) {
+    public void onFullReviewSelected(View sharedView, String author, String content) {
         ViewFullReviewFragment viewFullReviewFragment = ViewFullReviewFragment.newInstance(author, content);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_scroll_view, viewFullReviewFragment, FULL_REVIEW_FRAGMENT_TAG)
