@@ -330,7 +330,10 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void showAttributionUi() {
         Intent intent = new Intent(getContext(), AttributionActivity.class);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity()
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
