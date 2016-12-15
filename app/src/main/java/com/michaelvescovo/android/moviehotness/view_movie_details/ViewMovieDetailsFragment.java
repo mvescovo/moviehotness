@@ -507,7 +507,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     public void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews) {
         Intent intent = new Intent(getContext(), ViewAllReviewsActivity.class);
         intent.putExtra(ViewAllReviewsActivity.REVIEWS, mReviews);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity()
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
