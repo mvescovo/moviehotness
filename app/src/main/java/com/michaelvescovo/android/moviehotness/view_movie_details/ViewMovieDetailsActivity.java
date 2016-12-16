@@ -1,11 +1,14 @@
 package com.michaelvescovo.android.moviehotness.view_movie_details;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
@@ -14,8 +17,14 @@ import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
+import com.michaelvescovo.android.moviehotness.view_all_reviews.ViewAllReviewsActivity;
+import com.michaelvescovo.android.moviehotness.view_all_trailers.ViewAllTrailersActivity;
+import com.michaelvescovo.android.moviehotness.view_full_plot.ViewFullPlotActivity;
+import com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewActivity;
 
 import java.util.ArrayList;
+
+import static android.R.attr.author;
 
 
 public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewMovieDetailsFragment.DetailSelectedCallback {
@@ -54,21 +63,47 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
 
     @Override
     public void onFullPlotSelected(View sharedView, String title, String plot) {
-
+        Intent intent = new Intent(this, ViewFullPlotActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("plot", plot);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                sharedView,
+                ViewCompat.getTransitionName(sharedView)
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
     public void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers) {
-
+        Intent intent = new Intent(this, ViewAllTrailersActivity.class);
+        intent.putExtra(ViewAllTrailersActivity.TRAILERS, trailers);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
     public void onFullReviewSelected(View sharedView, String authory, String content) {
-
+        Intent intent = new Intent(this, ViewFullReviewActivity.class);
+        intent.putExtra(ViewFullReviewActivity.AUTHOR, author);
+        intent.putExtra(ViewFullReviewActivity.CONTENT, content);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                sharedView,
+                ViewCompat.getTransitionName(sharedView)
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
     public void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews) {
-
+        Intent intent = new Intent(this, ViewAllReviewsActivity.class);
+        intent.putExtra(ViewAllReviewsActivity.REVIEWS, reviews);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 }
