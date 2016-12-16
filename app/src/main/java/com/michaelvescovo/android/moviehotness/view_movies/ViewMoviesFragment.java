@@ -46,9 +46,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.michaelvescovo.android.moviehotness.R;
+import com.michaelvescovo.android.moviehotness.data.Movie;
 import com.michaelvescovo.android.moviehotness.data.MovieHotnessContract;
 import com.michaelvescovo.android.moviehotness.data.MovieInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
@@ -56,12 +58,13 @@ import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsActivity;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
-
-//    private static final String TAG = "ViewMoviesFragment";
 
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
@@ -420,5 +423,184 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
          * DetailFragmentCallback for when an item has been selected.
          */
         void onItemSelected(int sortBy, String movieId);
+    }
+
+    private class PosterApiAdapter extends RecyclerView.Adapter {
+
+        private List<MovieInterface> mDataset = new ArrayList<>();
+        private ViewMoviesContract.UserActionsListener mActionsListener;
+
+        PosterApiAdapter(ViewMoviesContract.UserActionsListener userActionsListener) {
+            mActionsListener = userActionsListener;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_preview_card,
+                    parent, false);
+            return new MovieApiViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            ImageView imageView = (ImageView) ((MovieApiViewHolder) holder).getView()
+                    .findViewById(R.id.poster_image);
+            Picasso.with(imageView.getContext()).load("https://image.tmdb.org/t/p/"
+                    + imageView.getContext().getResources().getString(R.string.poster_large)
+                    + mDataset.get(position).getPosterUrl()).error(R.drawable.no_image)
+                    .into(imageView, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+            ViewCompat.setTransitionName(
+                    imageView,
+                    imageView.getResources().getString(R.string.transition_poster)
+            );
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDataset.size();
+        }
+
+        void updateDataset(List<MovieInterface> movies) {
+            mDataset.clear();
+            mDataset.addAll(movies);
+            notifyDataSetChanged();
+        }
+
+        class MovieApiViewHolder extends RecyclerView.ViewHolder {
+
+            private View mView;
+
+            MovieApiViewHolder(View itemView) {
+                super(itemView);
+                mView = itemView;
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mActionsListener != null)
+                            mActionsListener.openMovieDetails(v.findViewById(R.id.poster_image),
+                                    mDataset.get(getAdapterPosition()));
+                    }
+                });
+            }
+
+            public View getView() {
+                return mView;
+            }
+        }
+    }
+
+    private class PosterCursorAdapter extends RecyclerView.Adapter {
+
+        private Context mContext;
+        private ViewMoviesContract.UserActionsListener mActionsListener;
+        private Cursor mCursor;
+
+        PosterCursorAdapter(Context context, ViewMoviesContract.UserActionsListener actionsListener) {
+            mContext = context;
+            mActionsListener = actionsListener;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_preview_card, parent, false);
+            return new MovieCursorViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            // Posters are from local storage when getting details from local db. PosterUrl holds the full filename.
+            ImageView imageView = (ImageView) ((MovieCursorViewHolder) holder).getView().findViewById(R.id.poster_image);
+            int posterUrlColumnIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL);
+            String posterUrl;
+
+            if (mCursor != null) {
+                mCursor.moveToPosition(position);
+                posterUrl = mCursor.getString(posterUrlColumnIndex);
+
+                String filename = posterUrl;
+                File file = new File(mContext.getFilesDir(), filename);
+                Picasso.with(mContext).load(file).error(R.drawable.no_image).into(imageView, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+            }
+            ViewCompat.setTransitionName(
+                    imageView,
+                    imageView.getResources().getString(R.string.transition_poster)
+            );
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mCursor != null) {
+                return mCursor.getCount();
+            } else {
+                return 0;
+            }
+        }
+
+        void swapCursor(Cursor movies) {
+            mCursor = movies;
+            notifyDataSetChanged();
+        }
+
+        class MovieCursorViewHolder extends RecyclerView.ViewHolder  {
+
+            private View mView;
+
+            MovieCursorViewHolder(View itemView) {
+                super(itemView);
+                mView = itemView;
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int idIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_MOVIE_ID);
+                        int titleIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_TITLE);
+                        int releaseDateIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_RELEASE_DATE);
+                        int posterUrlIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_POSTER_URL);
+                        int voteAverageIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_VOTE_AVERAGE);
+                        int plotIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_PLOT);
+                        int backdropUrlIndex = mCursor.getColumnIndex(MovieHotnessContract.MovieEntry.COLUMN_BACKDROP_URL);
+
+                        mCursor.moveToPosition(getAdapterPosition());
+                        String id = mCursor.getString(idIndex);
+                        String title = mCursor.getString(titleIndex);
+                        String releaseDate = mCursor.getString(releaseDateIndex);
+                        String posterUrl = mCursor.getString(posterUrlIndex);
+                        String voteAverage = mCursor.getString(voteAverageIndex);
+                        String plot = mCursor.getString(plotIndex);
+                        String backdropUrl = mCursor.getString(backdropUrlIndex);
+                        Movie movie = new Movie(id, title, releaseDate, posterUrl, voteAverage, plot, backdropUrl);
+
+                        if (mActionsListener != null) {
+                            mActionsListener.openMovieDetails(v.findViewById(R.id.poster_image), movie);
+                        }
+                    }
+                });
+            }
+
+            public View getView() {
+                return mView;
+            }
+        }
     }
 }
