@@ -1,15 +1,19 @@
 package com.michaelvescovo.android.moviehotness.view_all_reviews;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
+import com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewActivity;
 
 import java.util.ArrayList;
 
@@ -54,6 +58,14 @@ public class ViewAllReviewsActivity extends AppCompatActivity implements ViewAll
 
     @Override
     public void onFullReviewSelected(View sharedView, String author, String content) {
-
+        Intent intent = new Intent(this, ViewFullReviewActivity.class);
+        intent.putExtra(ViewFullReviewActivity.AUTHOR, author);
+        intent.putExtra(ViewFullReviewActivity.CONTENT, content);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                sharedView,
+                ViewCompat.getTransitionName(sharedView)
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 }
