@@ -57,7 +57,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.util.VolleyRequestQueue;
 import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
-import com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -66,7 +65,6 @@ import java.util.List;
 
 public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.View, LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     public static final String CURRENT_PAGE = "CURRENT_PAGE";
     public static final String NEXT_PAGE = "NEXT_PAGE";
@@ -309,19 +307,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
     @Override
     public void showMovieDetailUi(View sharedView, String movieId) {
-        if (ViewMoviesActivity.mTwoPane) {
-            mCallback.onItemSelected(mSortBy, movieId);
-        } else {
-            Intent intent = new Intent(getContext(), ViewMovieDetailsActivity.class);
-            intent.putExtra(SORT_BY, mSortBy);
-            intent.putExtra(MOVIE_ID, movieId);
-            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    getActivity(),
-                    sharedView,
-                    ViewCompat.getTransitionName(sharedView)
-            ).toBundle();
-            startActivity(intent, bundle);
-        }
+        mCallback.onItemSelected(sharedView, mSortBy, movieId);
     }
 
     @Override
@@ -416,7 +402,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        void onItemSelected(int sortBy, String movieId);
+        void onItemSelected(View sharedView, int sortBy, String movieId);
     }
 
     private class PosterApiAdapter extends RecyclerView.Adapter {

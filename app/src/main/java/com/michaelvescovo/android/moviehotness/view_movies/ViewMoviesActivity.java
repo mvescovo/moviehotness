@@ -8,10 +8,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +27,7 @@ import com.michaelvescovo.android.moviehotness.view_all_reviews.ViewAllReviewsFr
 import com.michaelvescovo.android.moviehotness.view_all_trailers.ViewAllTrailersFragment;
 import com.michaelvescovo.android.moviehotness.view_full_plot.ViewFullPlotFragment;
 import com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewFragment;
+import com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsActivity;
 import com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsFragment;
 
 import java.util.ArrayList;
@@ -40,6 +43,8 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     Menu mMenu;
     TabLayout mTabLayout;
     public static boolean mTwoPane;
+    public static final String MOVIE_ID = "MOVIE_ID";
+    public static final String SORT_BY = "SORT_BY";
     private static final String DETAIL_FRAGMENT_TAG = "DETAIL_TAG";
     private static final String FULL_PLOT_FRAGMENT_TAG = "FULL_PLOT_TAG";
     private static final String FULL_REVIEW_FRAGMENT_TAG = "FULL_REVIEW_TAG";
@@ -130,17 +135,29 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     }
 
     @Override
-    public void onItemSelected(int sortBy, String movieId) {
-        // Only select an item (movie poster) if it's not already selected
-        if ((mSelectedMovieIds.size() == 0) || (!mSelectedMovieIds.get(mSelectedMovieIds.size() - 1).contentEquals(movieId))) {
-            mSelectedMovieIds.add(movieId);
-            ViewMovieDetailsFragment viewMovieDetailsFragment = ViewMovieDetailsFragment.newInstance(sortBy, movieId);
-            getSupportFragmentManager().popBackStack(FULL_PLOT_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getSupportFragmentManager().popBackStack(ALL_TRAILERS_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container_scroll_view, viewMovieDetailsFragment, DETAIL_FRAGMENT_TAG)
-                    .addToBackStack(DETAIL_FRAGMENT_TAG)
-                    .commit();
+    public void onItemSelected(View sharedView, int sortBy, String movieId) {
+        if (ViewMoviesActivity.mTwoPane) {
+            // Only select an item (movie poster) if it's not already selected
+            if ((mSelectedMovieIds.size() == 0) || (!mSelectedMovieIds.get(mSelectedMovieIds.size() - 1).contentEquals(movieId))) {
+                mSelectedMovieIds.add(movieId);
+                ViewMovieDetailsFragment viewMovieDetailsFragment = ViewMovieDetailsFragment.newInstance(sortBy, movieId);
+                getSupportFragmentManager().popBackStack(FULL_PLOT_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().popBackStack(ALL_TRAILERS_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_scroll_view, viewMovieDetailsFragment, DETAIL_FRAGMENT_TAG)
+                        .addToBackStack(DETAIL_FRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            Intent intent = new Intent(this, ViewMovieDetailsActivity.class);
+            intent.putExtra(SORT_BY, sortBy);
+            intent.putExtra(MOVIE_ID, movieId);
+            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    sharedView,
+                    ViewCompat.getTransitionName(sharedView)
+            ).toBundle();
+            startActivity(intent, bundle);
         }
     }
 
