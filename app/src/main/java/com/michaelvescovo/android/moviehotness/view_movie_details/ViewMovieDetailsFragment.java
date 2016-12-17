@@ -39,6 +39,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,6 +104,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         setHasOptionsMenu(true);
 
         final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
+
+        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
+        ((ViewMovieDetailsActivity)getActivity()).setSupportActionBar(toolbar);
+        if (((ViewMovieDetailsActivity)getActivity()).getSupportActionBar() != null) {
+            ((ViewMovieDetailsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         if (mDetailposterView != null) {
