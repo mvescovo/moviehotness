@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.michaelvescovo.android.moviehotness.R;
-import com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity;
 
 
 /**
@@ -35,13 +34,6 @@ public class ViewFullPlotFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.full_plot);
 
-        if (!ViewMoviesActivity.mTwoPane) {
-            ((ViewFullPlotActivity)getActivity()).setSupportActionBar(toolbar);
-            if (((ViewFullPlotActivity)getActivity()).getSupportActionBar() != null) {
-                ((ViewFullPlotActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                ((ViewFullPlotActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-            }
-        }
         return root;
     }
 
