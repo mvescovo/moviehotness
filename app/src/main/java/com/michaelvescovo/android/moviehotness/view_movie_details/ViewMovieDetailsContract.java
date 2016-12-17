@@ -34,7 +34,8 @@ import java.util.ArrayList;
  * Created by Michael Vescovo on 6/01/16.
  *
  */
-public interface ViewMovieDetailsContract {
+interface ViewMovieDetailsContract {
+
     interface View {
 
         void showMovieDetails(MovieInterface movie);
@@ -80,4 +81,5 @@ public interface ViewMovieDetailsContract {
 
         void removeFavouriteMovie(String movieId);
     }
+
 }

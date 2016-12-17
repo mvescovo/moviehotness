@@ -36,7 +36,8 @@ import java.util.List;
  * Created by Michael Vescovo on 5/01/16.
  *
  */
-public interface ViewMoviesContract {
+interface ViewMoviesContract {
+
     interface View {
 
         void setProgressIndicator(boolean active);
@@ -57,4 +58,5 @@ public interface ViewMoviesContract {
         void openMovieDetails(@NonNull android.view.View sharedView,
                               @NonNull MovieInterface requestedMovie);
     }
+
 }

@@ -5,7 +5,7 @@ package com.michaelvescovo.android.moviehotness.view_full_plot;
  *
  */
 
-public class ViewFullPlotContract {
+interface ViewFullPlotContract {
 
     interface View {
 
