@@ -22,7 +22,6 @@ import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.michaelvescovo.android.moviehotness.BuildConfig;
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
-import com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,13 +49,6 @@ public class ViewAllTrailersFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_trailers);
 
-        if (!ViewMoviesActivity.mTwoPane) {
-            ((ViewAllTrailersActivity)getActivity()).setSupportActionBar(toolbar);
-            if (((ViewAllTrailersActivity)getActivity()).getSupportActionBar() != null) {
-                ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-            }
-        }
         return root;
     }
 
