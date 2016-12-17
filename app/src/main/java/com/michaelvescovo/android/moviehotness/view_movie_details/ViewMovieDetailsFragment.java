@@ -34,7 +34,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
@@ -57,7 +56,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
-import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -445,11 +443,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showAttributionUi() {
-        Intent intent = new Intent(getContext(), AttributionActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity()
-        ).toBundle();
-        startActivity(intent, bundle);
+        mDetailSelectedCallback.onAboutSelected();
     }
 
     @Override
@@ -502,6 +496,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
      * implement. This mechanism allows activities to be notified of detail clicks.
      */
     public interface DetailSelectedCallback {
+        void onAboutSelected();
+
         void onFullPlotSelected(View sharedView, String title, String plot);
 
         void onAllTrailersSelected(ArrayList<MovieTrailerInterface> trailers);

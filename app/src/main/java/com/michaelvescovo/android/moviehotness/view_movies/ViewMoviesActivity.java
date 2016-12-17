@@ -25,6 +25,7 @@ import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.view_all_reviews.ViewAllReviewsFragment;
 import com.michaelvescovo.android.moviehotness.view_all_trailers.ViewAllTrailersFragment;
+import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.android.moviehotness.view_full_plot.ViewFullPlotFragment;
 import com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewFragment;
 import com.michaelvescovo.android.moviehotness.view_movie_details.ViewMovieDetailsActivity;
@@ -159,6 +160,15 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
             ).toBundle();
             startActivity(intent, bundle);
         }
+    }
+
+    @Override
+    public void onAboutSelected() {
+        Intent intent = new Intent(this, AttributionActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override

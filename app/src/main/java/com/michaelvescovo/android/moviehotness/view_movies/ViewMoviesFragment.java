@@ -25,14 +25,12 @@
 package com.michaelvescovo.android.moviehotness.view_movies;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -56,7 +54,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.util.VolleyRequestQueue;
-import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -73,11 +70,11 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public static final String LOADING = "LOADING";
     public static final String SHOWN_TOP_MOVIE = "SHOWN_TOP_MOVIE";
     public static final String CONNECTED = "CONNECTED";
-    public int mSortBy = -1;
     private ViewMoviesContract.UserActionsListener mActionsListener;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private Callback mCallback;
+    public int mSortBy = -1;
     private int mCurrentPage = 0;
     private int mNextPage = 1;
     private int mPreviousTotal = 0;
@@ -312,11 +309,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
     @Override
     public void showAttributionUi() {
-        Intent intent = new Intent(getContext(), AttributionActivity.class);
-        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity()
-        ).toBundle();
-        startActivity(intent, bundle);
+        mCallback.onAboutSelected();
     }
 
     @Override
@@ -324,9 +317,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            if (!ViewMoviesActivity.mTwoPane) {
-                showAttributionUi();
-            }
+            showAttributionUi();
         }
 
         return super.onOptionsItemSelected(item);
@@ -403,6 +394,8 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
          * DetailFragmentCallback for when an item has been selected.
          */
         void onItemSelected(View sharedView, int sortBy, String movieId);
+
+        void onAboutSelected();
     }
 
     private class PosterApiAdapter extends RecyclerView.Adapter {
@@ -542,7 +535,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             notifyDataSetChanged();
         }
 
-        class MovieCursorViewHolder extends RecyclerView.ViewHolder  {
+        class MovieCursorViewHolder extends RecyclerView.ViewHolder {
 
             private View mView;
 

@@ -20,6 +20,7 @@ import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.view_all_reviews.ViewAllReviewsActivity;
 import com.michaelvescovo.android.moviehotness.view_all_trailers.ViewAllTrailersActivity;
+import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
 import com.michaelvescovo.android.moviehotness.view_full_plot.ViewFullPlotActivity;
 import com.michaelvescovo.android.moviehotness.view_full_review.ViewFullReviewActivity;
 
@@ -66,6 +67,15 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onAboutSelected() {
+        Intent intent = new Intent(this, AttributionActivity.class);
+        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this
+        ).toBundle();
+        startActivity(intent, bundle);
     }
 
     @Override
