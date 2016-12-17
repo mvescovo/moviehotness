@@ -58,7 +58,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.view_attribution.AttributionActivity;
-import com.michaelvescovo.android.moviehotness.view_movies.ViewMoviesActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -108,7 +107,9 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
-        ViewCompat.setTransitionName(mDetailposterView, getString(R.string.transition_poster));
+        if (mDetailposterView != null) {
+            ViewCompat.setTransitionName(mDetailposterView, getString(R.string.transition_poster));
+        }
 
         final View plotSharedView = root.findViewById(R.id.plot_preview_shared_view);
         ViewCompat.setTransitionName(plotSharedView, getString(R.string.transition_plot));
@@ -237,9 +238,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         }
 
         // Poster
-        if (ViewMoviesActivity.mTwoPane) {
-            mDetailposterView.setVisibility(View.GONE);
-        } else {
+        if (mDetailposterView != null) {
             EspressoIdlingResource.increment();
             // Load poster from local storage if selecting from favourites
             if ((getArguments() != null) && (getArguments().getInt(SORT_BY) == getResources()
