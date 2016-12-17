@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <integer name="popular">0</integer>
     <integer name="highest_rated">1</integer>
     <integer name="favourite">2</integer>
     <integer name="preview_text_max_chars">120</integer>
-    <integer name="movie_preview_grid_cols_twopane">2</integer>
-    <integer name="movie_preview_grid_cols_onepane">2</integer>
+    <integer name="movie_preview_grid_cols">2</integer>
     <integer name="page_size">20</integer>
 
 </resources>

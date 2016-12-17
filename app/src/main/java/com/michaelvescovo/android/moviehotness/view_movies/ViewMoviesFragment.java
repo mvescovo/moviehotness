@@ -128,13 +128,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.view_movies_list);
         recyclerView.setAdapter(mAdapter);
 
-        int numColumns;
-
-        if (ViewMoviesActivity.mTwoPane) {
-            numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_twopane);
-        } else {
-            numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols_onepane);
-        }
+        int numColumns = getContext().getResources().getInteger(R.integer.movie_preview_grid_cols);
 
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getContext(), numColumns);
