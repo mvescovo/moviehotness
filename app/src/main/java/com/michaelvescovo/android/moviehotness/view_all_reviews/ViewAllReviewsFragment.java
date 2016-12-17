@@ -44,6 +44,11 @@ public class ViewAllReviewsFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_reviews);
+        ((ViewAllReviewsActivity)getActivity()).setSupportActionBar(toolbar);
+        if (((ViewAllReviewsActivity)getActivity()).getSupportActionBar() != null) {
+            ((ViewAllReviewsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((ViewAllReviewsActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+        }
 
         return root;
     }

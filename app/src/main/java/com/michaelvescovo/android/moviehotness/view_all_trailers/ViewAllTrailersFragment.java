@@ -49,6 +49,12 @@ public class ViewAllTrailersFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_trailers);
 
+        ((ViewAllTrailersActivity)getActivity()).setSupportActionBar(toolbar);
+        if (((ViewAllTrailersActivity)getActivity()).getSupportActionBar() != null) {
+            ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+        }
+
         return root;
     }
 
