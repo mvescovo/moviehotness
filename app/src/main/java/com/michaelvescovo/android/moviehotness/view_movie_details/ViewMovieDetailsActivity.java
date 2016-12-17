@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
@@ -37,6 +38,12 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_view_movie_details);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbardetail);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         int sortBy = getIntent().getIntExtra(SORT_BY, -1);
         String movieId = getIntent().getStringExtra(MOVIE_ID);
