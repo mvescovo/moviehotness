@@ -45,7 +45,6 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
     ViewMoviesFragment mFavouriteMovieGridFragment;
     Menu mMenu;
     TabLayout mTabLayout;
-    public static boolean mTwoPane;
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     private static final String DETAIL_FRAGMENT_TAG = "DETAIL_TAG";
@@ -61,7 +60,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
         int lastBackStackIndex = getSupportFragmentManager().getBackStackEntryCount() - 1;
 
         // Remove selected id only if the user presses back on a main detail screen
-        if (mTwoPane) {
+        if (getResources().getBoolean(R.bool.two_pane)) {
             if (getSupportFragmentManager().getBackStackEntryAt(lastBackStackIndex).getName().contentEquals(DETAIL_FRAGMENT_TAG)) {
                 if (mSelectedMovieIds.size() > 0) {
                     mSelectedMovieIds.remove(mSelectedMovieIds.size() - 1);
@@ -83,10 +82,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
 
         setContentView(R.layout.activity_view_movies);
 
-        if (findViewById(R.id.fragment_container_scroll_view) != null) {
-            mTwoPane = true;
-        } else {
-            mTwoPane = false;
+        if (!getResources().getBoolean(R.bool.two_pane)) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setElevation(0f);
             }
@@ -139,7 +135,7 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
 
     @Override
     public void onItemSelected(View sharedView, int sortBy, String movieId) {
-        if (ViewMoviesActivity.mTwoPane) {
+        if (getResources().getBoolean(R.bool.two_pane)) {
             // Only select an item (movie poster) if it's not already selected
             if ((mSelectedMovieIds.size() == 0) || (!mSelectedMovieIds.get(mSelectedMovieIds.size() - 1).contentEquals(movieId))) {
                 mSelectedMovieIds.add(movieId);

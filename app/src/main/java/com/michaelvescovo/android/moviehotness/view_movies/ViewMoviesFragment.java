@@ -287,7 +287,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             mNextPage++;
         }
 
-        if ((ViewMoviesActivity.mTwoPane) && (mSortBy == getContext().getResources().getInteger(R.integer.popular))) {
+        if (getResources().getBoolean(R.bool.two_pane) && (mSortBy == getContext().getResources().getInteger(R.integer.popular))) {
             if (movies.size() != 0) {
                 showTopMovie(movies.get(0));
             }
