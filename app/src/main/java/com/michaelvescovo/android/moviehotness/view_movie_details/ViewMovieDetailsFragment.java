@@ -65,12 +65,16 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.michaelvescovo.android.moviehotness.R.id.fab;
+
 public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetailsContract.View {
 
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     private ViewMovieDetailsContract.UserActionsListener mActionsListener;
     private String mTitle;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private ImageView mBackdrop;
     private ImageView mDetailposterView;
     private TextView mReleaseDateView;
     private TextView mPlotView;
@@ -78,6 +82,13 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private Button mMoreTrailersButton;
     private ArrayList<MovieTrailerInterface> mTrailers;
     private ArrayList<MovieReviewInterface> mReviews;
+    private TextView mReviewTitle;
+    private TextView mReviewAuthorLabel;
+    private TextView mReviewContent;
+    private TextView mReviewContentReadMore;
+    private TextView mReviewAuthor;
+    private Button mReviewAllReviewsButton;
+    private FloatingActionButton mFab;
     private MovieInterface mMovie;
     private DetailSelectedCallback mDetailSelectedCallback;
     private ShareActionProvider mShareActionProvider;
@@ -117,6 +128,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                 }
             }
         }
+
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.toolbar_layout);
+
+        mBackdrop = (ImageView) root.findViewById(R.id.backdrop);
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
         if (mDetailposterView != null) {
@@ -170,11 +185,18 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
+        // Reviews
+        mReviewTitle = (TextView) root.findViewById(R.id.review_title);
+        mReviewAuthorLabel = (TextView) root.findViewById(R.id.review_author_label);
+        mReviewAuthor = (TextView) root.findViewById(R.id.review_author);
+        mReviewContent = (TextView) root.findViewById(R.id.review_content);
+        mReviewContentReadMore = (TextView) root.findViewById(R.id.review_content_read_more);
+        mReviewAllReviewsButton = (Button) root.findViewById(R.id.review_all_reviews_button);
+
         final CardView reviewCard = (CardView) root.findViewById(R.id.full_review_card);
         ViewCompat.setTransitionName(reviewCard, getString(R.string.transition_review));
 
-        TextView review = (TextView) root.findViewById(R.id.review_content);
-        review.setOnClickListener(new View.OnClickListener() {
+        mReviewContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openFullReview(
@@ -184,8 +206,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        TextView reviewMore = (TextView) root.findViewById(R.id.review_content_read_more);
-        reviewMore.setOnClickListener(new View.OnClickListener() {
+        mReviewContentReadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openFullReview(
@@ -196,13 +217,15 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        Button allReviewsButton = (Button) root.findViewById(R.id.review_all_reviews_button);
-        allReviewsButton.setOnClickListener(new View.OnClickListener() {
+        mReviewAllReviewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.openAllReviews(mReviews);
             }
         });
+
+        // Favourites FAB
+        mFab = (FloatingActionButton) root.findViewById(fab);
 
         return root;
     }
@@ -238,9 +261,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         } else {
             mTitle = getContext().getResources().getString(R.string.title_unavailable);
         }
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) getActivity()
-                .findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setTitle(mTitle);
+
+        if (mCollapsingToolbarLayout != null) {
+            mCollapsingToolbarLayout.setTitle(mTitle);
+        }
 
         // Release date
         if (movie.getReleaseDate() != null) {
@@ -318,25 +342,26 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         }
 
         // Backdrop
-        ImageView backdrop = (ImageView) getActivity().findViewById(R.id.backdrop);
-        EspressoIdlingResource.increment();
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
-                + getResources().getString(R.string.poster_xx_large)
-                + movie.getBackdropUrl()).error(R.drawable.no_image).into(backdrop, new Callback() {
-            @Override
-            public void onSuccess() {
-                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                    EspressoIdlingResource.decrement();
+        if (mBackdrop != null) {
+            EspressoIdlingResource.increment();
+            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
+                    + getResources().getString(R.string.poster_xx_large)
+                    + movie.getBackdropUrl()).error(R.drawable.no_image).into(mBackdrop, new Callback() {
+                @Override
+                public void onSuccess() {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement();
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
-                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                    EspressoIdlingResource.decrement();
+                @Override
+                public void onError() {
+                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                        EspressoIdlingResource.decrement();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Trailers
         mTrailers = movie.getTrailers();
@@ -350,41 +375,30 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         // Reviews
         mReviews = movie.getReviews();
         if (movie.getReviewCount() > 0) {
-            TextView reviewTitle = (TextView) getActivity()
-                    .findViewById(R.id.review_title);
-            reviewTitle.setVisibility(View.VISIBLE);
-            TextView reviewAuthorLabel = (TextView) getActivity()
-                    .findViewById(R.id.review_author_label);
-            reviewAuthorLabel.setVisibility(View.VISIBLE);
-            TextView reviewAuthor = (TextView) getActivity().findViewById(R.id.review_author);
-            reviewAuthor.setVisibility(View.VISIBLE);
+            mReviewTitle.setVisibility(View.VISIBLE);
+            mReviewAuthorLabel.setVisibility(View.VISIBLE);
+            mReviewAuthor.setVisibility(View.VISIBLE);
             if (movie.getReview(0).getAuthor() != null) {
-                reviewAuthor.setText(movie.getReview(0).getAuthor());
+                mReviewAuthor.setText(movie.getReview(0).getAuthor());
             } else {
-                reviewAuthor.setText(getContext().getResources()
+                mReviewAuthor.setText(getContext().getResources()
                         .getString(R.string.author_unavailable));
             }
-            TextView reviewContent = (TextView) getActivity().findViewById(R.id.review_content);
-            reviewContent.setVisibility(View.VISIBLE);
+            mReviewContent.setVisibility(View.VISIBLE);
             if (movie.getReview(0).getContent() != null) {
-                reviewContent.setText(movie.getReview(0).getContent());
+                mReviewContent.setText(movie.getReview(0).getContent());
                 if (movie.getReview(0).getContent().length() > getResources()
                         .getInteger(R.integer.preview_text_max_chars)) {
-                    TextView reviewContentReadMore = (TextView) getActivity()
-                            .findViewById(R.id.review_content_read_more);
-                    reviewContentReadMore.setVisibility(View.VISIBLE);
+                    mReviewContentReadMore.setVisibility(View.VISIBLE);
                 }
             } else {
-                reviewAuthor.setText(getContext().getResources()
+                mReviewAuthor.setText(getContext().getResources()
                         .getString(R.string.review_unavailable));
             }
-            Button reviewAllReviewsButton = (Button) getActivity()
-                    .findViewById(R.id.review_all_reviews_button);
-            reviewAllReviewsButton.setVisibility(View.VISIBLE);
+            mReviewAllReviewsButton.setVisibility(View.VISIBLE);
         } else {
-            TextView reviewTitle = (TextView) getActivity().findViewById(R.id.review_title);
-            reviewTitle.setText(R.string.review_title_no_review);
-            reviewTitle.setVisibility(View.VISIBLE);
+            mReviewTitle.setText(R.string.review_title_no_review);
+            mReviewTitle.setVisibility(View.VISIBLE);
         }
     }
 
@@ -398,9 +412,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void setFavouriteFab(int imageResource, final boolean addFavourite) {
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageResource(imageResource);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFab.setImageResource(imageResource);
+        mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (addFavourite) {
