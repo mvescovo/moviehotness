@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesFragment.Callback,
-        ViewMovieDetailsFragment.DetailSelectedCallback, ViewAllReviewsFragment.ReviewSelectedCallback {
+        ViewMovieDetailsFragment.DetailSelectedCallback,
+        ViewAllReviewsFragment.ReviewSelectedCallback,
+        ViewFullPlotFragment.Callback {
 
     ViewPager mViewPager;
     ViewMoviesFragment mPopularMovieGridFragment;
@@ -117,13 +119,13 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
         bundle.putInt("sortBy", getResources().getInteger(R.integer.highest_rated));
         mHighestRatedMovieGridFragment = new ViewMoviesFragment();
         mHighestRatedMovieGridFragment.setArguments(bundle);
-        ((MovieSortByPagerAdapter)pagerAdapter).addFragment(mHighestRatedMovieGridFragment, "Highest Rated");
+        ((MovieSortByPagerAdapter) pagerAdapter).addFragment(mHighestRatedMovieGridFragment, "Highest Rated");
 
         bundle = new Bundle();
         bundle.putInt("sortBy", getResources().getInteger(R.integer.favourite));
         mFavouriteMovieGridFragment = new ViewMoviesFragment();
         mFavouriteMovieGridFragment.setArguments(bundle);
-        ((MovieSortByPagerAdapter)pagerAdapter).addFragment(mFavouriteMovieGridFragment, "Favourite");
+        ((MovieSortByPagerAdapter) pagerAdapter).addFragment(mFavouriteMovieGridFragment, "Favourite");
 
         viewPager.setAdapter(pagerAdapter);
     }

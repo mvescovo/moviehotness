@@ -105,10 +105,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
 
-        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
-        ((ViewMovieDetailsActivity)getActivity()).setSupportActionBar(toolbar);
-        if (((ViewMovieDetailsActivity)getActivity()).getSupportActionBar() != null) {
-            ((ViewMovieDetailsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (!getResources().getBoolean(R.bool.two_pane)) {
+            Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
+            ((ViewMovieDetailsActivity)getActivity()).setSupportActionBar(toolbar);
+            if (((ViewMovieDetailsActivity)getActivity()).getSupportActionBar() != null) {
+                ((ViewMovieDetailsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         mDetailposterView = (ImageView) root.findViewById(R.id.fragment_detail_poster);
