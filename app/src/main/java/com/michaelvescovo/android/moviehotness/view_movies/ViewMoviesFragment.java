@@ -114,9 +114,9 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // If viewing favourites create cursor adapter, otherwise create arraylist adapter
         if (mSortBy == getContext().getResources().getInteger(R.integer.favourite)) {
-            mAdapter = new PosterCursorAdapter(getContext(), mActionsListener);
+            mAdapter = new PosterCursorAdapter();
         } else {
-            mAdapter = new PosterApiAdapter(mActionsListener);
+            mAdapter = new PosterApiAdapter();
         }
 
         View root = inflater.inflate(R.layout.fragment_view_movies, container, false);
@@ -401,11 +401,6 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     private class PosterApiAdapter extends RecyclerView.Adapter {
 
         private List<MovieInterface> mDataset = new ArrayList<>();
-        private ViewMoviesContract.UserActionsListener mActionsListener;
-
-        PosterApiAdapter(ViewMoviesContract.UserActionsListener userActionsListener) {
-            mActionsListener = userActionsListener;
-        }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -475,14 +470,7 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
 
     private class PosterCursorAdapter extends RecyclerView.Adapter {
 
-        private Context mContext;
-        private ViewMoviesContract.UserActionsListener mActionsListener;
         private Cursor mCursor;
-
-        PosterCursorAdapter(Context context, ViewMoviesContract.UserActionsListener actionsListener) {
-            mContext = context;
-            mActionsListener = actionsListener;
-        }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -502,8 +490,8 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
                 posterUrl = mCursor.getString(posterUrlColumnIndex);
 
                 String filename = posterUrl;
-                File file = new File(mContext.getFilesDir(), filename);
-                Picasso.with(mContext).load(file).error(R.drawable.no_image).into(imageView, new com.squareup.picasso.Callback() {
+                File file = new File(getContext().getFilesDir(), filename);
+                Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(imageView, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
 
