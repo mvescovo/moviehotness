@@ -88,7 +88,9 @@ public class ViewFullPlotFragment extends Fragment implements ViewFullPlotContra
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            mActionsListener.openAttribution();
+            if (!getResources().getBoolean(R.bool.two_pane)) {
+                mActionsListener.openAttribution();
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -482,7 +482,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
-            mActionsListener.openAttribution();
+            // In two pane this action is already implemented in the movieDetailsFragment
+            if (!getResources().getBoolean(R.bool.two_pane)) {
+                mActionsListener.openAttribution();
+            }
         } else if (id == R.id.menu_item_share) {
             Uri.Builder builder = new Uri.Builder();
             String url = builder.scheme("https")
