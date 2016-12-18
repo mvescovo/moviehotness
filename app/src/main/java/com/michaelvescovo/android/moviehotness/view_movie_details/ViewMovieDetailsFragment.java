@@ -37,6 +37,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -107,9 +109,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         if (!getResources().getBoolean(R.bool.two_pane)) {
             Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
-            ((ViewMovieDetailsActivity)getActivity()).setSupportActionBar(toolbar);
-            if (((ViewMovieDetailsActivity)getActivity()).getSupportActionBar() != null) {
-                ((ViewMovieDetailsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
+                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+                ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                }
             }
         }
 

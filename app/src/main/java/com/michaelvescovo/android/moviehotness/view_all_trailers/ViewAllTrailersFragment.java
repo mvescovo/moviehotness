@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -49,10 +51,15 @@ public class ViewAllTrailersFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_trailers);
 
-        ((ViewAllTrailersActivity)getActivity()).setSupportActionBar(toolbar);
-        if (((ViewAllTrailersActivity)getActivity()).getSupportActionBar() != null) {
-            ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((ViewAllTrailersActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+        if (!getResources().getBoolean(R.bool.two_pane)) {
+            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
+                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+                }
+            }
         }
 
         return root;

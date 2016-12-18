@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,10 +46,16 @@ public class ViewAllReviewsFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_reviews);
-        ((ViewAllReviewsActivity)getActivity()).setSupportActionBar(toolbar);
-        if (((ViewAllReviewsActivity)getActivity()).getSupportActionBar() != null) {
-            ((ViewAllReviewsActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((ViewAllReviewsActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+
+        if (!getResources().getBoolean(R.bool.two_pane)) {
+            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
+                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+                }
+            }
         }
 
         return root;

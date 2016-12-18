@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,10 +35,16 @@ public class ViewFullReviewFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.full_review);
-        ((ViewFullReviewActivity)getActivity()).setSupportActionBar(toolbar);
-        if (((ViewFullReviewActivity)getActivity()).getSupportActionBar() != null) {
-            ((ViewFullReviewActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((ViewFullReviewActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+
+        if (!getResources().getBoolean(R.bool.two_pane)) {
+            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
+                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24dp);
+                }
+            }
         }
 
         return root;
