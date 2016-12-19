@@ -1,14 +1,14 @@
 package com.michaelvescovo.android.moviehotness.view_all_trailers;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +36,19 @@ import java.util.List;
  */
 public class ViewAllTrailersFragment extends Fragment {
 
+    private ViewAllTrailersFragment.Callback mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (ViewAllTrailersFragment.Callback) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement ViewAllTrailersFragment Callback");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,16 +64,7 @@ public class ViewAllTrailersFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_trailers);
 
-        if (!getResources().getBoolean(R.bool.two_pane)) {
-            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
-                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-                }
-            }
-        }
+        mCallback.onSetSupportActionbar(toolbar, true, R.drawable.ic_close_24dp);
 
         return root;
     }
@@ -183,5 +187,13 @@ public class ViewAllTrailersFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public interface Callback {
+
+        void onSetSupportActionbar(@NonNull Toolbar toolbar, @NonNull Boolean upEnabled,
+                                   @Nullable Integer homeAsUpIndicator);
+
+        void onAboutSelected();
     }
 }

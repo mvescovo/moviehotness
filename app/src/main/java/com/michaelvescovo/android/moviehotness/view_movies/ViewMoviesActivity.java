@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -35,9 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesFragment.Callback,
-        ViewMovieDetailsFragment.DetailSelectedCallback,
-        ViewAllReviewsFragment.ReviewSelectedCallback,
-        ViewFullPlotFragment.Callback {
+        ViewMovieDetailsFragment.Callback,
+        ViewFullReviewFragment.Callback,
+        ViewFullPlotFragment.Callback,
+        ViewAllTrailersFragment.Callback,
+        ViewAllReviewsFragment.Callback {
 
     ViewPager mViewPager;
     ViewMoviesFragment mPopularMovieGridFragment;
@@ -158,6 +162,13 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
             ).toBundle();
             startActivity(intent, bundle);
         }
+    }
+
+    @Override
+    public void onSetSupportActionbar(@NonNull Toolbar toolbar, @NonNull Boolean upEnabled,
+                                      @Nullable Integer homeAsUpIndicator) {
+        // The support bar is already set in this Activity. For other Activities implementing this
+        // interface that may not be the case.
     }
 
     @Override

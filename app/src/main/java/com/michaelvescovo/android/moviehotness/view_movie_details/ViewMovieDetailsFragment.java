@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -37,8 +38,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -59,7 +58,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -90,7 +88,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private Button mReviewAllReviewsButton;
     private FloatingActionButton mFab;
     private MovieInterface mMovie;
-    private DetailSelectedCallback mDetailSelectedCallback;
+    private Callback mCallback;
     private ShareActionProvider mShareActionProvider;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
@@ -118,16 +116,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
 
-        if (!getResources().getBoolean(R.bool.two_pane)) {
-            Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
-            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
-                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-                ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                }
-            }
-        }
+        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
+        mCallback.onSetSupportActionbar(toolbar, true, null);
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.toolbar_layout);
 
@@ -234,10 +224,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mDetailSelectedCallback = (DetailSelectedCallback) context;
+            mCallback = (Callback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement DetailSelectedCallback");
+                    + " must implement Callback");
         }
     }
 
@@ -282,7 +272,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                 String filename = movie.getId() + ".png";
                 File file = new File(getContext().getFilesDir(), filename);
                 Picasso.with(getContext()).load(file).error(R.drawable.no_image)
-                        .into(mDetailposterView, new Callback() {
+                        .into(mDetailposterView, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
@@ -301,7 +291,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                 Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
                         + getResources().getString(R.string.poster_large)
                         + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposterView,
-                        new Callback() {
+                        new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
@@ -346,7 +336,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             EspressoIdlingResource.increment();
             Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
                     + getResources().getString(R.string.poster_xx_large)
-                    + movie.getBackdropUrl()).error(R.drawable.no_image).into(mBackdrop, new Callback() {
+                    + movie.getBackdropUrl()).error(R.drawable.no_image).into(mBackdrop, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
@@ -443,7 +433,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showFullPlotUi(View sharedView, String title, String plot) {
-        mDetailSelectedCallback.onFullPlotSelected(
+        mCallback.onFullPlotSelected(
                 sharedView,
                 mTitle,
                 mPlotView.getText().toString()
@@ -452,12 +442,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showAllTrailersUi(ArrayList<MovieTrailerInterface> trailers) {
-        mDetailSelectedCallback.onAllTrailersSelected(mTrailers);
+        mCallback.onAllTrailersSelected(mTrailers);
     }
 
     @Override
     public void showFullReview(View sharedView, String author, String content) {
-        mDetailSelectedCallback.onFullReviewSelected(
+        mCallback.onFullReviewSelected(
                 sharedView,
                 mReviews.get(0).getAuthor(),
                 mReviews.get(0).getContent());
@@ -465,12 +455,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
     @Override
     public void showAllReviewsUi(ArrayList<MovieReviewInterface> reviews) {
-        mDetailSelectedCallback.onAllReviewsSelected(mReviews);
+        mCallback.onAllReviewsSelected(mReviews);
     }
 
     @Override
     public void showAttributionUi() {
-        mDetailSelectedCallback.onAboutSelected();
+        mCallback.onAboutSelected();
     }
 
     @Override
@@ -525,7 +515,11 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of detail clicks.
      */
-    public interface DetailSelectedCallback {
+    public interface Callback {
+
+        void onSetSupportActionbar(@NonNull Toolbar toolbar, @NonNull Boolean upEnabled,
+                                   @Nullable Integer homeAsUpIndicator);
+
         void onAboutSelected();
 
         void onFullPlotSelected(View sharedView, String title, String plot);

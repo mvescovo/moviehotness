@@ -2,11 +2,10 @@ package com.michaelvescovo.android.moviehotness.view_all_reviews;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ import java.util.List;
  */
 public class ViewAllReviewsFragment extends Fragment {
 
-    public ReviewSelectedCallback mReviewSelectedCallback;
+    public Callback mCallback;
 
     @Nullable
     @Override
@@ -47,16 +46,7 @@ public class ViewAllReviewsFragment extends Fragment {
         Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.all_reviews);
 
-        if (!getResources().getBoolean(R.bool.two_pane)) {
-            if (getActivity().getClass().isInstance(AppCompatActivity.class)) {
-                ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-                ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setDisplayHomeAsUpEnabled(true);
-                    actionBar.setHomeAsUpIndicator(R.drawable.ic_close_24dp);
-                }
-            }
-        }
+        mCallback.onSetSupportActionbar(toolbar, true, R.drawable.ic_close_24dp);
 
         return root;
     }
@@ -73,9 +63,10 @@ public class ViewAllReviewsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mReviewSelectedCallback = (ReviewSelectedCallback) context;
+            mCallback = (ViewAllReviewsFragment.Callback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement ReviewSelectedCallback");
+            throw new ClassCastException(context.toString()
+                    + " must implement ViewAllReviewsFragment Callback");
         }
     }
 
@@ -83,7 +74,13 @@ public class ViewAllReviewsFragment extends Fragment {
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of detail clicks.
      */
-    public interface ReviewSelectedCallback {
+    public interface Callback {
+
+        void onSetSupportActionbar(@NonNull Toolbar toolbar, @NonNull Boolean upEnabled,
+                                   @Nullable Integer homeAsUpIndicator);
+
+        void onAboutSelected();
+
         void onFullReviewSelected(View sharedView, String author, String content);
     }
 
@@ -148,7 +145,7 @@ public class ViewAllReviewsFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mViewAllReviewsFragment.mReviewSelectedCallback.onFullReviewSelected(
+                    mViewAllReviewsFragment.mCallback.onFullReviewSelected(
                             v,
                             mAdapter.get(getAdapterPosition()).getAuthor(),
                             mAdapter.get(getAdapterPosition()).getContent()

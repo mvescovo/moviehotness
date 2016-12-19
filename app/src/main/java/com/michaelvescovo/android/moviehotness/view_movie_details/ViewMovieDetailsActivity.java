@@ -2,6 +2,8 @@ package com.michaelvescovo.android.moviehotness.view_movie_details;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -9,7 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
@@ -28,7 +32,7 @@ import java.util.ArrayList;
 import static android.R.attr.author;
 
 
-public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewMovieDetailsFragment.DetailSelectedCallback {
+public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewMovieDetailsFragment.Callback {
 
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
@@ -60,6 +64,19 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements ViewM
     @VisibleForTesting
     public IdlingResource getCountingIdlingResource() {
         return EspressoIdlingResource.getIdlingResource();
+    }
+
+    @Override
+    public void onSetSupportActionbar(@NonNull Toolbar toolbar, @NonNull Boolean upEnabled,
+                                      @Nullable Integer homeAsUpIndicator) {
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(upEnabled);
+            if (homeAsUpIndicator != null) {
+                actionBar.setHomeAsUpIndicator(homeAsUpIndicator);
+            }
+        }
     }
 
     @Override
