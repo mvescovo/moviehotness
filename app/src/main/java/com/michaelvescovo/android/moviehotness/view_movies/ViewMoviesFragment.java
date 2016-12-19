@@ -177,7 +177,8 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         try {
             mCallback = (Callback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement Callback");
+            throw new ClassCastException(context.toString()
+                    + " must implement ViewMoviesFragment Callback");
         }
     }
 
@@ -194,13 +195,6 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
     @Override
     public void onResume() {
         super.onResume();
-
-//        Log.i(TAG, "onResume: sortBy: " + mSortBy);
-//        Log.i(TAG, "onResume: currentPage: " + mCurrentPage);
-//        Log.i(TAG, "onResume: nextPage: " + mNextPage);
-//        Log.i(TAG, "onResume: previousTotal: " + mPreviousTotal);
-//        Log.i(TAG, "onResume: totalItemCount: " + mTotalItemCount);
-//        Log.i(TAG, "onResume: loading: " + mLoading);
 
         if (mLoading) {
             loadMovies(mNextPage);
