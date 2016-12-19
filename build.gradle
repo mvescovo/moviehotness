@@ -34,4 +34,5 @@ ext {
     rulesVersion = '0.4.1'
     espressoVersion = '2.2.2'
     picassoVersion = '2.5.2'
+    glideVersion = '3.7.0'
 }

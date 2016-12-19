@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,10 +15,12 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
@@ -43,12 +46,13 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
         ViewAllTrailersFragment.Callback,
         ViewAllReviewsFragment.Callback {
 
-    ViewPager mViewPager;
-    ViewMoviesFragment mPopularMovieGridFragment;
-    ViewMoviesFragment mHighestRatedMovieGridFragment;
-    ViewMoviesFragment mFavouriteMovieGridFragment;
-    Menu mMenu;
-    TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private ViewMoviesFragment mPopularMovieGridFragment;
+    private ViewMoviesFragment mHighestRatedMovieGridFragment;
+    private ViewMoviesFragment mFavouriteMovieGridFragment;
+    private Menu mMenu;
+    private TabLayout mTabLayout;
+    private Toolbar mToolbar;
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String SORT_BY = "SORT_BY";
     private static final String DETAIL_FRAGMENT_TAG = "DETAIL_TAG";
@@ -92,8 +96,8 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
             }
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager(mViewPager);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -214,6 +218,37 @@ public class ViewMoviesActivity extends AppCompatActivity implements ViewMoviesF
                 .replace(R.id.fragment_container_scroll_view, viewAllReviewsFragment, ALL_REVIEWS_FRAGMENT_TAG)
                 .addToBackStack(ALL_TRAILERS_FRAGMENT_TAG)
                 .commit();
+    }
+
+    @Override
+    public void onSetThemeColours(Palette palette, Boolean restoreDefaults) {
+        int defaultVibrant = ContextCompat.getColor(this, R.color.colorPrimary);
+        int defaultVibrantTitleColour = ContextCompat.getColor(this, R.color.textPrimaryDark);
+        int defaultDarkVibrant = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+        Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+
+        if (restoreDefaults || vibrantSwatch == null || darkVibrantSwatch == null) {
+            mToolbar.setBackgroundColor(defaultVibrant);
+            mToolbar.setTitleTextColor(defaultVibrantTitleColour);
+            mTabLayout.setBackgroundColor(defaultVibrant);
+            mTabLayout.setTabTextColors(defaultVibrantTitleColour, defaultVibrantTitleColour);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(defaultDarkVibrant);
+            }
+        } else {
+            int vibrant = vibrantSwatch.getRgb();
+            int vibrantTitleColour = vibrantSwatch.getTitleTextColor();
+            int darkVibrant = darkVibrantSwatch.getRgb();
+
+            mToolbar.setBackgroundColor(vibrant);
+            mToolbar.setTitleTextColor(vibrantTitleColour);
+            mTabLayout.setBackgroundColor(vibrant);
+            mTabLayout.setTabTextColors(vibrantTitleColour, vibrantTitleColour);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(darkVibrant);
+            }
+        }
     }
 
     @Override

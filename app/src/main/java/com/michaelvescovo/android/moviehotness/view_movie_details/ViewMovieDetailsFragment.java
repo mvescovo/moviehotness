@@ -27,17 +27,22 @@ package com.michaelvescovo.android.moviehotness.view_movie_details;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -51,6 +56,9 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.MovieInterface;
@@ -58,7 +66,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.data.MovieReviewInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieTrailerInterface;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,6 +79,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private ViewMovieDetailsContract.UserActionsListener mActionsListener;
     private String mTitle;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private Toolbar mToolbar;
+    private AppBarLayout mAppbar;
     private ImageView mBackdrop;
     private ImageView mDetailposterView;
     private TextView mReleaseDateView;
@@ -90,6 +99,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private MovieInterface mMovie;
     private Callback mCallback;
     private ShareActionProvider mShareActionProvider;
+    private Palette mPalette;
 
     public static ViewMovieDetailsFragment newInstance(int sortBy, String movieId) {
         Bundle arguments = new Bundle();
@@ -116,8 +126,10 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
 
         final View root = inflater.inflate(R.layout.fragment_view_movie_details, container, false);
 
-        Toolbar toolbar = (Toolbar) root.findViewById(R.id.toolbardetail);
-        mCallback.onSetSupportActionbar(toolbar, true, null);
+        mAppbar = (AppBarLayout) root.findViewById(R.id.appbar);
+
+        mToolbar = (Toolbar) root.findViewById(R.id.toolbar);
+        mCallback.onSetSupportActionbar(mToolbar, true, null);
 
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) root.findViewById(R.id.toolbar_layout);
 
@@ -271,41 +283,60 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                     .getInteger(R.integer.favourite))) {
                 String filename = movie.getId() + ".png";
                 File file = new File(getContext().getFilesDir(), filename);
-                Picasso.with(getContext()).load(file).error(R.drawable.no_image)
-                        .into(mDetailposterView, new com.squareup.picasso.Callback() {
+                Glide.with(this)
+                        .load(file)
+                        .asBitmap()
+                        .error(R.drawable.no_image)
+                        .into(new ImageViewTarget<Bitmap>(mDetailposterView) {
                             @Override
-                            public void onSuccess() {
+                            protected void setResource(Bitmap resource) {
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
                                     EspressoIdlingResource.decrement();
                                 }
+                                mDetailposterView.setImageBitmap(resource);
                             }
 
                             @Override
-                            public void onError() {
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                                super.onLoadFailed(e, errorDrawable);
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
                                     EspressoIdlingResource.decrement();
                                 }
                             }
                         });
             } else {
-                Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
-                        + getResources().getString(R.string.poster_large)
-                        + movie.getPosterUrl()).error(R.drawable.no_image).into(mDetailposterView,
-                        new com.squareup.picasso.Callback() {
+                Glide.with(this)
+                        .load("https://image.tmdb.org/t/p/"
+                                + getResources().getString(R.string.poster_large)
+                                + movie.getPosterUrl())
+                        .asBitmap()
+                        .error(R.drawable.no_image)
+                        .into(new ImageViewTarget<Bitmap>(mDetailposterView) {
                             @Override
-                            public void onSuccess() {
+                            protected void setResource(Bitmap resource) {
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
                                     EspressoIdlingResource.decrement();
+                                }
+                                mDetailposterView.setImageBitmap(resource);
+                                if (!getResources().getBoolean(R.bool.two_pane)) {
+                                    getPalette(resource, new GetPaletteCallback() {
+                                        @Override
+                                        public void onPaletteCreated() {
+                                            setToolbarColours();
+                                        }
+                                    });
                                 }
                             }
 
                             @Override
-                            public void onError() {
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                super.onResourceReady(resource, glideAnimation);
                                 if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
                                     EspressoIdlingResource.decrement();
                                 }
                             }
                         });
+
             }
         }
 
@@ -334,23 +365,36 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         // Backdrop
         if (mBackdrop != null) {
             EspressoIdlingResource.increment();
-            Picasso.with(getContext()).load("https://image.tmdb.org/t/p/"
-                    + getResources().getString(R.string.poster_xx_large)
-                    + movie.getBackdropUrl()).error(R.drawable.no_image).into(mBackdrop, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement();
-                    }
-                }
+            Glide.with(this)
+                    .load("https://image.tmdb.org/t/p/"
+                            + getResources().getString(R.string.poster_xx_large)
+                            + movie.getBackdropUrl())
+                    .asBitmap()
+                    .into(new ImageViewTarget<Bitmap>(mBackdrop) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                                EspressoIdlingResource.decrement();
+                            }
+                            mBackdrop.setImageBitmap(resource);
+                            if (getResources().getBoolean(R.bool.two_pane)) {
+                                getPalette(resource, new GetPaletteCallback() {
+                                    @Override
+                                    public void onPaletteCreated() {
+                                        setToolbarColours();
+                                    }
+                                });
+                            }
+                        }
 
-                @Override
-                public void onError() {
-                    if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
-                        EspressoIdlingResource.decrement();
-                    }
-                }
-            });
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                            super.onLoadFailed(e, errorDrawable);
+                            if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                                EspressoIdlingResource.decrement();
+                            }
+                        }
+                    });
         }
 
         // Trailers
@@ -389,6 +433,39 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         } else {
             mReviewTitle.setText(R.string.review_title_no_review);
             mReviewTitle.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void getPalette(Bitmap bitmap, final GetPaletteCallback callback) {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+            public void onGenerated(Palette p) {
+                mPalette = p;
+                callback.onPaletteCreated();
+            }
+        });
+    }
+
+    private void setToolbarColours() {
+        int defaultVibrant = ContextCompat.getColor(getContext(), R.color.colorPrimary);
+        int defaultVibrantTitleColour = ContextCompat.getColor(getContext(), R.color.textPrimaryDark);
+        int defaultDarkVibrant = ContextCompat.getColor(getContext(), R.color.colorPrimaryDark);
+        Palette.Swatch vibrantSwatch = mPalette.getVibrantSwatch();
+        Palette.Swatch darkVibrantSwatch = mPalette.getDarkVibrantSwatch();
+
+        if (vibrantSwatch != null && darkVibrantSwatch != null) {
+            int vibrant = vibrantSwatch.getRgb();
+            int vibrantTitleColour = vibrantSwatch.getTitleTextColor();
+            int darkVibrant = darkVibrantSwatch.getRgb();
+
+            mCollapsingToolbarLayout.setStatusBarScrimColor(darkVibrant);
+            mCollapsingToolbarLayout.setContentScrimColor(vibrant);
+            mCollapsingToolbarLayout.setCollapsedTitleTextColor(vibrantTitleColour);
+            mCallback.onSetThemeColours(mPalette, false);
+        } else {
+            mCollapsingToolbarLayout.setStatusBarScrimColor(defaultDarkVibrant);
+            mCollapsingToolbarLayout.setContentScrimColor(defaultVibrant);
+            mCollapsingToolbarLayout.setCollapsedTitleTextColor(defaultVibrantTitleColour);
+            mCallback.onSetThemeColours(mPalette, true);
         }
     }
 
@@ -529,6 +606,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         void onFullReviewSelected(View sharedView, String author, String content);
 
         void onAllReviewsSelected(ArrayList<MovieReviewInterface> reviews);
+
+        void onSetThemeColours(Palette palette, Boolean restoreDefaults);
+    }
+
+    interface GetPaletteCallback {
+        void onPaletteCreated();
     }
 
     public class InstallYoutube implements View.OnClickListener {
