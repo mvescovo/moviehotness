@@ -294,7 +294,12 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
                                     EspressoIdlingResource.decrement();
                                 }
                                 mDetailposterView.setImageBitmap(resource);
-                            }
+                                getPalette(resource, new GetPaletteCallback() {
+                                    @Override
+                                    public void onPaletteCreated() {
+                                        setToolbarColours();
+                                    }
+                                });                            }
 
                             @Override
                             public void onLoadFailed(Exception e, Drawable errorDrawable) {
