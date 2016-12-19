@@ -47,6 +47,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.michaelvescovo.android.moviehotness.R;
 import com.michaelvescovo.android.moviehotness.data.Movie;
 import com.michaelvescovo.android.moviehotness.data.MovieHotnessContract;
@@ -54,7 +55,6 @@ import com.michaelvescovo.android.moviehotness.data.MovieInterface;
 import com.michaelvescovo.android.moviehotness.data.MovieRepositories;
 import com.michaelvescovo.android.moviehotness.util.EspressoIdlingResource;
 import com.michaelvescovo.android.moviehotness.util.VolleyRequestQueue;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -407,20 +407,12 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ImageView imageView = (ImageView) ((MovieApiViewHolder) holder).getView()
                     .findViewById(R.id.poster_image);
-            Picasso.with(imageView.getContext()).load("https://image.tmdb.org/t/p/"
-                    + imageView.getContext().getResources().getString(R.string.poster_large)
-                    + mDataset.get(position).getPosterUrl()).error(R.drawable.no_image)
-                    .into(imageView, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
+            Glide.with(getContext())
+                    .load("https://image.tmdb.org/t/p/"
+                            + imageView.getContext().getResources().getString(R.string.poster_large)
+                            + mDataset.get(position).getPosterUrl())
+                    .error(R.drawable.no_image)
+                    .into(imageView);
             ViewCompat.setTransitionName(
                     imageView,
                     imageView.getResources().getString(R.string.transition_poster)
@@ -482,20 +474,12 @@ public class ViewMoviesFragment extends Fragment implements ViewMoviesContract.V
             if (mCursor != null) {
                 mCursor.moveToPosition(position);
                 posterUrl = mCursor.getString(posterUrlColumnIndex);
-
                 String filename = posterUrl;
                 File file = new File(getContext().getFilesDir(), filename);
-                Picasso.with(getContext()).load(file).error(R.drawable.no_image).into(imageView, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
+                Glide.with(getContext())
+                        .load(file)
+                        .error(R.drawable.no_image)
+                        .into(imageView);
             }
             ViewCompat.setTransitionName(
                     imageView,
