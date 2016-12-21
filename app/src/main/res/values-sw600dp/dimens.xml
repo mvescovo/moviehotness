@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">64dp</dimen>
     <dimen name="md_keylines">8dp</dimen>
 
+    <!--ViewMovieDetails-->
+    <dimen name="app_bar_height_backdrop">500dp</dimen>
+
 </resources>
