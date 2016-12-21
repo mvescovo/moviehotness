@@ -27,7 +27,7 @@
                 android:layout_below="@id/fragment_detail_release_date"
                 android:id="@+id/plot_preview_shared_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
