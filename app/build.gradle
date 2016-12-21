@@ -19,8 +19,8 @@ android {
         applicationId "com.michaelvescovo.android.moviehotness"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,11 +40,11 @@ android {
     productFlavors {
         mock {
             applicationIdSuffix = ".mock"
-            versionName "1.2-mock"
+            versionName "1.3-mock"
         }
         prod {
             applicationIdSuffix = ".prod"
-            versionName "1.2-prod"
+            versionName "1.3-prod"
         }
     }
     // Remove mockRelease as it's not needed.
