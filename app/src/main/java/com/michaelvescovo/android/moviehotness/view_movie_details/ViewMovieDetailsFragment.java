@@ -87,6 +87,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
     private TextView mPlotView;
     private RatingBar mRatingBarView;
     private Button mMoreTrailersButton;
+    private ImageView mMainTrailersButton;
     private ArrayList<MovieTrailerInterface> mTrailers;
     private ArrayList<MovieReviewInterface> mReviews;
     private TextView mReviewTitle;
@@ -179,8 +180,8 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
             }
         });
 
-        ImageView playFirstTrailerButton = (ImageView) root.findViewById(R.id.main_trailer_play_button);
-        playFirstTrailerButton.setOnClickListener(new View.OnClickListener() {
+        mMainTrailersButton = (ImageView) root.findViewById(R.id.main_trailer_play_button);
+        mMainTrailersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mActionsListener.playFirstTrailer(mTrailers.get(0).getYouTubeId());
@@ -406,9 +407,7 @@ public class ViewMovieDetailsFragment extends Fragment implements ViewMovieDetai
         mTrailers = movie.getTrailers();
         if (movie.getTrailerCount() > 0) {
             mMoreTrailersButton.setVisibility(View.VISIBLE);
-            ImageView imageView = (ImageView) getActivity()
-                    .findViewById(R.id.main_trailer_play_button);
-            imageView.setVisibility(View.VISIBLE);
+            mMainTrailersButton.setVisibility(View.VISIBLE);
         }
 
         // Reviews
