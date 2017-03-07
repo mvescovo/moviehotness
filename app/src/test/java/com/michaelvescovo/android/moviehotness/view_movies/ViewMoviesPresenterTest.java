@@ -25,6 +25,7 @@
 package com.michaelvescovo.android.moviehotness.view_movies;
 
 import android.content.Context;
+import android.view.View;
 
 import com.google.common.collect.Lists;
 import com.michaelvescovo.android.moviehotness.data.Movie;
@@ -68,6 +69,9 @@ public class ViewMoviesPresenterTest {
     @Mock
     private Context mContext;
 
+    @Mock
+    private View mView;
+
     @Captor
     private ArgumentCaptor<MovieRepository.LoadMoviesCallback> mLoadMoviesCallbackCaptor;
 
@@ -100,10 +104,10 @@ public class ViewMoviesPresenterTest {
         MovieInterface requestedMovie = new Movie("286217", "The Martian", "2015-10-02", "/5aGhaIHYuQbqlHWvWYqMCnj40y2.jpg", "7.67", "During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.", "/sy3e2e4JwdAtd2oZGA2uUilZe8j.jpg");
 
         // When open movie details is requested
-        mViewMoviesPresenter.openMovieDetails(requestedMovie);
+        mViewMoviesPresenter.openMovieDetails(mView, requestedMovie);
 
         // Then movie detail UI is shown
-        verify(mViewMoviesView).showMovieDetailUi(any(String.class));
+        verify(mViewMoviesView).showMovieDetailUi(any(View.class), any(String.class));
     }
 
 //    @Test

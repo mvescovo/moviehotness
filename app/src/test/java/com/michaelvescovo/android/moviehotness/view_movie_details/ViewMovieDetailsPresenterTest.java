@@ -25,6 +25,7 @@
 package com.michaelvescovo.android.moviehotness.view_movie_details;
 
 import android.content.Context;
+import android.view.View;
 
 import com.michaelvescovo.android.moviehotness.data.Movie;
 import com.michaelvescovo.android.moviehotness.data.MovieInterface;
@@ -72,6 +73,9 @@ public class ViewMovieDetailsPresenterTest {
 
     @Mock
     private Context mContext;
+
+    @Mock
+    private View mView;
 
     @Mock
     private ArrayList<MovieTrailerInterface> mTrailers;
@@ -134,10 +138,10 @@ public class ViewMovieDetailsPresenterTest {
     @Test
     public void getFullPlotAndLoadIntoView() {
         // When loading the full plot is requested
-        mViewMovieDetailsPresenter.openFullPlot(TITLE_TEST, PLOT_TEST);
+        mViewMovieDetailsPresenter.openFullPlot(mView, TITLE_TEST, PLOT_TEST);
 
         // Then the view is called to update the view
-        verify(mViewMovieDetailsView).showFullPlotUi(TITLE_TEST, PLOT_TEST);
+        verify(mViewMovieDetailsView).showFullPlotUi(mView, TITLE_TEST, PLOT_TEST);
     }
 
     @Test
@@ -152,10 +156,10 @@ public class ViewMovieDetailsPresenterTest {
     @Test
     public void getFullReviewAndLoadIntoView() {
         // When loading the full review is requested
-        mViewMovieDetailsPresenter.openFullReview(AUTHOR, CONTENT);
+        mViewMovieDetailsPresenter.openFullReview(mView, AUTHOR, CONTENT);
 
         // Then the view is called to update the view
-        verify(mViewMovieDetailsView).showFullReview(AUTHOR, CONTENT);
+        verify(mViewMovieDetailsView).showFullReview(mView, AUTHOR, CONTENT);
     }
 
     @Test
